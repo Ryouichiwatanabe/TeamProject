@@ -39,6 +39,7 @@ void Player::InitComponent()
 {
 	// -- Module追加 -- //
 	AddModule<Transform>();
+	AddModule<Gravity>();
 }
 
 void Player::InitPiece()
@@ -100,6 +101,7 @@ void Player::Update(float _deltaTime)
 
 	mController.Update();
 	GameObject::Update(_deltaTime);
+	OnPieceGrounded();
 }
 
 void Player::Draw()
@@ -210,6 +212,28 @@ void Player::UpdatePieceRotation()
 			piece->UpdateRotation();
 		}
 	}
+}
+
+void Player::OnPieceGrounded()
+{
+	bool isGrounded = false;
+
+	for (auto& row : mPieces)
+	{
+		for (auto* piece : row)
+		{
+			if (piece == nullptr)
+				continue;
+
+			auto pieceGravity = piece->GetModule<Gravity>();
+			bool pieceIsGrounded = pieceGravity->IsGrounded();
+
+			if (pieceIsGrounded) isGrounded = true;
+		}
+	}
+
+	auto gravity = GetModule<Gravity>();
+	gravity->SetGrounded(isGrounded);
 }
 
 void Player::Move(VECTOR _direction)

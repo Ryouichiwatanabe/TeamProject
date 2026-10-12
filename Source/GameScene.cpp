@@ -1,4 +1,4 @@
-#include "GameScene.h"
+﻿#include "GameScene.h"
 
 #include "Master.h"
 #include "SceneManager.h"
@@ -14,6 +14,7 @@
 #include "MovingBlock.h"
 
 #include <string>
+#include <DxLib.h>
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
@@ -74,10 +75,8 @@ void GameScene::Initialize()
 
 
 	//Typewriter
-	mTypewriter = TypewriterText(3); //3フレームに1文字送る設定
 	mMessageMotion = FloatingMotion(90, 4.0f);
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
-	mTypewriter.SetText(startMessage);
 	mbIsMessageActive = true;//メッセージ表示開始
 
     auto* fakePlayer = 
@@ -107,10 +106,9 @@ void GameScene::Update(float deltaTime)
 	}
 
 
-	//====メッセージ表示中の制御====//
+/*	//====メッセージ表示中の制御====//
 	if (mbIsMessageActive)
 	{
-		mTypewriter.Update();
 		mMessageMotion.Update();
 		// 左クリック または Zキー/SPACEキーが押されたか判定
 		bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
@@ -139,7 +137,7 @@ void GameScene::Update(float deltaTime)
 
 		// メッセージ表示中はゲーム本編の進行（移動など）を止める場合
 		return;
-	}
+	}*/
 
 
 	//==通常時：ステージ番号の文字を更新==//
@@ -180,7 +178,7 @@ void GameScene::Draw()
 
 
 	// ★ メッセージウィンドウ描画
-	if (mbIsMessageActive)
+/*	if (mbIsMessageActive)
 	{
 		// 背景の半透明黒帯ウィンドウ
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
@@ -201,7 +199,7 @@ void GameScene::Draw()
 		{
 			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
 		}
-	}
+	}*/
 
 
     if (mbIsPaused)
@@ -315,7 +313,7 @@ void GameScene::UpdateClear()
 
 void GameScene::UpdatePause()
 {
-	bool currentP = CheckHitKey(KEY_INPUT_P) != 0;
+	bool currentP = InputManager::GetInstance().GetButtonDown(Button::Pause);
 
 	if (currentP && !mbPreviousP)
 	{

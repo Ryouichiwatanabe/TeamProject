@@ -121,8 +121,6 @@ void Game::Run()
             break;
         }
 
-        InputManager::GetInstance().Update();
-
         const auto currentTime = std::chrono::steady_clock::now();
         std::chrono::duration<double> frameTime = currentTime - m_lastFrameTime;
         m_lastFrameTime = currentTime;
@@ -145,6 +143,7 @@ void Game::Run()
         // MAX_SIMULATION_STEPS（例: 5回など）の上限を設けている。
         // ここを stepCount < 100 に増やすと、処理落ち時に無理に追いつこうとして完全にゲームが固まる（Spiral of Death）
         while (m_accumulator >= fixedStep && stepCount < MAX_SIMULATION_STEPS) {
+            InputManager::GetInstance().Update();
             UpdateLogic(fixedStep.count());
             m_accumulator -= fixedStep;
             ++stepCount;

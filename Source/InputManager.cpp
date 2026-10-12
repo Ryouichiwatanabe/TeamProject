@@ -58,6 +58,15 @@ void InputManager::InitializeButton() {
 		PAD_INPUT_5
 	};
 
+	mButtonBindings[(int)Button::Pause] =
+	{
+		InputMode::Normal,
+
+		KEY_INPUT_P,
+		-1,
+		-1
+	};
+
 	mButtonBindings[(int)Button::Shape] =
 	{
 		InputMode::Normal,

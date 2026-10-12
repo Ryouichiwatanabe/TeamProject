@@ -9,30 +9,33 @@ void UIText::Initialize(UI* _pUI)
 
 void UIText::Draw()
 {
-	VECTOR position = CalculateTextDrawPosition();
+	std::string drawText = mText;	// 描画する文字列の宣言
+
+	// -- 全体の文字列から描画分の文字列を取得 -- //
+	drawText = mpUI
+		->GetTypewriterText()
+		.GetVisibleText();
+
+	VECTOR position = CalculateTextDrawPosition(drawText);
 
 	DrawString(
 		static_cast<int>(position.x),
 		static_cast<int>(position.y),
-		mText.c_str(),
+		drawText.c_str(),
 		mColor
 	);
 }
 
-VECTOR UIText::CalculateTextDrawPosition()
+VECTOR UIText::CalculateTextDrawPosition(std::string _text)
 {
 	auto transform =
 		mpUI->GetTransform();
-	/*VECTOR basePosition = VSub(
-		transform.GetCenterPosition(),
-		transform.GetSize()
-	);*/
 
 	VECTOR basePosition = transform.GetCenterPosition();
 
 	int textWidth = GetDrawStringWidth(
-		mText.c_str(),
-		static_cast<int>(mText.size()),
+		_text.c_str(),
+		static_cast<int>(_text.size()),
 		mnFontSize
 	);
 
@@ -52,7 +55,8 @@ VECTOR UIText::CalculateTextDrawPosition()
 		break;
 	}
 
-	int drawY = static_cast<int>(basePosition.y - mnFontSize / 2.0f);
+	int drawY = 
+		static_cast<int>(basePosition.y - mnFontSize / 2.0f);
 
 	return VGet(
 		static_cast<int>(drawX),

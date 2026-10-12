@@ -49,6 +49,9 @@ private:
 	// -- Player座標補正後にPieceの座標を更新 -- //
 	void UpdatePiecePosition();
 	void UpdatePieceRotation();
+
+	// -- Pieceの接地判定をPlayerに適用 -- //
+	void OnPieceGrounded();
 protected:
 	const char* GetModelFilename() const override {
 		return "Resource/Player.png";
