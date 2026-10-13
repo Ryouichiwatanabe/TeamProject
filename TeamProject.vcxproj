@@ -64,6 +64,7 @@
     <ClCompile Include="Source\UI.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
     <ClCompile Include="Source\UIGraphic.cpp" />
+    <ClCompile Include="Source\UIHoverScaler.cpp" />
     <ClCompile Include="Source\UIManager.cpp" />
     <ClCompile Include="Source\UIText.cpp" />
     <ClCompile Include="Source\UITransform.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />
+    <ClInclude Include="Source\UIHoverScaler.h" />
     <ClInclude Include="Source\UILabel.h" />
     <ClInclude Include="Source\UIManager.h" />
     <ClInclude Include="Source\UIText.h" />

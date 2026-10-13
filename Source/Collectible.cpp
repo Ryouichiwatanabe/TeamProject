@@ -24,7 +24,7 @@ void Collectible::InitComponent()
 
     // 取得アイテムの画像
     // ※画像パスは実際のファイル名に合わせて変更する
-    AddModule<Graphic>("Resource/Cursor.png");
+    AddModule<Graphic>("Resource/Cursor2.png");
 
     // 当たり判定
     AddModule<Collider>();

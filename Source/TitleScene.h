@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "FloatingMotion.h"
+#include "UIHoverScaler.h"
 
 class TitleScene : public Scene
 {
@@ -22,5 +23,7 @@ private:
 	int mStartTofuHandle = -1;
 private:
 	FloatingMotion mTitleFloatingMotion;
+
+	UIHoverScaler mStartScaler; // êÈåæ
 
 };
