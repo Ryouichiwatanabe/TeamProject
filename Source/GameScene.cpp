@@ -154,19 +154,9 @@ void GameScene::Update(float deltaTime)
 		->FindObject<Player>();
 
 	if (mpGoal != nullptr &&
-		mpGoal->IsShapeMatched(player) &&
-		mpGoal->IsWithinDistance(player))
+		mpGoal->IsPlayerTouching())
 	{
-		bool shapeMatched = mpGoal->IsShapeMatched(player);
-		bool withinDistance = mpGoal->IsWithinDistance(player);
-
-		Debug::Print("Goal Shape : ", shapeMatched);
-		Debug::Print("Goal Distance : ", withinDistance);
-
-		if (shapeMatched && withinDistance)
-		{
-			mbIsClear = true;
-		}
+		mbIsClear = true;
 	}
 }
 
