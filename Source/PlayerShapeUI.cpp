@@ -117,6 +117,8 @@ void PlayerShapeUI::CreatePieceUI(int _column, int _row)
 
 void PlayerShapeUI::Update()
 {
+	UI::Update();
+
 	if (mpConfirmUI->GetButton().IsClicked())
 	{
 		mpPlayer->ApplyShapeFromUI();

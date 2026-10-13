@@ -67,6 +67,7 @@
     <ClCompile Include="Source\UIManager.cpp" />
     <ClCompile Include="Source\UIText.cpp" />
     <ClCompile Include="Source\UITransform.cpp" />
+    <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Collectible.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Source\InputManager.h" />
     <ClInclude Include="Source\Keyboard.h" />
     <ClInclude Include="Source\Master.h" />
+    <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\Mouse.h" />
     <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ObjectManager.h" />
@@ -114,7 +116,7 @@
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TextRenderer.h" />
     <ClInclude Include="Source\TitleScene.h" />
-    <ClInclude Include="Source\TypewriterText.h" />
+    <ClInclude Include="Source\UITypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />

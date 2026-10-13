@@ -1,4 +1,4 @@
-#include "Game.h"
+ï»¿#include "Game.h"
 #include "ScreenConfig.h"
 #include "InputManager.h"
 #include "Master.h"
@@ -14,7 +14,7 @@ Game::Game()
         return;
     }
 
-    // Šeƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^ó‚¯“n‚µ
+    // å„ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿å—ã‘æ¸¡ã—
     Master::mpResource = &m_resourceManager;
     Master::mpFontManager = &m_fontManager;
     Master::mpSceneManager = &m_sceneManager;
@@ -23,7 +23,7 @@ Game::Game()
     InputManager::GetInstance().InitializeAxis();
     m_cursor.Initialize();
 
-    // Å‰‚ÌƒV[ƒ“‚ğ“Ç‚İ‚Ş
+    // æœ€åˆã®ã‚·ãƒ¼ãƒ³ã‚’èª­ã¿è¾¼ã‚€
     m_sceneManager.Initialize();
 
     m_initSuccess = true;
@@ -89,9 +89,7 @@ void Game::Run()
             break;
         }
 
-        InputManager::GetInstance().Update();
-
-        // ƒ}ƒEƒXXV‚ÆƒNƒŠƒbƒN”»’è
+        // ãƒã‚¦ã‚¹æ›´æ–°ã¨ã‚¯ãƒªãƒƒã‚¯åˆ¤å®š
         m_mouse.Update();
         if (m_mouse.IsDown(MOUSE_INPUT_LEFT)) {
             const TofuGame::Vector2 clickPos{
@@ -112,6 +110,7 @@ void Game::Run()
         const std::chrono::duration<double> fixedStep = FIXED_TIMESTEP;
 
         while (m_accumulator >= fixedStep && stepCount < MAX_SIMULATION_STEPS) {
+            InputManager::GetInstance().Update();
             UpdateLogic(fixedStep.count());
             m_accumulator -= fixedStep;
             ++stepCount;
@@ -126,10 +125,10 @@ void Game::UpdateLogic(double deltaTime)
 {
     m_cursor.Update();
 
-    // ƒV[ƒ“XV
+    // ã‚·ãƒ¼ãƒ³æ›´æ–°
     m_sceneManager.Update(static_cast<float>(deltaTime));
 
-    // ŠeíƒGƒtƒFƒNƒgXV
+    // å„ç¨®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæ›´æ–°
     m_clickEffect.update(static_cast<float>(deltaTime));
     m_goalEffect.Update();
 }
@@ -138,14 +137,14 @@ void Game::Draw()
 {
     ClearDrawScreen();
 
-    // 1. 3DƒV[ƒ“•`‰æi3D—p‚Ì[“xEƒ‰ƒCƒeƒBƒ“ƒOİ’èj
+    // 1. 3Dã‚·ãƒ¼ãƒ³æç”»ï¼ˆ3Dç”¨ã®æ·±åº¦ãƒ»ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°è¨­å®šï¼‰
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
 
     m_sceneManager.Draw();
 
-    // 2. 2DƒGƒtƒFƒNƒg•`‰æiƒ‰ƒCƒeƒBƒ“ƒOEZƒeƒXƒg‚ğOFF‚É‚µ‚ÄÅ‘O–Ê‚ÉƒNƒŠƒA•`‰æj
+    // 2. 2Dã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»ï¼ˆãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ãƒ»Zãƒ†ã‚¹ãƒˆã‚’OFFã«ã—ã¦æœ€å‰é¢ã«ã‚¯ãƒªã‚¢æç”»ï¼‰
     SetUseZBufferFlag(FALSE);
     SetWriteZBufferFlag(FALSE);
     SetUseLighting(FALSE);
@@ -153,10 +152,10 @@ void Game::Draw()
     m_clickEffect.draw();
     m_goalEffect.Draw();
 
-    // 3. Å‘O–ÊƒJ[ƒ\ƒ‹
+    // 3. æœ€å‰é¢ã‚«ãƒ¼ã‚½ãƒ«
     m_cursor.Draw();
 
-    // •`‰æƒXƒe[ƒg‚ğ3D—p‚ÌƒfƒtƒHƒ‹ƒgó‘Ô‚É•œ‹A
+    // æç”»ã‚¹ãƒ†ãƒ¼ãƒˆã‚’3Dç”¨ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆçŠ¶æ…‹ã«å¾©å¸°
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
