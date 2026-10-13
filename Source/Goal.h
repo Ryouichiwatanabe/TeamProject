@@ -1,21 +1,24 @@
 ﻿#pragma once
 
-#include "GameObject.h"
+#include "StageBlock.h"
 
 class Player;
 
-class Goal : public GameObject
+class Goal : public StageBlock
 {
 public:
     void Init() override;
-    void InitComponent() override;
-    void Update(float _deltaTime) override;
-    void Draw() override;
 
     bool IsPlayerTouching();
 
     bool IsShapeMatched(Player* _player) const;
     bool IsWithinDistance(Player* _player);
+
+protected:
+    const char* GetModelFilename() const override
+    {
+        return "Resource/Stage.png";
+    }
 
 private:
     bool mShape[3][3] =

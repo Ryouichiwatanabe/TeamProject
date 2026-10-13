@@ -147,9 +147,12 @@ void GameScene::Update(float deltaTime)
 	// 更新処理
 	Scene::Update(deltaTime);
 
+	auto player = GetObjectManager()
+		->FindObject<Player>();
+
 	if (mpGoal != nullptr &&
-		mpGoal->IsShapeMatched(mpPlayer) &&
-		mpGoal->IsWithinDistance(mpPlayer))
+		mpGoal->IsShapeMatched(player) &&
+		mpGoal->IsWithinDistance(player))
 	{
 		mbIsClear = true;
 	}

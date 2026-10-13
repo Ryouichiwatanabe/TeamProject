@@ -54,7 +54,7 @@ private:
 	void OnPieceGrounded();
 protected:
 	const char* GetModelFilename() const override {
-		return "Resource/Player.png";
+		return "Resource/Player3.png";
 	}
 
 private:
