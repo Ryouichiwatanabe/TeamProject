@@ -1,4 +1,4 @@
-#include "UITypewriterText.h"
+﻿#include "UITypewriterText.h"
 
 #include "UI.h"
 
@@ -19,18 +19,20 @@ void UITypewriterText::Update()
     }
     mFrameTimer = mFrameInterval;
 
+    auto text = mpUI->GetText().GetText();
+
     // 文字送りの処理
-    if (mVisibleByteCount < mFullText.length()) {
-        unsigned char c = static_cast<unsigned char>(mFullText[mVisibleByteCount]);
+    if (mVisibleByteCount < text.length()) {
+        unsigned char c = static_cast<unsigned char>(text[mVisibleByteCount]);
 
         // 全角文字（先行バイト）なら2バイト進め、半角なら1バイト進める
         if (_ismbblead(c)) {
             // 安全のため終端チェック
-            if (mVisibleByteCount + 2 <= mFullText.length()) {
+            if (mVisibleByteCount + 2 <= text.length()) {
                 mVisibleByteCount += 2;
             }
             else {
-                mVisibleByteCount = mFullText.length();
+                mVisibleByteCount = text.length();
             }
         }
         else {
@@ -38,8 +40,8 @@ void UITypewriterText::Update()
         }
 
         // 最後まで表示し終えたか判定
-        if (mVisibleByteCount >= mFullText.length()) {
-            mVisibleByteCount = mFullText.length();
+        if (mVisibleByteCount >= text.length()) {
+            mVisibleByteCount = text.length();
             mIsFinished = true;
         }
     }
@@ -48,4 +50,12 @@ void UITypewriterText::Update()
 std::string UITypewriterText::GetVisibleText()
 {
     return mpUI->GetText().GetText().substr(0, mVisibleByteCount);
+}
+
+void UITypewriterText::Skip()
+{
+    auto text = mpUI->GetText().GetText();
+
+    mVisibleByteCount = text.size();
+    mIsFinished = true;
 }

@@ -37,8 +37,8 @@ void GameScene::Initialize()
 		this
 		->GetObjectManager()
 		->CreateObject<Player>();
-
-	mpPlayer->InitPiece();
+	mpPlayer
+		->InitPiece();
 
 	auto* stage = new Stage();
 
@@ -80,10 +80,10 @@ void GameScene::Initialize()
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
 	mbIsMessageActive = true;//メッセージ表示開始
 
-    auto* fakePlayer = 
+   /* auto* fakePlayer = 
         this
         ->GetObjectManager()
-        ->CreateObject<FakePlayer>();
+        ->CreateObject<FakePlayer>();*/
 
     auto* testUI =
         this

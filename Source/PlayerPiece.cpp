@@ -66,8 +66,8 @@ void PlayerPiece::SetEnabled(bool _enabled)
 	if (auto collider = GetModule<Collider>())
 		collider->SetEnabled(_enabled);
 
-	/*if (auto gravity = GetModule<Gravity>())
-		gravity->SetEnabled(_enabled);*/
+	if (auto gravity = GetModule<Gravity>())
+		gravity->SetEnabled(_enabled);
 }
 
 void PlayerPiece::ResolveCollision()

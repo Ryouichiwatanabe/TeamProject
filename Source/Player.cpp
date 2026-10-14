@@ -33,6 +33,15 @@ void Player::Init()
 	// -- タグ設定 -- //
 	SetTag(Tag::PLAYER);
 	mController.Initialize(this);
+
+	if (auto transform = GetModule<Transform>())
+		transform->SetPosition(
+			VGet(
+				200.0f,
+				200.0f,
+				0.0f
+			)
+		);
 }
 
 void Player::InitComponent()
@@ -59,10 +68,10 @@ void Player::InitPiece()
 		}
 	}
 
-	/*mPieces[0][1]->SetEnabled(false);
+	mPieces[0][1]->SetEnabled(false);
 	mPieces[0][2]->SetEnabled(false);
 	mPieces[1][1]->SetEnabled(false);
-	mPieces[1][2]->SetEnabled(false);*/
+	mPieces[1][2]->SetEnabled(false);
 }
 
 void Player::CreatePiece(int _column, int _row)
