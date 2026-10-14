@@ -1,5 +1,7 @@
 ﻿#include "PlayerPieceUI.h"
 
+#include "PlayerPiece.h"
+
 #include "Debug.h"
 
 #include <DxLib.h>	// 選択済みPieceの減算ブレンド用
@@ -34,4 +36,23 @@ void PlayerPieceUI::Draw()
 	}
 
 	UI::Draw();
+}
+
+bool PlayerPieceUI::IsSelected()
+{
+	return mbSelected;
+}
+
+void PlayerPieceUI::SetSelected(bool _selected)
+{
+	mbSelected = _selected;
+
+	if (mpPlayerPiece)
+		mpPlayerPiece->SetEnabled(_selected);
+}
+
+void PlayerPieceUI::ToggleSelected()
+{
+	mbSelected = !mbSelected;
+	SetSelected(mbSelected);
 }

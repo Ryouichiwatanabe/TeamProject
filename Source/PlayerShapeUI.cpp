@@ -145,12 +145,14 @@ void PlayerShapeUI::Update()
 {
 	UI::Update();
 
+	// -- 「OK」を押した場合 -- //
 	if (mpConfirmUI->GetButton().IsClicked())
 	{
 		mpPlayer->ApplyShapeFromUI();
 		this->SetEnabled(false);
 	}
 
+	// -- 「Back」を押した場合 -- //
 	if (mpBackUI->GetButton().IsClicked())
 	{
 		this->SetEnabled(false);
@@ -199,6 +201,11 @@ void PlayerShapeUI::Draw()
 bool PlayerShapeUI::IsPieceSelected(int _x, int _y)
 {
 	return mPieceUI[_x][_y]->IsSelected();
+}
+
+void PlayerShapeUI::SetPieceSelected(int _x, int _y,bool _enabled)
+{
+	return mpPlayer.Get[_x][_y]->SetEnabled(_enabled);
 }
 
 

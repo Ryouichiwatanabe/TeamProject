@@ -35,6 +35,7 @@ public:
 	void ApplyShapeFromUI();									// PlayerShapeUIの情報からPieceの有効状態を変更する処理
 
 	bool IsPieceEnabled(int _column, int _row);
+	PlayerPiece* GetPlayerPiece(int _column,int _row)
 private:
 
 	VECTOR mvRespawnPos = VGet(0.0f, 0.0f, 0.0f);	// リスポーンの座標

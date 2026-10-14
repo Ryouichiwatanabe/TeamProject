@@ -17,7 +17,7 @@ public:
 	void Draw() override;
 
 	bool IsPieceSelected(int _x, int _y);
-
+	void SetPieceSelected(int _x, int _y, bool _enabled);
 private:
 	void CreatePieceUI(int _column, int _row);
 

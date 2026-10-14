@@ -105,8 +105,12 @@ void Player::Update(float _deltaTime)
 	}
 	
 	if (mpShapeUI != nullptr &&
-		InputManager::GetInstance().GetButtonDown(Button::Shape))
+		InputManager::GetInstance().GetButtonDown(Button::Shape)
+		)
+	{
 		mpShapeUI->SetEnabled(!mpShapeUI->IsEnabled());
+		ApplyShapeFromUI();
+	}
 
 	auto transform = GetModule<Transform>();
 	if (transform->GetPosition().y >= ScreenConfig::SCREEN_HEIGHT)
@@ -283,21 +287,6 @@ void Player::Move(VECTOR _direction)
 
 void Player::Rotation(float _rotateDirection)
 {
-	//// -- 回転値を取得 -- //
-	//float rotationAmount = _rotateDirection * mfRotationPower;	// 回転の値(度数)
-	//float rotationRadian = rotationAmount * DX_PI_F / 180.0f;	// 回転の値(ラジアン)
-
-	//// -- 回転値を適用 -- //
-	//if (auto transform = GetModule<Transform>())
-	//	transform->SetRotation(
-	//		VAdd(
-	//			transform->GetRotation(),
-	//			VGet(0.0f, 0.0f, rotationRadian)
-	//		)
-	//	);
-
-	//UpdatePieceRotation();
-
 	// 挟まれている間は回転入力を無視する！
 	if (mbIsPinched) return;
 

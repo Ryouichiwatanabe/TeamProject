@@ -18,7 +18,7 @@ public:
 	void Draw() override;
 
 	void SetEnabled(bool _enabled);	// 有効状態のセッター
-	bool GetEnabled() { return mbIsEnabled; }
+	bool IsEnabled() { return mbIsEnabled; }
 
 	// -- Playerからの相対座標アクセサ -- //
 	void SetLocalPosition(VECTOR _pos) { mvLocalPosition = _pos; }
