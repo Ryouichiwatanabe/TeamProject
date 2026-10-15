@@ -16,12 +16,12 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	bool IsPieceSelected(int _x, int _y);
-	void SetPieceSelected(int _x, int _y, bool _enabled);
+	void ApplyPieceActivityToUI();	// UI展開時にPlayerPieceの有効状態を取得し、UIPlayerPieceに適用させる処理
+
+	// -- PieceUIの取得する -- //
+	PlayerPieceUI* GetPlayerPieceUI(int _column, int _row) { return mPieceUI[_column][_row]; }
 private:
 	void CreatePieceUI(int _column, int _row);
-
-	void ApplyShapeFromUI();
 
 private:
 	Player* mpPlayer;

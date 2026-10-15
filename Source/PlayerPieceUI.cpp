@@ -48,7 +48,7 @@ void PlayerPieceUI::SetSelected(bool _selected)
 	mbSelected = _selected;
 
 	if (mpPlayerPiece)
-		mpPlayerPiece->SetEnabled(_selected);
+		mpPlayerPiece->SetActive(_selected);
 }
 
 void PlayerPieceUI::ToggleSelected()

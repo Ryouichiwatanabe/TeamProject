@@ -53,21 +53,21 @@ void PlayerPiece::Draw()
 	GameObject::Draw();
 }
 
-void PlayerPiece::SetEnabled(bool _enabled)
+void PlayerPiece::SetActive(bool _active)
 {
-	mbIsEnabled = _enabled;
+	mbIsActive = _active;
 
 	if (auto transform = GetModule<Transform>())
-		transform->SetEnabled(_enabled);
+		transform->SetEnabled(_active);
 	
 	if (auto graphic = GetModule<Graphic>())
-		graphic->SetEnabled(_enabled);
+		graphic->SetEnabled(_active);
 
 	if (auto collider = GetModule<Collider>())
-		collider->SetEnabled(_enabled);
+		collider->SetEnabled(_active);
 
 	if (auto gravity = GetModule<Gravity>())
-		gravity->SetEnabled(_enabled);
+		gravity->SetEnabled(_active);
 }
 
 void PlayerPiece::ResolveCollision()

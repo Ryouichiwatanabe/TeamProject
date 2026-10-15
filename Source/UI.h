@@ -33,8 +33,10 @@ public:
 	void SetLayer(int _layer) { mnLayer = _layer; }
 	int GetLayer() { return mnLayer; }
 
-	bool IsEnabled();	// 有効であるかどうかを取得する
+	// -- 有効状態のアクセサ -- //
+	bool IsEnabled();
 	void SetEnabled(bool _enabled) { mbIsEnabled = _enabled; }
+	void ToggleEnabled() { mbIsEnabled = !mbIsEnabled; }
 
 	// -- Moduleの取得 -- //
 	UITransform& GetTransform() { return mTransform; }

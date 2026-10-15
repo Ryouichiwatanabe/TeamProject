@@ -15,9 +15,19 @@
 // -- Module -- //
 #include "Transform.h"
 
+#include "GameConfig.h"
+
+#include "PlayerPiece.h"
+
 void PlayerShapeUI::Init()
 {
-	LoadUIGraph("Resource/UI/外側.png");
+	// -- Playerのアドレス取得 -- //
+	mpPlayer =
+		Master::mpSceneManager
+		->GetCurrentScene()
+		->GetObjectManager()
+		->FindObject<Player>();
+	mpPlayer->SetShapeUI(this);
 
 	// -- piece生成 & 初期処理 -- //
 	for (int row = 0;
@@ -32,12 +42,13 @@ void PlayerShapeUI::Init()
 		}
 	}
 
+	// -- 「決定ボタン」の生成 / 初期処理 -- //
+		// Todo : 関数化
 	mpConfirmUI =
 		Master::mpSceneManager
 		->GetCurrentScene()
 		->GetUIManager()
 		->CreateUI<UI>();
-	// Todo : 画像が決まり次第ロード
 	mpConfirmUI->LoadUIGraph("Resource/Obj/test_field.png");
 	mpConfirmUI->SetLayer(2);
 	mpConfirmUI
@@ -62,16 +73,17 @@ void PlayerShapeUI::Init()
 			"OK"
 		);
 
-	// -- 親子の設定 -- //
 	this->AddChild(mpConfirmUI);
 	mpConfirmUI->SetParent(this);
 
+
+	// -- 「戻るボタン」の生成 / 初期処理 -- //
+		// Todo : 関数化
 	mpBackUI =
 		Master::mpSceneManager
 		->GetCurrentScene()
 		->GetUIManager()
 		->CreateUI<UI>();
-	// Todo : 画像が決まり次第ロード
 	mpBackUI->LoadUIGraph("Resource/Obj/test_field.png");
 	mpBackUI->SetLayer(2);
 	mpBackUI
@@ -96,17 +108,8 @@ void PlayerShapeUI::Init()
 			"Back"
 		);
 
-	// -- 親子の設定 -- //
 	this->AddChild(mpBackUI);
 	mpBackUI->SetParent(this);
-
-	// -- Playerのアドレス取得 -- //
-	mpPlayer =
-		Master::mpSceneManager
-		->GetCurrentScene()
-		->GetObjectManager()
-		->FindObject<Player>();
-	mpPlayer->SetShapeUI(this);
 }
 
 void PlayerShapeUI::CreatePieceUI(int _column, int _row)
@@ -122,6 +125,7 @@ void PlayerShapeUI::CreatePieceUI(int _column, int _row)
 		return;
 
 	pieceUI->LoadUIGraph("Resource/UI/内側.png");
+	pieceUI->SetPlayerPiece(mpPlayer->GetPlayerPiece(_column, _row));
 	pieceUI->SetLayer(1);
 	mPieceUI[_row][_column] = pieceUI;
 
@@ -148,14 +152,14 @@ void PlayerShapeUI::Update()
 	// -- 「OK」を押した場合 -- //
 	if (mpConfirmUI->GetButton().IsClicked())
 	{
-		mpPlayer->ApplyShapeFromUI();
-		this->SetEnabled(false);
+		mpPlayer->ApplyUISelectionToPlayerPiece();	// UI(Piece)の選択状態をObjに適用
+		this->SetEnabled(false);					// UIを閉じる
 	}
 
 	// -- 「Back」を押した場合 -- //
 	if (mpBackUI->GetButton().IsClicked())
 	{
-		this->SetEnabled(false);
+		this->SetEnabled(false);					// UIを閉じる
 	}
 
 	if (IsEnabled())
@@ -198,14 +202,30 @@ void PlayerShapeUI::Draw()
 	UI::Draw();
 }
 
-bool PlayerShapeUI::IsPieceSelected(int _x, int _y)
+void PlayerShapeUI::ApplyPieceActivityToUI()
 {
-	return mPieceUI[_x][_y]->IsSelected();
-}
+	if (!mpPlayer)
+		return;
 
-void PlayerShapeUI::SetPieceSelected(int _x, int _y,bool _enabled)
-{
-	return mpPlayer.Get[_x][_y]->SetEnabled(_enabled);
+	for (int row = 0;
+		row < GameConfig::PLAYER_PIECE_SIZE;
+		++row)
+	{
+		for (int column = 0;
+			column < GameConfig::PLAYER_PIECE_SIZE;
+			++column)
+		{
+			auto piece = mpPlayer->GetPlayerPiece(column, row);
+			if (!piece)
+				continue;
+
+			auto pieceUI = GetPlayerPieceUI(column, row);
+			if (!pieceUI)
+				continue;
+
+			pieceUI->SetSelected(piece->IsActive());
+		}
+	}
 }
 
 

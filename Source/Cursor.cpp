@@ -1,4 +1,4 @@
-#include "Cursor.h"
+ï»¿#include "Cursor.h"
 #include "DxLib.h"
 
 Cursor::Cursor()
@@ -11,16 +11,16 @@ Cursor::~Cursor()
 
 void Cursor::Initialize()
 {
-    // Windows‚Ìƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ”ñ•\¦
+    // Windowsã®ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤º
     SetMouseDispFlag(FALSE);
 
-    // ƒJ[ƒ\ƒ‹‰æ‘œ‚ğ“Ç‚İ‚Ş
+    // ã‚«ãƒ¼ã‚½ãƒ«ç”»åƒã‚’èª­ã¿è¾¼ã‚€
     mHandle = LoadGraph("Resource/Cursor3.png");
 }
 
 void Cursor::Update()
 {
-    // ¡‚Í“Á‚Éˆ—‚È‚µ
+    // ä»Šã¯ç‰¹ã«å‡¦ç†ãªã—
 }
 
 void Cursor::Draw()
@@ -52,6 +52,6 @@ void Cursor::Finalize()
         mHandle = -1;
     }
 
-    // Windows‚Ìƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğÄ•\¦
+    // Windowsã®ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å†è¡¨ç¤º
     SetMouseDispFlag(TRUE);
 }

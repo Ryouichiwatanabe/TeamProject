@@ -32,10 +32,10 @@ public:
 	void AddCollisionCorrection(VECTOR _correction);	// 補正値を一旦集める処理(PlayerPieceで呼ぶ)
 
 	void SetShapeUI(PlayerShapeUI* _ui) { mpShapeUI = _ui; }	// PlayerShapeUIのポインタを取得(Player変形情報の取得のため)
-	void ApplyShapeFromUI();									// PlayerShapeUIの情報からPieceの有効状態を変更する処理
 
-	bool IsPieceEnabled(int _column, int _row);
-	PlayerPiece* GetPlayerPiece(int _column,int _row)
+	PlayerPiece* GetPlayerPiece(int _column, int _row) { return mPieces[_column][_row]; }
+
+	void ApplyUISelectionToPlayerPiece();	// PlayerPieceUIの選択状態をPlayerPieceに適用させる
 private:
 
 	VECTOR mvRespawnPos = VGet(0.0f, 0.0f, 0.0f);	// リスポーンの座標

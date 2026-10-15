@@ -23,5 +23,5 @@ public:
 private:
 	PlayerPiece* mpPlayerPiece = nullptr;
 
-	bool mbSelected = false;
+	bool mbSelected = true;
 };

@@ -18,6 +18,7 @@
 
 // 変形状態取得用
 #include "PlayerShapeUI.h"
+#include "PlayerPieceUI.h"
 
 // 入力関係
 #include "InputManager.h"
@@ -68,10 +69,11 @@ void Player::InitPiece()
 		}
 	}
 
-	mPieces[0][1]->SetEnabled(false);
-	mPieces[0][2]->SetEnabled(false);
-	mPieces[1][1]->SetEnabled(false);
-	mPieces[1][2]->SetEnabled(false);
+	mPieces[0][0]->SetActive(true);
+	mPieces[1][0]->SetActive(true);
+	mPieces[2][0]->SetActive(true);
+	mPieces[2][1]->SetActive(true);
+	mPieces[2][2]->SetActive(true);
 }
 
 void Player::CreatePiece(int _column, int _row)
@@ -104,14 +106,18 @@ void Player::Update(float _deltaTime)
 		return;
 	}
 	
+	// -- Playerの変形UIを有効化 -- //
+		// Todo : 場所を変える(Controllerかな..？)
 	if (mpShapeUI != nullptr &&
 		InputManager::GetInstance().GetButtonDown(Button::Shape)
 		)
 	{
 		mpShapeUI->SetEnabled(!mpShapeUI->IsEnabled());
-		ApplyShapeFromUI();
+		mpShapeUI->ApplyPieceActivityToUI();
 	}
 
+	// -- 落下死した場合にリスポーン -- //
+		// Todo : 場所を変える、もしくは関数化
 	auto transform = GetModule<Transform>();
 	if (transform->GetPosition().y >= ScreenConfig::SCREEN_HEIGHT)
 		Respawn();
@@ -301,8 +307,16 @@ void Player::Rotation(float _rotateDirection)
 
 }
 
-void Player::ApplyShapeFromUI()
+void Player::Respawn()
 {
+	GetModule<Transform>()->SetPosition(mvRespawnPos);
+}
+
+void Player::ApplyUISelectionToPlayerPiece()
+{
+	if (!mpShapeUI)
+		return;
+
 	for (int row = 0;
 		row < GameConfig::PLAYER_PIECE_SIZE;
 		++row)
@@ -311,18 +325,15 @@ void Player::ApplyShapeFromUI()
 			column < GameConfig::PLAYER_PIECE_SIZE;
 			++column)
 		{
-			bool selected = mpShapeUI->IsPieceSelected(column, row);
-			mPieces[column][row]->SetEnabled(selected);
+			auto piece = GetPlayerPiece(column, row);
+			if (!piece)
+				continue;
+
+			auto pieceUI = mpShapeUI->GetPlayerPieceUI(column, row);
+			if (!pieceUI)
+				continue;
+
+			piece->SetActive(pieceUI->IsSelected());
 		}
 	}
-}
-
-void Player::Respawn()
-{
-	GetModule<Transform>()->SetPosition(mvRespawnPos);
-}
-
-bool Player::IsPieceEnabled(int _column, int _row)
-{
-	return mPieces[_column][_row]->GetEnabled();
 }
