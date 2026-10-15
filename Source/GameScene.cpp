@@ -37,8 +37,6 @@ void GameScene::Initialize()
 		this
 		->GetObjectManager()
 		->CreateObject<Player>();
-	mpPlayer
-		->InitPiece();
 
 	auto* stage = new Stage();
 

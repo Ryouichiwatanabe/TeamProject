@@ -33,8 +33,10 @@ void Player::Init()
 {
 	// -- タグ設定 -- //
 	SetTag(Tag::PLAYER);
+
 	mController.Initialize(this);
 
+	// Todo : CreateStage()内で生成 & 初期座標設定
 	if (auto transform = GetModule<Transform>())
 		transform->SetPosition(
 			VGet(
@@ -43,20 +45,18 @@ void Player::Init()
 				0.0f
 			)
 		);
+
+	SetupPieces();
 }
 
 void Player::InitComponent()
 {
-	// -- Module追加 -- //
 	AddModule<Transform>();
 	AddModule<Gravity>();
 }
 
-void Player::InitPiece()
+void Player::SetupPieces()
 {
-	// Todo : 複数Pieceに対応させる
-	
-	// -- piece生成 & 初期処理 -- //
 	for (int row = 0;
 		row < GameConfig::PLAYER_PIECE_SIZE;
 		++row)
@@ -68,59 +68,40 @@ void Player::InitPiece()
 			CreatePiece(column, row);
 		}
 	}
-
-	mPieces[0][0]->SetActive(true);
-	mPieces[1][0]->SetActive(true);
-	mPieces[2][0]->SetActive(true);
-	mPieces[2][1]->SetActive(true);
-	mPieces[2][2]->SetActive(true);
 }
 
 void Player::CreatePiece(int _column, int _row)
 {
+	// -- Pieceの生成 -- //
 	auto playerPiece =
 		Master::mpSceneManager
 		->GetCurrentScene()
 		->GetObjectManager()
 		->CreateObject<PlayerPiece>(this);
-
 	if (playerPiece == nullptr)
 		return;
 
-	mPieces[_row][_column] = playerPiece;
+	mPieces[_column][_row] = playerPiece;
 
+	// -- ローカル座標を取得 & 設定 -- //
 	VECTOR localPosition = VGet(
 		(_column - 1) * GameConfig::CELL_SIZE,
 		(_row - 1) * GameConfig::CELL_SIZE,
 		0.0f
 	);
-
 	playerPiece->SetLocalPosition(localPosition);
 }
 
 void Player::Update(float _deltaTime)
 {
 	// ポーズ中のバックグラウンドの停止
+		// Todo : ここに書かずとも、GameTimeScale的なシステムを作成する
 	if (_deltaTime <= 0.0f)
 	{
 		return;
 	}
-	
-	// -- Playerの変形UIを有効化 -- //
-		// Todo : 場所を変える(Controllerかな..？)
-	if (mpShapeUI != nullptr &&
-		InputManager::GetInstance().GetButtonDown(Button::Shape)
-		)
-	{
-		mpShapeUI->SetEnabled(!mpShapeUI->IsEnabled());
-		mpShapeUI->ApplyPieceActivityToUI();
-	}
 
-	// -- 落下死した場合にリスポーン -- //
-		// Todo : 場所を変える、もしくは関数化
-	auto transform = GetModule<Transform>();
-	if (transform->GetPosition().y >= ScreenConfig::SCREEN_HEIGHT)
-		Respawn();
+	CheackRespawn();	
 
 	mController.Update();
 	GameObject::Update(_deltaTime);
@@ -130,16 +111,6 @@ void Player::Update(float _deltaTime)
 void Player::Draw()
 {
 	GameObject::Draw();
-
-	auto transform = GetModule<Transform>();
-	VECTOR pos = transform->GetPosition();
-	Debug::Print(
-		"Player座標 : (",
-		pos.x,
-		" , ",
-		pos.y,
-		" )"
-	);
 }
 
 void Player::AddCollisionCorrection(VECTOR _correction)
@@ -304,12 +275,15 @@ void Player::Rotation(float _rotateDirection)
 	// 一旦回転させる
 	transform->SetRotation(VAdd(prevRot, VGet(0.0f, 0.0f, rotationRadian)));
 	UpdatePieceRotation();
-
 }
 
-void Player::Respawn()
+void Player::ToggleDeformationUI()
 {
-	GetModule<Transform>()->SetPosition(mvRespawnPos);
+	if (!mpShapeUI)
+		return;
+
+	mpShapeUI->ToggleEnabled();
+	mpShapeUI->ApplyPieceActivityToUI();	// Pieceの有効状態をPieceUIに適用する
 }
 
 void Player::ApplyUISelectionToPlayerPiece()
@@ -336,4 +310,23 @@ void Player::ApplyUISelectionToPlayerPiece()
 			piece->SetActive(pieceUI->IsSelected());
 		}
 	}
+}
+
+void Player::CheackRespawn()
+{
+	auto transform = GetModule<Transform>();
+	if (transform == nullptr)
+		return;
+
+	VECTOR position = transform->GetPosition();
+
+	// 画面下端を超えたらリスポーン
+	if (position.y > ScreenConfig::SCREEN_HEIGHT)
+		Respawn();;
+}
+
+void Player::Respawn()
+{
+	if (auto transform = GetModule<Transform>())
+		transform->SetPosition(mvRespawnPos);
 }

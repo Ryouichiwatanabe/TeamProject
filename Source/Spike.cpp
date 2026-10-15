@@ -57,7 +57,7 @@ void Spike::CheckPlayerCollision()
         }
 
         // Playerをリスポーン位置へ戻す
-        player->Respawn();
+        // player->Respawn();
 
         break;
     }

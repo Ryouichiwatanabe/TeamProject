@@ -30,10 +30,6 @@ private:
 		
         void*  mAddedFontHandle = nullptr; // フォントハンドル
 
-    int mCursorHandle = -1;
-
-    void DrawCursor();
-
     MovingBlock* mpMovingBlock = nullptr;
 
 private:

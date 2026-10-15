@@ -16,6 +16,7 @@ void PlayerController::Update()
 	UpdateMove();
 	UpdateOperationChange();
 	UpdateRotation();
+	UpdatePlayerDeformationUI();
 }
 
 void PlayerController::UpdateMove()
@@ -54,4 +55,10 @@ void PlayerController::UpdateRotation()
 	float rotateDirection = InputManager::GetInstance().GetAxis(Axis::Rotation);
 
 	mpPlayer->Rotation(rotateDirection);
+}
+
+void PlayerController::UpdatePlayerDeformationUI()
+{
+	if (InputManager::GetInstance().GetButtonDown(Button::Shape))
+		mpPlayer->ToggleDeformationUI();
 }
