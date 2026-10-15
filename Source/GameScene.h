@@ -12,6 +12,8 @@
 class Player;
 class Goal;
 class MovingBlock;
+class Stage;
+class CollectibleIconUI;
 
 //class Player_test;
 
@@ -37,6 +39,9 @@ private:
 
     MovingBlock* mpMovingBlock = nullptr;
 
+    Stage* mpStage = nullptr;
+    CollectibleIconUI* mpCollectibleIconUI[3] = {};
+    bool mbIsCollectibleCollected[3] = {};
 private:
     int mnStageNumber = 1;
 
