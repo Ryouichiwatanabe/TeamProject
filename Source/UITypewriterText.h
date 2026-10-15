@@ -38,4 +38,5 @@ private:
     int mFrameInterval = 4;         // 次の文字が出るまでの待機フレーム
     int mFrameTimer = 0;            // タイマー
     bool mIsFinished = false;       // 文字送りが終わったかどうかを示す
+    const int mBite = 2;
 };

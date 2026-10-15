@@ -34,10 +34,10 @@ public:
     float GetCurrentScale() const { return mCurrentScale; }
 
 private:
-    float mNormalScale;
-    float mHoverScale;
-    float mPressScale;
-    float mLerpSpeed;
+    float mNormalScale = 1.0f;
+    float mHoverScale = 1.08f;
+    float mPressScale = 0.94f;
+    float mLerpSpeed = 18.0f;
 
-    float mCurrentScale;
+    float mCurrentScale = 1.0f;
 };

@@ -1,6 +1,12 @@
 #include "Cursor.h"
 #include "DxLib.h"
 
+namespace
+{
+    constexpr int offsetX = -10; // ウィンドウ枠の装飾分、左へ寄せる
+    constexpr int offsetY = -1;  // テキストベースラインの微調整
+}
+
 Cursor::Cursor()
 {
 }
@@ -32,9 +38,6 @@ void Cursor::Draw()
     int mouseY;
 
     GetMousePoint(&mouseX, &mouseY);
-
-    const int offsetX = -10;
-    const int offsetY = -1;
 
     DrawGraph(
         mouseX + offsetX,
