@@ -13,8 +13,6 @@
 
 #include "InputManager.h"
 
-#include "Debug.h"
-
 #include "GameConfig.h"
 
 void FakePlayer::Init()
@@ -51,16 +49,6 @@ void FakePlayer::Update(float _deltaTime)
 void FakePlayer::Draw()
 {
 	GameObject::Draw();
-
-	Debug::Print(
-		"落下速度 : ",
-		GetModule<Gravity>()->GetVelocityY()
-	);
-
-	Debug::Print(
-		"接地しているかどうか : ",
-		GetModule<Gravity>()->IsGrounded()
-	);
 }
 
 void FakePlayer::Move(VECTOR _direction)

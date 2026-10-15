@@ -16,8 +16,6 @@ enum class Button {
 
 	Shape,
 
-	Pause,
-
 	OperationChange_toPlayer,	// (デバック用)
 	OperationChange_toFakePlayer,	// (デバック用)
 

@@ -41,25 +41,12 @@ void PlayerShapeUI::Init()
 	mpConfirmUI->LoadUIGraph("Resource/Obj/test_field.png");
 	mpConfirmUI->SetLayer(2);
 	mpConfirmUI
-		->GetTransform()
-		.SetScale(
-			VGet(2.0f,
-				1.0f,
-				1.0f
-			)
-		);
-	mpConfirmUI
 		->GetTransform().SetPosition(
 			VGet(
-				-180.0f,
-				300.0f,
+				-100.0f,
+				200.0f,
 				0.0f
 			)
-		);
-	mpConfirmUI
-		->GetText()
-		.SetText(
-			"OK"
 		);
 
 	// -- 親子の設定 -- //
@@ -75,25 +62,12 @@ void PlayerShapeUI::Init()
 	mpBackUI->LoadUIGraph("Resource/Obj/test_field.png");
 	mpBackUI->SetLayer(2);
 	mpBackUI
-		->GetTransform()
-		.SetScale(
-			VGet(2.0f,
-				1.0f,
-				1.0f
-			)
-		);
-	mpBackUI
 		->GetTransform().SetPosition(
 			VGet(
-				180.0f,
-				300.0f,
+				100.0f,
+				200.0f,
 				0.0f
 			)
-		);
-	mpBackUI
-		->GetText()
-		.SetText(
-			"Back"
 		);
 
 	// -- 親子の設定 -- //
@@ -143,8 +117,6 @@ void PlayerShapeUI::CreatePieceUI(int _column, int _row)
 
 void PlayerShapeUI::Update()
 {
-	UI::Update();
-
 	if (mpConfirmUI->GetButton().IsClicked())
 	{
 		mpPlayer->ApplyShapeFromUI();

@@ -12,10 +12,10 @@ Collectible::Collectible(const std::string& _filename,int _itemIndex)
 
 void Collectible::Init()
 {
-    // ï¿½æ“¾ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Ìƒ^ï¿½Oï¿½ï¿½İ’ï¿½
+    // æ“¾ƒAƒCƒeƒ€‚Ìƒ^ƒO‚ğİ’è
     SetTag(Tag::COLLECTIBLE);
 
-    // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Æ‚ÌÕ“Ë‚ï¿½ï¿½ï¿½ï¿½mï¿½ï¿½ï¿½ï¿½
+    // ƒvƒŒƒCƒ„[‚Æ‚ÌÕ“Ë‚ğŒŸ’m‚·‚é
     auto collider = GetModule<Collider>();
     if (collider != nullptr)
     {
@@ -25,14 +25,14 @@ void Collectible::Init()
 
 void Collectible::InitComponent()
 {
-    // ï¿½ï¿½ï¿½Wï¿½Eï¿½ï¿½]ï¿½Eï¿½gï¿½å—¦
+    // À•WE‰ñ“]EŠg‘å—¦
     AddModule<Transform>();
 
-    // ï¿½æ“¾ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Ì‰æ‘œ
-    // ï¿½ï¿½ï¿½æ‘œï¿½pï¿½Xï¿½Íï¿½ï¿½Û‚Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½í‚¹ï¿½Ä•ÏXï¿½ï¿½ï¿½ï¿½
-    AddModule<Graphic>("Resource/Cursor2.png");
+    // æ“¾ƒAƒCƒeƒ€‚Ì‰æ‘œ
+    // ¦‰æ‘œƒpƒX‚ÍÀÛ‚Ìƒtƒ@ƒCƒ‹–¼‚É‡‚í‚¹‚Ä•ÏX‚·‚é
+    AddModule<Graphic>(mFilename);
 
-    // ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½
+    // “–‚½‚è”»’è
     AddModule<Collider>();
 
     auto collider = GetModule<Collider>();
@@ -46,13 +46,13 @@ void Collectible::InitComponent()
 
 void Collectible::Update(float _deltaTime)
 {
-    // ï¿½|ï¿½[ï¿½Yï¿½ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
+    // ƒ|[ƒY’†‚Íˆ—‚µ‚È‚¢
     if (_deltaTime <= 0.0f)
     {
         return;
     }
 
-    // ï¿½æ“¾ï¿½ï¿½ï¿½oï¿½ï¿½
+    // æ“¾‰‰o’†
     if (mbIsCollectEffect)
     {
         mCollectTime += _deltaTime;
@@ -65,7 +65,7 @@ void Collectible::Update(float _deltaTime)
 
             float scale = 1.0f;
 
-            // ï¿½Oï¿½ï¿½ï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½È‚ï¿½
+            // ‘O”¼F­‚µ‘å‚«‚­‚È‚é
             if (progress < 0.35f)
             {
                 float effectProgress =
@@ -73,7 +73,7 @@ void Collectible::Update(float _deltaTime)
 
                 scale = 1.0f + effectProgress * 0.15f;
             }
-            // ï¿½ã”¼ï¿½Fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½
+            // Œã”¼F¬‚³‚­‚È‚Á‚ÄÁ‚¦‚é
             else
             {
                 float effectProgress =
@@ -87,7 +87,7 @@ void Collectible::Update(float _deltaTime)
             );
         }
 
-        // ï¿½ï¿½ï¿½oï¿½Iï¿½ï¿½
+        // ‰‰oI—¹
         if (mCollectTime >= mCollectDuration)
         {
             mbIsCollected = true;
@@ -97,13 +97,13 @@ void Collectible::Update(float _deltaTime)
         return;
     }
 
-    // ï¿½æ“¾ï¿½Ï‚İ‚È‚ç‰½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½
+    // æ“¾Ï‚İ‚È‚ç‰½‚à‚µ‚È‚¢
     if (mbIsCollected)
     {
         return;
     }
 
-    // GameObjectï¿½ÌXï¿½V
+    // GameObject‚ÌXV
     GameObject::Update(_deltaTime);
 
     auto collider = GetModule<Collider>();
@@ -112,7 +112,7 @@ void Collectible::Update(float _deltaTime)
         return;
     }
 
-    // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÉGï¿½ê‚½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½oï¿½Jï¿½n
+    // ƒvƒŒƒCƒ„[‚ÉG‚ê‚½‚çæ“¾‰‰oŠJn
     if (collider->IsColliding(Tag::PLAYER_CELL))
     {
         mbIsPickedUp = true;
@@ -122,7 +122,7 @@ void Collectible::Update(float _deltaTime)
         return;
     }
 
-    // ï¿½Aï¿½Cï¿½eï¿½ï¿½ï¿½Ìã‰ºï¿½Ú“ï¿½
+    // ƒAƒCƒeƒ€‚Ìã‰ºˆÚ“®
     mMoveTime += _deltaTime;
 
     auto transform = GetModule<Transform>();
@@ -130,7 +130,7 @@ void Collectible::Update(float _deltaTime)
     {
         VECTOR position = transform->GetPosition();
 
-        // ï¿½Åï¿½ï¿½ÌˆÊ’uï¿½ï¿½ï¿½ã‰ºï¿½Ú“ï¿½ï¿½ÌŠî€ï¿½Ê’uï¿½Æ‚ï¿½ï¿½Ä•Û‘ï¿½
+        // Å‰‚ÌˆÊ’u‚ğã‰ºˆÚ“®‚ÌŠî€ˆÊ’u‚Æ‚µ‚Ä•Û‘¶
         if (!mbIsBasePositionSet)
         {
             mBaseY = position.y;
@@ -146,7 +146,7 @@ void Collectible::Update(float _deltaTime)
 
 void Collectible::Draw()
 {
-    // ï¿½æ“¾ï¿½Ï‚İ‚È‚ï¿½`ï¿½æ‚µï¿½È‚ï¿½
+    // æ“¾Ï‚İ‚È‚ç•`‰æ‚µ‚È‚¢
     if (mbIsCollected)
     {
         return;

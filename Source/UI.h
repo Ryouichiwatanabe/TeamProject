@@ -5,7 +5,6 @@
 #include "UIGraphic.h"
 #include "UIText.h"
 #include "UIButton.h"
-#include "UITypewriterText.h"
 
 #include <vector>
 #include <string>	// filenameの指定用
@@ -20,7 +19,7 @@ public:
 
 	virtual void Init() {};		// 固有の初期化処理
 
-	virtual void Update();
+	virtual void Update() {};		// 固有の更新処理
 	virtual void Draw();
 
 	void LoadUIGraph(std::string filename);
@@ -41,7 +40,6 @@ public:
 	UIGraphic& GetGraphic() { return mGraphic; }
 	UIText& GetText() { return mText; }
 	UIButton& GetButton() { return mButton; }
-	UITypewriterText& GetTypewriterText() { return mTypeWriterText; }
 
 	// -- Managerの取得 -- //
 	UIManager* GetUIManager() { return mpUIManager; }
@@ -60,7 +58,6 @@ private:
 	UIGraphic mGraphic;
 	UIText mText;
 	UIButton mButton;
-	UITypewriterText mTypeWriterText;
 
 	bool mbIsEnabled = false;
 

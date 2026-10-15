@@ -38,7 +38,7 @@ void GameObject::Finalize() {
 void GameObject::Update(float _deltaTime) {
 	for (auto& component : mModules) {
 		if (component->IsEnabled()) {
-			component->Update(_deltaTime);
+			component->Update();
 		}
 	}
 

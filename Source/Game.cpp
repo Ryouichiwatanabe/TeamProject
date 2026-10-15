@@ -1,4 +1,4 @@
-ï»¿#include "Game.h"
+#include "Game.h"
 #include "ScreenConfig.h"
 #include "InputManager.h"
 #include "Master.h"
@@ -8,13 +8,19 @@
 
 using namespace std::chrono_literals;
 
+SceneManager* Master::mpSceneManager{ nullptr };
+ResourceManager* Master::mpResource{ nullptr };
+FontManager* Master::mpFontManager{ nullptr };
+
 Game::Game()
 {
+    // ‚±‚±‚ª¸”s(false)‚ğ•Ô‚·‚ÆAƒEƒBƒ“ƒhƒE‚ªŠJ‚©‚¸‚ÉƒAƒvƒŠ‚ª‘¦I—¹‚·‚é
     if (!InitializeDxLib()) {
         return;
     }
 
-    // å„ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿å—ã‘æ¸¡ã—
+    // Šeƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^ó‚¯“n‚µB
+    // ‚±‚Ì‡”Ô‚ğ•Ï‚¦‚é‚ÆAQÆæ‚ª‘¶İ‚µ‚È‚¢ó‘Ô‚ÅƒAƒNƒZƒX‚µ‚ÄƒNƒ‰ƒbƒVƒ…‚·‚éŒ´ˆö‚É‚È‚é
     Master::mpResource = &m_resourceManager;
     Master::mpFontManager = &m_fontManager;
     Master::mpSceneManager = &m_sceneManager;
@@ -23,7 +29,7 @@ Game::Game()
     InputManager::GetInstance().InitializeAxis();
     m_cursor.Initialize();
 
-    // æœ€åˆã®ã‚·ãƒ¼ãƒ³ã‚’èª­ã¿è¾¼ã‚€
+    // Å‰‚É“Ç‚İ‚ŞƒV[ƒ“iƒ^ƒCƒgƒ‹EƒQ[ƒ€“™j‚ğØ‚è‘Ö‚¦‚é‚È‚çA‚±‚Ì Initialize “à‚ğ•ÒW‚·‚é
     m_sceneManager.Initialize();
 
     m_initSuccess = true;
@@ -34,12 +40,13 @@ Game::Game()
 Game::~Game()
 {
     if (m_initSuccess) {
-        m_goalEffect.Clear();
-        m_clickEffect.clear();
+        // ¶¬‚Æu‹t‡v‚Å”jŠü‚µ‚Ä‚¢‚éB
+        // —á‚¦‚Îæ‚É Resource ‚ğ”jŠü‚µ‚Ä Scene ‚ğŒã‰ñ‚µ‚É‚·‚é‚ÆA‰æ‘œ‰ğ•ú‚ÉƒNƒ‰ƒbƒVƒ…‚·‚é
         m_cursor.Finalize();
         m_sceneManager.Finalize();
         m_fontManager.Clear();
 
+        // ‚±‚±‚ğÁ‚·‚ÆAI—¹’¼‘O‚É‘¼ƒIƒuƒWƒFƒNƒg‚©‚çƒAƒNƒZƒX‚³‚ê‚½Û‚Éu•s³ƒƒ‚ƒŠQÆv‚Å—‚¿‚é
         Master::mpSceneManager = nullptr;
         Master::mpFontManager = nullptr;
         Master::mpResource = nullptr;
@@ -50,27 +57,49 @@ Game::~Game()
 
 bool Game::InitializeDxLib()
 {
+    // TRUE  ¨ ƒEƒBƒ“ƒhƒEƒ‚[ƒhiƒfƒoƒbƒO‚ª‚µ‚â‚·‚¢j
+    // FALSE ¨ ƒtƒ‹ƒXƒNƒŠ[ƒ“ƒ‚[ƒhi»•i”Å‚â–v“üŠ´d‹‚Ìj
     ChangeWindowMode(TRUE);
 
+    // y‰ğ‘œ“xEF[“x‚Ì•ÏXz
+    // 32 ‚ğ 16 ‚É‚·‚é‚Æ’áƒXƒyƒbƒNŒü‚¯‚É‚È‚é‚ªA”­F‚âƒOƒ‰ƒf[ƒVƒ‡ƒ“‚ª—ò‰»‚·‚é
+    // SCREEN_WIDTH / HEIGHT ‚ğ•Ï‚¦‚é‚ÆƒEƒBƒ“ƒhƒE‘S‘Ì‚Ì•\¦ƒTƒCƒY‚ª•Ï‚í‚é
     SetGraphMode(
         static_cast<int>(ScreenConfig::SCREEN_WIDTH),
         static_cast<int>(ScreenConfig::SCREEN_HEIGHT),
         32
     );
 
+    // ƒEƒBƒ“ƒhƒEã•”‚Ìƒo[‚É•\¦‚³‚ê‚éƒ^ƒCƒgƒ‹•¶š
+    SetMainWindowText("Game");
+
+    // TRUE  ¨ 60Hz‚â144Hz‚È‚Ç‚Ìƒ‚ƒjƒ^[•`‰æ“¯Šú‚ğ‘Ò‚Âi‰æ–Ê‚Ìƒ`ƒ‰‚Â‚«EƒYƒŒ‚ğ–h‚®j
+    // FALSE ¨ V-Sync‚ğ‘Ò‚½‚¸‚Éƒtƒ‹ƒpƒ[‚Å‰ñ‚·iFPS‘ª’è‚â“ü—Í’x‰„‚ğ‹ÉŒÀ‚Ü‚ÅŒ¸‚ç‚µ‚½‚¢j
     SetWaitVSyncFlag(TRUE);
 
     if (DxLib_Init() == -1) {
         return false;
     }
 
+    // DX_SCREEN_BACK ¨ ƒ_ƒuƒ‹ƒoƒbƒtƒ@ƒŠƒ“ƒO—LŒøi‰æ–Ê‚Ìƒ`ƒ‰‚Â‚«–h~j
+    // DX_SCREEN_FRONT‚É‚·‚é‚Æ•`‰æ“r’†‚Ì‰æ–Ê‚ª‚»‚Ì‚Ü‚Ü‰f‚Á‚ÄŒƒ‚µ‚­“_–Å‚·‚é
     SetDrawScreen(DX_SCREEN_BACK);
 
+    // 3Dƒ‚ƒfƒ‹‚ğ•`‰æ‚·‚éÛ‚Ì‰œs‚«”»’èiZƒoƒbƒtƒ@j
+    // ‚Ç‚¿‚ç‚©‚ğ FALSE ‚É‚·‚é‚ÆA‰œ‚É‚ ‚éƒLƒƒƒ‰ƒNƒ^[‚ªè‘O‚Ì•Ç‚ğ“Ë‚«”²‚¯‚Ä•\¦‚³‚ê‚Ä‚µ‚Ü‚¤
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
+
+    // FALSE ‚É‚·‚é‚Æ‰A‰e‚ÌŒvZ‚ª‚È‚­‚È‚èA3Dƒ‚ƒfƒ‹‘S‘Ì‚ª•½’R‚Å’PF‚ÌŒ©‚½–Ú‚É‚È‚é
     SetUseLighting(TRUE);
 
+    // y•W€ƒ‰ƒCƒg‚ÌFw’èF(Ô, —Î, Â, ƒAƒ‹ƒtƒ@)z
+    // RGB‚Ì”’l‚ğ (1.0f, 1.0f, 1.0f) ‚É‚·‚é‚Æ”’‚¢©‘RŒõ‚É‚È‚éiŒ»İ‚Í‚â‚â‰·‚©‚İ‚Ì‚ ‚é‰©FŒnj
     SetLightDifColor(GetColorF(1.0f, 0.8f, 0.4f, 0.0f));
+
+    // yŠÂ‹«Œõi‰e‚É‚È‚éˆÃ‚ª‚è‚Ì–¾‚é‚³jz
+    // ”’l‚ğ‰º‚°‚Ä (0.1f, 0.1f, 0.1f) “™‚É‚·‚é‚Æ–¾ˆÃ·‚ª‹­‚­‚È‚èAƒzƒ‰[ƒQ[ƒ€‚Ì‚æ‚¤‚ÈˆÃ‚¢ŠG‚É‚È‚é
+    // Œ»İ‚Ì 3.2f ‚Í‚©‚È‚è–¾‚é‚ß‚Ìİ’è
     SetLightAmbColor(GetColorF(3.2f, 3.2f, 3.2f, 0.0f));
 
     return true;
@@ -84,40 +113,45 @@ void Game::Run()
 
     while (m_isRunning && ProcessMessage() == 0) {
 
+        // yI—¹ƒL[‚Ì•ÏXz
+        // KEY_INPUT_ESCAPE ‚ğ KEY_INPUT_Q ‚É•Ï‚¦‚ê‚ÎuQƒL[‚ÅI—¹v‚É‚È‚é
+        // ŠJ”­’†‚ÉŒë”šI—¹‚ğ–h‚¬‚½‚¢ê‡‚ÍA‚±‚Ì if •¶‚²‚ÆƒRƒƒ“ƒgƒAƒEƒg‚·‚ê‚Î–³Œø‰»‚Å‚«‚é
         if (CheckHitKey(KEY_INPUT_ESCAPE) != 0) {
             m_isRunning = false;
             break;
         }
 
-        // ãƒã‚¦ã‚¹æ›´æ–°ã¨ã‚¯ãƒªãƒƒã‚¯åˆ¤å®š
-        m_mouse.Update();
-        if (m_mouse.IsDown(MOUSE_INPUT_LEFT)) {
-            const TofuGame::Vector2 clickPos{
-                static_cast<float>(m_mouse.GetX()),
-                static_cast<float>(m_mouse.GetY())
-            };
-            m_clickEffect.spawn(clickPos);
-        }
+        InputManager::GetInstance().Update();
 
         const auto currentTime = std::chrono::steady_clock::now();
         std::chrono::duration<double> frameTime = currentTime - m_lastFrameTime;
         m_lastFrameTime = currentTime;
 
+        // yƒXƒpƒCƒN‘Îô‚ÌãŒÀ’lz
+        // 0.2siÅ‘å0.2•b•ª‚Ü‚Å’~Ïj‚ğİ’è’†B
+        // ‚±‚±‚ğ 0.05s ‚É‹·‚ß‚é‚ÆAd‚¢ˆ—‚ª‹N‚«‚½‚ÉƒQ[ƒ€“àŠÔ‚ªƒXƒLƒbƒv‚³‚ê‚â‚·‚­‚È‚é
+        // ‹t‚É 1.0s ‚È‚Ç‚ÉL‚°‚é‚ÆAƒJƒN‚Â‚¢‚½Œã‚Ì•œ‹Œ‚ÉƒLƒƒƒ‰ƒNƒ^[‚ªˆêu–ÒƒXƒs[ƒh‚Å“®‚­
         frameTime = std::clamp(frameTime, 0.0s, 0.2s);
         m_accumulator += frameTime;
 
         int stepCount{ 0 };
+
+        // yXV•p“x‚Ì•ÏXz
+        // FIXED_TIMESTEP ‚ğ (1.0s / 120.0) ‚É•Ï‚¦‚é‚Æ120FPSŠî€‚Ì¸–§‚È•¨—ŒvZ‚É‚È‚é
+        // (1.0s / 30.0) ‚É‚·‚é‚ÆŒvZ•‰‰×‚Í”¼Œ¸‚·‚é‚ªA‚‘¬‚Å“®‚­’e‚âƒLƒƒƒ‰‚ª•Ç‚ğ‚·‚è”²‚¯‚â‚·‚­‚È‚é
         const std::chrono::duration<double> fixedStep = FIXED_TIMESTEP;
 
+        // y–³ŒÀƒ‹[ƒvEƒtƒŠ[ƒY–h~ƒK[ƒhz
+        // MAX_SIMULATION_STEPSi—á: 5‰ñ‚È‚Çj‚ÌãŒÀ‚ğİ‚¯‚Ä‚¢‚éB
+        // ‚±‚±‚ğ stepCount < 100 ‚É‘‚â‚·‚ÆAˆ——‚¿‚É–³—‚É’Ç‚¢‚Â‚±‚¤‚Æ‚µ‚ÄŠ®‘S‚ÉƒQ[ƒ€‚ªŒÅ‚Ü‚éiSpiral of Deathj
         while (m_accumulator >= fixedStep && stepCount < MAX_SIMULATION_STEPS) {
-            InputManager::GetInstance().Update();
             UpdateLogic(fixedStep.count());
             m_accumulator -= fixedStep;
             ++stepCount;
         }
 
         Draw();
-        ScreenFlip();
+        ScreenFlip(); // ‚±‚ê‚ğŒÄ‚Î‚È‚¢‚Æ— ‰æ–Ê‚É•`‚¢‚½“à—e‚ªƒ‚ƒjƒ^[‚É”½‰f‚³‚ê‚È‚¢
     }
 }
 
@@ -125,38 +159,19 @@ void Game::UpdateLogic(double deltaTime)
 {
     m_cursor.Update();
 
-    // ã‚·ãƒ¼ãƒ³æ›´æ–°
+    // deltaTime ‚É 2.0f ‚ğŠ|‚¯‚é‚ÆuƒQ[ƒ€‘S‘Ì‚ª2”{‘¬v‚É‚È‚éi”{‘¬ƒfƒoƒbƒO‚È‚Ç‚É—˜—p‰Â”\j
+    // 0.5f ‚ğŠ|‚¯‚é‚ÆƒXƒ[ƒ‚[ƒVƒ‡ƒ“‚É‚È‚é
     m_sceneManager.Update(static_cast<float>(deltaTime));
-
-    // å„ç¨®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆæ›´æ–°
-    m_clickEffect.update(static_cast<float>(deltaTime));
-    m_goalEffect.Update();
 }
 
 void Game::Draw()
 {
+    // ‚±‚ê‚ğÁ‚·‚ÆA‰ß‹ƒtƒŒ[ƒ€‚Ìc‘œ‚ª‚·‚×‚Ä“h‚èd‚Ë‚ç‚ê‚Ä‰æ–Ê‚ª‚®‚¿‚á‚®‚¿‚á‚É‚È‚é
     ClearDrawScreen();
 
-    // 1. 3Dã‚·ãƒ¼ãƒ³æç”»ï¼ˆ3Dç”¨ã®æ·±åº¦ãƒ»ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°è¨­å®šï¼‰
-    SetUseZBufferFlag(TRUE);
-    SetWriteZBufferFlag(TRUE);
-    SetUseLighting(TRUE);
-
+    // y•`‰æ‡˜‚Ì•ÏXz
+    // •`‰æ‡‚ğ‹t‚É‚µ‚Ä m_cursor.Draw() ‚ğæ‚É‘‚­‚ÆA
+    // ”wŒi‚â3Dƒ‚ƒfƒ‹AUI‚ÌŒã‚ë‚ÉƒJ[ƒ\ƒ‹‚ª‰B‚ê‚ÄŒ©‚¦‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤
     m_sceneManager.Draw();
-
-    // 2. 2Dã‚¨ãƒ•ã‚§ã‚¯ãƒˆæç”»ï¼ˆãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ãƒ»Zãƒ†ã‚¹ãƒˆã‚’OFFã«ã—ã¦æœ€å‰é¢ã«ã‚¯ãƒªã‚¢æç”»ï¼‰
-    SetUseZBufferFlag(FALSE);
-    SetWriteZBufferFlag(FALSE);
-    SetUseLighting(FALSE);
-
-    m_clickEffect.draw();
-    m_goalEffect.Draw();
-
-    // 3. æœ€å‰é¢ã‚«ãƒ¼ã‚½ãƒ«
-    m_cursor.Draw();
-
-    // æç”»ã‚¹ãƒ†ãƒ¼ãƒˆã‚’3Dç”¨ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆçŠ¶æ…‹ã«å¾©å¸°
-    SetUseZBufferFlag(TRUE);
-    SetWriteZBufferFlag(TRUE);
-    SetUseLighting(TRUE);
+    m_cursor.Draw(); // Å‘O–Ê‚É•\¦‚µ‚½‚¢‚à‚Ì‚ğˆê”ÔÅŒã‚É•`‚­
 }

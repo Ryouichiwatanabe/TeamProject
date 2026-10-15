@@ -36,39 +36,32 @@ void Goal::Draw()
 bool Goal::IsPlayerTouching()
 {
     auto collider = GetModule<Collider>();
-    if (!collider)
+
+    if (collider == nullptr)
         return false;
 
-    auto collisions = collider->GetCollisions(Tag::PLAYER_CELL);
-
-    for (auto collision : collisions)
-    {
-        if (collision)
-            return true;
-    }
-
-    return false;
+    return collider->IsColliding(Tag::PLAYER_CELL);
 }
 
-//bool Goal::IsShapeMatched(Player* _player) const
-//{
-//    if (_player == nullptr)
-//        return false;
-//
-//    for (int y = 0; y < 3; y++)
-//    {
-//        for (int x = 0; x < 3; x++)
-//        {
-//            bool isPieceEnabled =
-//                _player->IsPieceEnabled(x, y);
-//
-//            if (isPieceEnabled != mShape[y][x])
-//                return false;
-//        }
-//    }
-//
-//    return true;
-//}
+bool Goal::IsShapeMatched(Player* _player) const
+{
+    if (_player == nullptr)
+        return false;
+
+    for (int y = 0; y < 3; y++)
+    {
+        for (int x = 0; x < 3; x++)
+        {
+            bool isPieceEnabled =
+                _player->IsPieceEnabled(x, y);
+
+            if (isPieceEnabled != mShape[y][x])
+                return false;
+        }
+    }
+
+    return true;
+}
 
 bool Goal::IsWithinDistance(Player* _player)
 {
@@ -94,7 +87,7 @@ bool Goal::IsWithinDistance(Player* _player)
     float distance =
         VSize(VSub(playerPos, goalPos));
 
-    const float clearDistance = 100.0f;
+    const float clearDistance = 50.0f;
 
     return distance <= clearDistance;
 }

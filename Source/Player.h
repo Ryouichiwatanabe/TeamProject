@@ -49,12 +49,9 @@ private:
 	// -- Player座標補正後にPieceの座標を更新 -- //
 	void UpdatePiecePosition();
 	void UpdatePieceRotation();
-
-	// -- Pieceの接地判定をPlayerに適用 -- //
-	void OnPieceGrounded();
 protected:
 	const char* GetModelFilename() const override {
-		return "Resource/Player3.png";
+		return "Resource/Player.png";
 	}
 
 private:
@@ -69,6 +66,4 @@ private:
 	float mfSpeed = 10.0f;		// 移動スピード
 	float mfAngle = 0.0f;		// 回転の角度(-180 ~ 180)
 	float mfRotationPower = 5.0f;	// 回転力(単位は度数)
-
-	bool mbIsPinched = false; // 挟まれているかフラグ
 };

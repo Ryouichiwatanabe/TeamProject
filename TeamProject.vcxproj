@@ -22,7 +22,6 @@
     <ClCompile Include="Source\Collectible.cpp" />
     <ClCompile Include="Source\CollectibleIconUI.cpp" />
     <ClCompile Include="Source\CollectibleUI.cpp" />
-    <ClCompile Include="Source\ClickEffect.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
     <ClCompile Include="Source\CsvLoader.cpp" />
@@ -37,13 +36,11 @@
     <ClCompile Include="Source\GamePad.cpp" />
     <ClCompile Include="Source\GameScene.cpp" />
     <ClCompile Include="Source\Goal.cpp" />
-    <ClCompile Include="Source\GoalEffect.cpp" />
     <ClCompile Include="Source\Graphic.cpp" />
     <ClCompile Include="Source\Gravity.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\Master.cpp" />
     <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
@@ -66,17 +63,14 @@
     <ClCompile Include="Source\UI.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
     <ClCompile Include="Source\UIGraphic.cpp" />
-    <ClCompile Include="Source\UIHoverScaler.cpp" />
     <ClCompile Include="Source\UIManager.cpp" />
     <ClCompile Include="Source\UIText.cpp" />
     <ClCompile Include="Source\UITransform.cpp" />
-    <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Collectible.h" />
     <ClInclude Include="Source\CollectibleIconUI.h" />
     <ClInclude Include="Source\CollectibleUI.h" />
-    <ClInclude Include="Source\ClickEffect.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
     <ClInclude Include="Source\CsvLoader.h" />
@@ -94,13 +88,11 @@
     <ClInclude Include="Source\GamePad.h" />
     <ClInclude Include="Source\GameScene.h" />
     <ClInclude Include="Source\Goal.h" />
-    <ClInclude Include="Source\GoalEffect.h" />
     <ClInclude Include="Source\Graphic.h" />
     <ClInclude Include="Source\Gravity.h" />
     <ClInclude Include="Source\InputManager.h" />
     <ClInclude Include="Source\Keyboard.h" />
     <ClInclude Include="Source\Master.h" />
-    <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\Mouse.h" />
     <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ObjectManager.h" />
@@ -121,11 +113,10 @@
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TextRenderer.h" />
     <ClInclude Include="Source\TitleScene.h" />
-    <ClInclude Include="Source\UITypewriterText.h" />
+    <ClInclude Include="Source\TypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />
-    <ClInclude Include="Source\UIHoverScaler.h" />
     <ClInclude Include="Source\UILabel.h" />
     <ClInclude Include="Source\UIManager.h" />
     <ClInclude Include="Source\UIText.h" />

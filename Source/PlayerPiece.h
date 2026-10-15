@@ -31,7 +31,7 @@ public:
 protected:
 	const char* GetModelFilename() const override
 	{
-		return "Resource/Player_test.png";
+		return "Resource/Player.png";
 	}
 private:
 	Player* mpPlayer = nullptr;	// ハブとなるPlayerのポインタ

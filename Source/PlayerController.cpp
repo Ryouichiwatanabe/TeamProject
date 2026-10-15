@@ -1,4 +1,4 @@
-﻿#include "PlayerController.h"
+#include "PlayerController.h"
 
 #include "Player.h"
 
@@ -20,26 +20,16 @@ void PlayerController::Update()
 
 void PlayerController::UpdateMove()
 {
-	//// -- 入力値を取得 -- //
-	//VECTOR inputDirection = VGet(0.0f, 0.0f, 0.0f);
+	// -- 入力値を取得 -- //
+	VECTOR inputDirection = VGet(0.0f, 0.0f, 0.0f);
 
-	//inputDirection.x += InputManager::GetInstance().GetAxis(Axis::MoveX);
-	//inputDirection.y += InputManager::GetInstance().GetAxis(Axis::MoveY);
+	inputDirection.x += InputManager::GetInstance().GetAxis(Axis::MoveX);
+	inputDirection.y += InputManager::GetInstance().GetAxis(Axis::MoveY);
 
-	//if (VSize(inputDirection) == 0.0f)
-	//	return;
+	if (VSize(inputDirection) == 0.0f)
+		return;
 
-	//// -- 入力(移動方向)をFakePlayerに渡す -- //
-	//mpPlayer->Move(inputDirection);
-
-	float rotateDirection = InputManager::GetInstance().GetAxis(Axis::Rotation);
-
-	VECTOR inputDirection = VGet(
-		rotateDirection,
-		std::abs(rotateDirection / 2.0f),
-		0.0f
-	);
-
+	// -- 入力(移動方向)をFakePlayerに渡す -- //
 	mpPlayer->Move(inputDirection);
 }
 
