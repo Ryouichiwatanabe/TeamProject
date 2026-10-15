@@ -9,18 +9,18 @@ void Goal::Init()
 {
     SetTag(Tag::BLOCK);
 
-    /*auto collider = GetModule<Collider>();
+    auto collider = GetModule<Collider>();
     if (collider != nullptr)
     {
         collider->AddCollisionTag(Tag::PLAYER_CELL);
-    }*/
+    }
 }
 
 void Goal::InitComponent()
 {
     AddModule<Transform>();
     AddModule<Graphic>(GetModelFilename());
-    //AddModule<Collider>();
+    AddModule<Collider>();
 }
 
 void Goal::Update(float _deltaTime)
