@@ -15,32 +15,39 @@ void Goal::Init()
 bool Goal::IsPlayerTouching()
 {
     auto collider = GetModule<Collider>();
-
-    if (collider == nullptr)
+    if (!collider)
         return false;
 
-    return collider->IsColliding(Tag::PLAYER_CELL);
-}
+    auto collisions = collider->GetCollisions(Tag::PLAYER_CELL);
 
-bool Goal::IsShapeMatched(Player* _player) const
-{
-    if (_player == nullptr)
-        return false;
-
-    for (int y = 0; y < 3; y++)
+    for (auto collision : collisions)
     {
-        for (int x = 0; x < 3; x++)
-        {
-            bool isPieceEnabled =
-                _player->IsPieceEnabled(x, y);
-
-            if (isPieceEnabled != mShape[y][x])
-                return false;
-        }
+        if (collision)
+            return true;
     }
 
-    return true;
+    return false;
 }
+
+//bool Goal::IsShapeMatched(Player* _player) const
+//{
+//    if (_player == nullptr)
+//        return false;
+//
+//    for (int y = 0; y < 3; y++)
+//    {
+//        for (int x = 0; x < 3; x++)
+//        {
+//            bool isPieceEnabled =
+//                _player->IsPieceEnabled(x, y);
+//
+//            if (isPieceEnabled != mShape[y][x])
+//                return false;
+//        }
+//    }
+//
+//    return true;
+//}
 
 bool Goal::IsWithinDistance(Player* _player)
 {

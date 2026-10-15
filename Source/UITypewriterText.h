@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 #include <mbstring.h>
 #include "DxLib.h"
@@ -20,14 +20,10 @@ public:
         mIsFinished = false;
     }
 
-    // ‘S•¶•\¦‚ÖƒXƒLƒbƒviƒL[“ü—Í—pj
-    void Skip() 
-    {
-        mVisibleByteCount = mFullText.size();
-        mIsFinished = true;
-    }
+    // å…¨æ–‡è¡¨ç¤ºã¸ã‚¹ã‚­ãƒƒãƒ—ï¼ˆã‚­ãƒ¼å…¥åŠ›æ™‚ç”¨ï¼‰
+    void Skip();
 
-    std::string GetVisibleText();   // •`‰æ‚·‚é•ª‚Ì•¶š—ñ‚ğ•Ô‚·
+    std::string GetVisibleText();   // æç”»ã™ã‚‹åˆ†ã®æ–‡å­—åˆ—ã‚’è¿”ã™
 
     void SetFrameInterval(int _interval) { mFrameInterval = _interval; }
 
@@ -36,10 +32,10 @@ public:
 private:
     UI* mpUI = nullptr;
 
-    std::string mFullText;          // •`‰æ‚·‚é‘S‚Ä‚Ì•¶š—ñ
+    // std::string mFullText;          // æç”»ã™ã‚‹å…¨ã¦ã®æ–‡å­—åˆ—
 
-    size_t mVisibleByteCount = 0;   // •\¦‘ÎÛ‚ÌƒoƒCƒg”
-    int mFrameInterval = 4;         // Ÿ‚Ì•¶š‚ªo‚é‚Ü‚Å‚Ì‘Ò‹@ƒtƒŒ[ƒ€
-    int mFrameTimer = 0;            // ƒ^ƒCƒ}[
-    bool mIsFinished = false;       // •¶š‘—‚è‚ªI‚í‚Á‚½‚©‚Ç‚¤‚©‚ğ¦‚·
+    size_t mVisibleByteCount = 0;   // è¡¨ç¤ºå¯¾è±¡ã®ãƒã‚¤ãƒˆæ•°
+    int mFrameInterval = 4;         // æ¬¡ã®æ–‡å­—ãŒå‡ºã‚‹ã¾ã§ã®å¾…æ©Ÿãƒ•ãƒ¬ãƒ¼ãƒ 
+    int mFrameTimer = 0;            // ã‚¿ã‚¤ãƒãƒ¼
+    bool mIsFinished = false;       // æ–‡å­—é€ã‚ŠãŒçµ‚ã‚ã£ãŸã‹ã©ã†ã‹ã‚’ç¤ºã™
 };

@@ -66,8 +66,8 @@ void PlayerPiece::SetEnabled(bool _enabled)
 	if (auto collider = GetModule<Collider>())
 		collider->SetEnabled(_enabled);
 
-	/*if (auto gravity = GetModule<Gravity>())
-		gravity->SetEnabled(_enabled);*/
+	if (auto gravity = GetModule<Gravity>())
+		gravity->SetEnabled(_enabled);
 }
 
 void PlayerPiece::ResolveCollision()
@@ -89,9 +89,12 @@ void PlayerPiece::UpdateWorldPosition()
 		mvLocalPosition
 	);
 
+	UpdateRotation();
+
 	// -- 座標を更新 -- //
 	auto piece_transform = this->GetModule<Transform>();
 	piece_transform->SetPosition(nextPos);
+
 }
 
 void PlayerPiece::UpdateRotation()

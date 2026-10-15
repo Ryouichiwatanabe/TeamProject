@@ -69,4 +69,6 @@ private:
 	float mfSpeed = 10.0f;		// 移動スピード
 	float mfAngle = 0.0f;		// 回転の角度(-180 ~ 180)
 	float mfRotationPower = 5.0f;	// 回転力(単位は度数)
+
+	bool mbIsPinched = false; // 挟まれているかフラグ
 };

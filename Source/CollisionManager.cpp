@@ -312,11 +312,11 @@ bool CollisionManager::GetBoxBoxCollision(
 		}
 	}
 
-	Debug::Print(
+	/*Debug::Print(
 		"A:(", posA.x, ",", posA.y, ")", "B:(", posB.x, ",", posB.y, ")", "Pen :", minPenetration);
 
 	Debug::Print(
-		"HalfA:(", halfA.x, ",", halfA.y, ")", "HalfB:(", halfB.x, ",", halfB.y, ")");
+		"HalfA:(", halfA.x, ",", halfA.y, ")", "HalfB:(", halfB.x, ",", halfB.y, ")");*/
 
 	_info.penetration = minPenetration;
 	_info.normal = collisionNormal;
