@@ -22,6 +22,7 @@
     <ClCompile Include="Source\Collectible.cpp" />
     <ClCompile Include="Source\CollectibleIconUI.cpp" />
     <ClCompile Include="Source\CollectibleUI.cpp" />
+    <ClCompile Include="Source\ClickEffect.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
     <ClCompile Include="Source\CsvLoader.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Source\Collectible.h" />
     <ClInclude Include="Source\CollectibleIconUI.h" />
     <ClInclude Include="Source\CollectibleUI.h" />
+    <ClInclude Include="Source\ClickEffect.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
     <ClInclude Include="Source\CsvLoader.h" />

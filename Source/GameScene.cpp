@@ -244,13 +244,7 @@ void GameScene::Update(float deltaTime)
 
 	if (mpGoal != nullptr)
 	{
-		bool shapeMatched = mpGoal->IsShapeMatched(mpPlayer);
-		bool withinDistance = mpGoal->IsWithinDistance(mpPlayer);
-
-		if (shapeMatched && withinDistance)
-		{
-			mbIsClear = true;
-		}
+		mbIsClear = true;
 	}
 }
 

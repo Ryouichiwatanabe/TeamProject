@@ -7,30 +7,9 @@
 
 void Goal::Init()
 {
-    SetTag(Tag::BLOCK);
-
-    /*auto collider = GetModule<Collider>();
-    if (collider != nullptr)
-    {
-        collider->AddCollisionTag(Tag::PLAYER_CELL);
-    }*/
-}
-
-void Goal::InitComponent()
-{
-    AddModule<Transform>();
-    AddModule<Graphic>(GetModelFilename());
-    //AddModule<Collider>();
-}
-
-void Goal::Update(float _deltaTime)
-{
-    GameObject::Update(_deltaTime);
-}
-
-void Goal::Draw()
-{
-    GameObject::Draw();
+    StageBlock::Init();
+    // プレイヤーとの衝突を見る
+    GetModule<Collider>()->AddCollisionTag(Tag::PLAYER);
 }
 
 bool Goal::IsPlayerTouching()
