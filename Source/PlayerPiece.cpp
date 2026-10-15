@@ -89,9 +89,12 @@ void PlayerPiece::UpdateWorldPosition()
 		mvLocalPosition
 	);
 
+	UpdateRotation();
+
 	// -- 座標を更新 -- //
 	auto piece_transform = this->GetModule<Transform>();
 	piece_transform->SetPosition(nextPos);
+
 }
 
 void PlayerPiece::UpdateRotation()

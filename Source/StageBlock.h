@@ -6,14 +6,14 @@ class StageBlock : public GameObject
 public:
 	~StageBlock() = default;
 
-	void Init() override;
-	void InitComponent() override;
+	virtual void Init() override;
+	virtual void InitComponent() override;
 
-	void Update(float _deltaTime) override;
-	void Draw() override;
+	virtual void Update(float _deltaTime) override;
+	virtual void Draw() override;
 
 protected:
-	const char* GetModelFilename() const override
+	virtual const char* GetModelFilename() const override
 	{
 		return "Resource/Stage.png";
 	}

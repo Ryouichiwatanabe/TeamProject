@@ -23,7 +23,7 @@ SceneManager::SceneManager()
 void SceneManager::Initialize()
 {
 	// -- 初期シーンの設定 -- //
-	mnNextSceneType = SCENE_TYPE::TITLE_SCENE;
+	mnNextSceneType = SCENE_TYPE::GAME_SCENE;
 	ChangeSceneIfNeeded();
 
 	mbIsChangingScene = true;

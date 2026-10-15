@@ -11,7 +11,7 @@
 
 void Gravity::Update(float _deltaTime)
 {
-	if (!mbIsGrounded)
+	if (mbIsGrounded)
 	{
 		ResetVerticalVelocity();
 		return;

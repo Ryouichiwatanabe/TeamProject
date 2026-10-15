@@ -39,15 +39,15 @@ public:
 	void Draw();
 
 private:
-	VECTOR CalculateTextDrawPosition();	// AlignによるX / Y を補正した座標を返す
+	VECTOR CalculateTextDrawPosition(std::string _text);	// AlignによるX / Y を補正した座標を返す
 
 private:
-	std::string mText;
+	std::string mText;		// 描画するテキストの全文
 
 	int mnFontSize = 24;
 	unsigned int mColor = GetColor(255, 255, 255);
 
-	UITextAlign mAlign = UITextAlign::CENTER;
+	UITextAlign mAlign = UITextAlign::CENTER;	// テキストの配置(デフォルトは中央揃え)
 
 	UI* mpUI;
 };
