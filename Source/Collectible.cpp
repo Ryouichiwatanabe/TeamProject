@@ -4,7 +4,7 @@
 #include "Graphic.h"
 #include "Collider.h"
 
-Collectible::Collectible(const std::string& _filename, int _itemIndex)
+Collectible::Collectible(const std::string& _filename,int _itemIndex)
     : mFilename(_filename),
     mItemIndex(_itemIndex)
 {
@@ -12,10 +12,10 @@ Collectible::Collectible(const std::string& _filename, int _itemIndex)
 
 void Collectible::Init()
 {
-    // 取得アイテムのタグを設定
+    // �擾�A�C�e���̃^�O��ݒ�
     SetTag(Tag::COLLECTIBLE);
 
-    // プレイヤーとの衝突を確認
+    // �v���C���[�Ƃ̏Փ˂����m����
     auto collider = GetModule<Collider>();
     if (collider != nullptr)
     {
@@ -25,33 +25,34 @@ void Collectible::Init()
 
 void Collectible::InitComponent()
 {
-    // 座標・回転・拡縮
+    // ���W�E��]�E�g�嗦
     AddModule<Transform>();
 
-    // 取得アイテムの画像
-    AddModule<Graphic>(mFilename);
+    // �擾�A�C�e���̉摜
+    // ���摜�p�X�͎��ۂ̃t�@�C�����ɍ��킹�ĕύX����
+    AddModule<Graphic>("Resource/Cursor2.png");
 
-    // 衝突判定
+    // �����蔻��
     AddModule<Collider>();
 
     auto collider = GetModule<Collider>();
     if (collider != nullptr)
     {
-        collider->SetHalfSize(
-            VGet(25.0f, 25.0f, 0.0f)
-        );
+
+        collider->SetHalfSize(VGet(25.0f, 25.0f, 0.0f));
+    
     }
 }
 
 void Collectible::Update(float _deltaTime)
 {
-    // ポーズ中は処理しない
+    // �|�[�Y���͏������Ȃ�
     if (_deltaTime <= 0.0f)
     {
         return;
     }
 
-    // 取得演出中
+    // �擾���o��
     if (mbIsCollectEffect)
     {
         mCollectTime += _deltaTime;
@@ -64,7 +65,7 @@ void Collectible::Update(float _deltaTime)
 
             float scale = 1.0f;
 
-            // 前半：少し大きくなる
+            // �O���F�����傫���Ȃ�
             if (progress < 0.35f)
             {
                 float effectProgress =
@@ -72,7 +73,7 @@ void Collectible::Update(float _deltaTime)
 
                 scale = 1.0f + effectProgress * 0.15f;
             }
-            // 後半：小さくなって消える
+            // �㔼�F�������Ȃ��ď�����
             else
             {
                 float effectProgress =
@@ -86,7 +87,7 @@ void Collectible::Update(float _deltaTime)
             );
         }
 
-        // 取得演出終了
+        // ���o�I��
         if (mCollectTime >= mCollectDuration)
         {
             mbIsCollected = true;
@@ -96,13 +97,13 @@ void Collectible::Update(float _deltaTime)
         return;
     }
 
-    // 取得済みなら何もしない
+    // �擾�ς݂Ȃ牽�����Ȃ�
     if (mbIsCollected)
     {
         return;
     }
 
-    // GameObjectの更新
+    // GameObject�̍X�V
     GameObject::Update(_deltaTime);
 
     auto collider = GetModule<Collider>();
@@ -111,7 +112,7 @@ void Collectible::Update(float _deltaTime)
         return;
     }
 
-    // プレイヤーに触れたら取得演出を開始
+    // �v���C���[�ɐG�ꂽ��擾���o�J�n
     if (collider->IsColliding(Tag::PLAYER_CELL))
     {
         mbIsPickedUp = true;
@@ -121,7 +122,7 @@ void Collectible::Update(float _deltaTime)
         return;
     }
 
-    // アイテムを上下に移動
+    // �A�C�e���̏㉺�ړ�
     mMoveTime += _deltaTime;
 
     auto transform = GetModule<Transform>();
@@ -129,7 +130,7 @@ void Collectible::Update(float _deltaTime)
     {
         VECTOR position = transform->GetPosition();
 
-        // 初期位置を上下移動の基準位置として保存
+        // �ŏ��̈ʒu���㉺�ړ��̊�ʒu�Ƃ��ĕۑ�
         if (!mbIsBasePositionSet)
         {
             mBaseY = position.y;
@@ -145,7 +146,7 @@ void Collectible::Update(float _deltaTime)
 
 void Collectible::Draw()
 {
-    // 取得済みなら描画しない
+    // �擾�ς݂Ȃ�`�悵�Ȃ�
     if (mbIsCollected)
     {
         return;
