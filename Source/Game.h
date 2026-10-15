@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <DxLib.h>
 #include <chrono>
@@ -8,10 +8,12 @@
 #include "ResourceManager.h"
 #include "FontManager.h"
 #include "Cursor.h"
-
+#include "Mouse.h"          // è¿½åŠ 
+#include "ClickEffect.h"    // è¿½åŠ 
+#include "GoalEffect.h"
 class Game {
 public:
-    // C++20 chronoŒ^‚ğ—p‚¢‚½ŒÅ’èƒ^ƒCƒ€ƒXƒeƒbƒv’è‹`
+    // C++20 chronoå‹ã‚’ç”¨ã„ãŸå›ºå®šã‚¿ã‚¤ãƒ ã‚¹ãƒ†ãƒƒãƒ—å®šç¾©
     using FrameDuration = std::chrono::duration<double, std::ratio<1, 60>>;
     static constexpr FrameDuration FIXED_TIMESTEP{ 1.0 };
     static constexpr int MAX_SIMULATION_STEPS{ 5 };
@@ -19,7 +21,7 @@ public:
     Game();
     ~Game();
 
-    // ƒRƒs[Eƒ€[ƒu‹Ö~
+    // ã‚³ãƒ”ãƒ¼ãƒ»ãƒ ãƒ¼ãƒ–ç¦æ­¢
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     Game(Game&&) = delete;
@@ -30,7 +32,7 @@ public:
     bool IsInitialized() const noexcept { return m_initSuccess; }
 
 private:
-     bool InitializeDxLib();
+    bool InitializeDxLib();
     void UpdateLogic(double deltaTime);
     void Draw();
 
@@ -41,9 +43,12 @@ private:
     std::chrono::steady_clock::time_point m_lastFrameTime{};
     std::chrono::duration<double> m_accumulator{ 0.0 };
 
-    // ˆË‘¶ŠÖŒW‡‚É’è‹`i‰º‚©‚çã‚Ö‹t‡‚É”jŠü‚³‚ê‚éj
-    ResourceManager m_resourceManager{};
-    FontManager     m_fontManager{};
-    SceneManager    m_sceneManager{};
-    Cursor          m_cursor{};
+    // ä¾å­˜é–¢ä¿‚é †ã«å®šç¾©ï¼ˆä¸‹ã‹ã‚‰ä¸Šã¸é€†é †ã«ç ´æ£„ã•ã‚Œã‚‹ï¼‰
+    ResourceManager       m_resourceManager{};
+    FontManager           m_fontManager{};
+    SceneManager          m_sceneManager{};
+    Cursor                m_cursor{};
+    Mouse                 m_mouse{};        // è¿½åŠ 
+    TofuGame::ClickEffect m_clickEffect{};  // è¿½åŠ 
+    GoalEffect m_goalEffect;
 };

@@ -183,8 +183,8 @@ void Stage::CreateObjects()
         {
             const int tile = mStageData[y][x];
             VECTOR initPosition = VGet(
-                (x * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE,
-                (y * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE,
+                (x * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
+                (y * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
                 0.0f
             );
 

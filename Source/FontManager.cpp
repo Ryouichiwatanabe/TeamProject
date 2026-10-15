@@ -1,16 +1,16 @@
-#include "FontManager.h"
+ï»¿#include "FontManager.h"
 
 
 int FontManager::GetFont(const std::string& fontName, int size, int thick, int fontType) {
     std::string key = GenerateKey(fontName, size, thick, fontType);
 
-    // ‚·‚Å‚ÉƒLƒƒƒbƒVƒ…‚É‚ ‚éê‡‚ÍŠù‘¶‚Ìƒnƒ“ƒhƒ‹‚ğ•Ô‚·
+    // ã™ã§ã«ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ã‚ã‚‹å ´åˆã¯æ—¢å­˜ã®ãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã™
     auto it = fontMap_.find(key);
     if (it != fontMap_.end()) {
-		return it->second; //Šù‘¶‚ÌƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹‚ğ•Ô‚·
+		return it->second; //æ—¢å­˜ã®ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’è¿”ã™
     }
 
-    // ƒLƒƒƒbƒVƒ…‚É‚È‚¢ê‡‚ÍV‹Kì¬
+    // ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ãªã„å ´åˆã¯æ–°è¦ä½œæˆ
     int handle = CreateFontToHandle(
         fontName.empty() ? nullptr : fontName.c_str(),
         size,
@@ -18,7 +18,7 @@ int FontManager::GetFont(const std::string& fontName, int size, int thick, int f
         fontType
     );
 
-	//¶¬¬Œ÷‚Ì‚İƒLƒƒƒbƒVƒ…‚É“o˜^
+	//ç”ŸæˆæˆåŠŸæ™‚ã®ã¿ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã«ç™»éŒ²
     if (handle != -1) {
         fontMap_[key] = handle;
     }
@@ -26,7 +26,7 @@ int FontManager::GetFont(const std::string& fontName, int size, int thick, int f
     return handle;
 }
 
-//ŒÂ•ÊƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹‚Ì”jŠü
+//å€‹åˆ¥ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã®ç ´æ£„
 void FontManager::ReleaseFont(const std::string& fontName, int size, int thick, int fontType) {
     std::string key = GenerateKey(fontName, size, thick, fontType);
     auto it = fontMap_.find(key);
@@ -36,7 +36,7 @@ void FontManager::ReleaseFont(const std::string& fontName, int size, int thick, 
     }
 }
 
-// ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+// ãƒ•ã‚©ãƒ³ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
 bool FontManager::LoadFontFile(const std::string& filePath)
 {
 
@@ -52,7 +52,7 @@ bool FontManager::LoadFontFile(const std::string& filePath)
 
 void FontManager::Clear() 
 {
-	//ƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹‚ğ‚·‚×‚Äíœ
+	//ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’ã™ã¹ã¦å‰Šé™¤
 
     for (auto& pair : fontMap_) 
     {
@@ -60,7 +60,7 @@ void FontManager::Clear()
     }
     fontMap_.clear();
 
-	//“Ç‚İ‚ñ‚¾ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚ÌƒŠƒXƒg‚ğƒNƒŠƒA
+	//èª­ã¿è¾¼ã‚“ã ãƒ•ã‚©ãƒ³ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
     for (const auto& handle : loadedFontFiles_) 
     {
         RemoveFontFile(handle);

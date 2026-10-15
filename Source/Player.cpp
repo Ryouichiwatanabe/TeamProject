@@ -13,7 +13,7 @@
 #include "ObjectManager.h"
 #include "PlayerPiece.h"
 
-
+#include "ScreenConfig.h"
 #include "GameConfig.h"
 
 // 変形状態取得用
@@ -33,12 +33,22 @@ void Player::Init()
 	// -- タグ設定 -- //
 	SetTag(Tag::PLAYER);
 	mController.Initialize(this);
+
+	if (auto transform = GetModule<Transform>())
+		transform->SetPosition(
+			VGet(
+				200.0f,
+				200.0f,
+				0.0f
+			)
+		);
 }
 
 void Player::InitComponent()
 {
 	// -- Module追加 -- //
 	AddModule<Transform>();
+	AddModule<Gravity>();
 }
 
 void Player::InitPiece()
@@ -58,10 +68,10 @@ void Player::InitPiece()
 		}
 	}
 
-	/*mPieces[0][1]->SetEnabled(false);
+	mPieces[0][1]->SetEnabled(false);
 	mPieces[0][2]->SetEnabled(false);
 	mPieces[1][1]->SetEnabled(false);
-	mPieces[1][2]->SetEnabled(false);*/
+	mPieces[1][2]->SetEnabled(false);
 }
 
 void Player::CreatePiece(int _column, int _row)
@@ -98,8 +108,13 @@ void Player::Update(float _deltaTime)
 		InputManager::GetInstance().GetButtonDown(Button::Shape))
 		mpShapeUI->SetEnabled(!mpShapeUI->IsEnabled());
 
+	auto transform = GetModule<Transform>();
+	if (transform->GetPosition().y >= ScreenConfig::SCREEN_HEIGHT)
+		Respawn();
+
 	mController.Update();
 	GameObject::Update(_deltaTime);
+	OnPieceGrounded();
 }
 
 void Player::Draw()
@@ -133,23 +148,29 @@ void Player::ResetCollisionCorrections()
 
 VECTOR Player::CalculateCollisionCorrection()
 {
-	VECTOR correction = VGet(0.0f, 0.0f, 0.0f);
 
+	float minX = 0.0f, maxX = 0.0f;
+	for (const VECTOR& candidate : mCollisionCorrections) {
+		if (candidate.x < minX) minX = candidate.x;
+		if (candidate.x > maxX) maxX = candidate.x;
+	}
+	// 左右両方から一定以上押し戻されている ＝ 隙間に挟まれている！
+	mbIsPinched = (minX < -1.0f && maxX > 1.0f);
+
+	// float minX = 0.0f, maxX = 0.0f;
+	float minY = 0.0f, maxY = 0.0f;
 	for (const VECTOR& candidate : mCollisionCorrections)
 	{
-		// X軸：絶対値が最大の補正を採用
-		if (fabsf(candidate.x) > fabsf(correction.x))
-		{
-			correction.x = candidate.x;
-		}
-
-		// Y軸：絶対値が最大の補正を採用
-		if (fabsf(candidate.y) > fabsf(correction.y))
-		{
-			correction.y = candidate.y;
-		}
+		if (candidate.x > maxX) maxX = candidate.x;
+		if (candidate.x < minX) minX = candidate.x;
+		if (candidate.y > maxY) maxY = candidate.y;
+		if (candidate.y < minY) minY = candidate.y;
 	}
-
+	VECTOR correction = VGet(0.0f, 0.0f, 0.0f);
+	// 左右両方から押されている場合（minX < 0 かつ maxX > 0）は
+	// 単純に合算して相殺させる、または挟まれとして振動を抑制
+	correction.x = maxX + minX;
+	correction.y = maxY + minY;
 	return correction;
 }
 
@@ -160,6 +181,13 @@ void Player::ApplyCollisionCorrection()
 		return;
 
 	VECTOR correction = CalculateCollisionCorrection();
+
+	Debug::Print(
+		"Player Correction: X = ",
+		correction.x,
+		" Y = ",
+		correction.y
+	);
 
 	VECTOR position = transform->GetPosition();
 	position = VAdd(position, correction);
@@ -212,6 +240,28 @@ void Player::UpdatePieceRotation()
 	}
 }
 
+void Player::OnPieceGrounded()
+{
+	bool isGrounded = false;
+
+	for (auto& row : mPieces)
+	{
+		for (auto* piece : row)
+		{
+			if (piece == nullptr)
+				continue;
+
+			auto pieceGravity = piece->GetModule<Gravity>();
+			bool pieceIsGrounded = pieceGravity->IsGrounded();
+
+			if (pieceIsGrounded) isGrounded = true;
+		}
+	}
+
+	auto gravity = GetModule<Gravity>();
+	gravity->SetGrounded(isGrounded);
+}
+
 void Player::Move(VECTOR _direction)
 {
 	if (VSize(_direction) == 0.0f)
@@ -233,20 +283,33 @@ void Player::Move(VECTOR _direction)
 
 void Player::Rotation(float _rotateDirection)
 {
-	// -- 回転値を取得 -- //
-	float rotationAmount = _rotateDirection * mfRotationPower;	// 回転の値(度数)
-	float rotationRadian = rotationAmount * DX_PI_F / 180.0f;	// 回転の値(ラジアン)
+	//// -- 回転値を取得 -- //
+	//float rotationAmount = _rotateDirection * mfRotationPower;	// 回転の値(度数)
+	//float rotationRadian = rotationAmount * DX_PI_F / 180.0f;	// 回転の値(ラジアン)
 
-	// -- 回転値を適用 -- //
-	if (auto transform = GetModule<Transform>())
-		transform->SetRotation(
-			VAdd(
-				transform->GetRotation(),
-				VGet(0.0f, 0.0f, rotationRadian)
-			)
-		);
+	//// -- 回転値を適用 -- //
+	//if (auto transform = GetModule<Transform>())
+	//	transform->SetRotation(
+	//		VAdd(
+	//			transform->GetRotation(),
+	//			VGet(0.0f, 0.0f, rotationRadian)
+	//		)
+	//	);
 
+	//UpdatePieceRotation();
+
+	// 挟まれている間は回転入力を無視する！
+	if (mbIsPinched) return;
+
+	auto transform = GetModule<Transform>();
+	if (!transform) return;
+	VECTOR prevRot = transform->GetRotation();
+	float rotationAmount = _rotateDirection * mfRotationPower;
+	float rotationRadian = rotationAmount * DX_PI_F / 180.0f;
+	// 一旦回転させる
+	transform->SetRotation(VAdd(prevRot, VGet(0.0f, 0.0f, rotationRadian)));
 	UpdatePieceRotation();
+
 }
 
 void Player::ApplyShapeFromUI()
