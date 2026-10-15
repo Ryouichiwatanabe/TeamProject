@@ -7,7 +7,6 @@
 
 void Goal::Init()
 {
-    StageBlock::Init();
     // プレイヤーとの衝突を見る
     GetModule<Collider>()->AddCollisionTag(Tag::PLAYER);
 }
