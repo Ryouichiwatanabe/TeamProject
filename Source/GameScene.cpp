@@ -17,6 +17,8 @@
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
+#include "CollectibleIconUI.h"
+#include "Collectible.h"
 
 #include "Debug.h"
 #include "GameConfig.h"
@@ -39,14 +41,14 @@ void GameScene::Initialize()
 
 	mpPlayer->InitPiece();
 
-	auto* stage = new Stage();
+	mpStage = new Stage();
 
 	std::string stageFileName =
 		"Resource/Stage/Stage"
 		+ std::to_string(mnStageNumber)
 		+ ".csv";
 
-	stage->Load(stageFileName);
+	mpStage->Load(stageFileName);
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
@@ -91,11 +93,99 @@ void GameScene::Initialize()
         ->GetUIManager()
         ->CreateUI<PlayerShapeUI>();
 
-	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
+	mpCollectibleIconUI[0] =
+		this
+		->GetUIManager()
+		->CreateUI<CollectibleIconUI>();
+
+	mpCollectibleIconUI[1] =
+		this
+		->GetUIManager()
+		->CreateUI<CollectibleIconUI>();
+
+	mpCollectibleIconUI[2] =
+		this
+		->GetUIManager()
+		->CreateUI<CollectibleIconUI>();
+
+
+	// アイテムアイコンの設定
+	for (int i = 0; i < 3; i++)
+	{
+		// 右上に配置
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetAnchor(
+				VGet(0.0f, 0.0f, 0.0f)
+			);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetPosition(
+				VGet(
+					1000.0f + (i * 100.0f),
+					70.0f,
+					0.0f
+				)
+			);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(
+					0.65f,
+					0.65f,
+					1.0f
+				)
+			);
+
+		// ステージに対応した画像を設定
+		std::string filename =
+			mpStage->GetCollectibleFilename(i);
+
+		if (!filename.empty())
+		{
+			mpCollectibleIconUI[i]
+				->SetGraph(filename);
+		}
+	}
+
+	mPauseBoardHandle =
+		Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
 }
 
 void GameScene::Update(float deltaTime)
 {
+
+	auto collectibles =
+		GetObjectManager()->FindObjects<Collectible>();
+
+	for (auto* collectible : collectibles)
+	{
+		if (!collectible->IsPickedUp())
+		{
+			continue;
+		}
+
+		int itemIndex =
+			collectible->GetItemIndex();
+
+		if (itemIndex < 0 || itemIndex >= 3)
+		{
+			continue;
+		}
+
+		mbIsCollectibleCollected[itemIndex] = true;
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		mpCollectibleIconUI[i]
+			->SetCollected(
+				mbIsCollectibleCollected[i]
+			);
+	}
+
 	if (mbIsClear)
 	{
 		UpdateClear();
@@ -156,9 +246,6 @@ void GameScene::Update(float deltaTime)
 	{
 		bool shapeMatched = mpGoal->IsShapeMatched(mpPlayer);
 		bool withinDistance = mpGoal->IsWithinDistance(mpPlayer);
-
-		Debug::Print("Goal Shape : ", shapeMatched);
-		Debug::Print("Goal Distance : ", withinDistance);
 
 		if (shapeMatched && withinDistance)
 		{

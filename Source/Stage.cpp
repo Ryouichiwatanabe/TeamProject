@@ -1,6 +1,8 @@
 ﻿#include "Stage.h"
 
 #include "CsvLoader.h"
+#include <string>
+#include <array>
 
 // Obj生成用
 #include "Master.h"
@@ -10,7 +12,6 @@
 #include "Player.h"
 
 // 生成するObj関係
-#include "Player.h"
 #include "StageBlock.h"
 #include "Goal.h"
 #include "MovingBlock.h"
@@ -26,10 +27,136 @@
 
 #include <DxLib.h>  // VECTOR用
 
+namespace
+{
+    constexpr int COLLECTIBLE_TYPE_COUNT = 3;
+    constexpr int STAGE_COUNT = 8;
+
+    using CollectibleFiles =
+        std::array<std::string, COLLECTIBLE_TYPE_COUNT>;
+
+    const std::array<CollectibleFiles, STAGE_COUNT>
+        COLLECTIBLE_FILES =
+    { {
+        // Stage1
+        {{
+            "Resource/Collectible/Stage1/Negi.png",
+            "Resource/Collectible/Stage1/Syouga.png",
+            "Resource/Collectible/Stage1/Syouyu.png"
+        }},
+
+        // Stage2
+        {{
+            "Resource/Collectible/Stage2/Konbu.png",
+            "Resource/Collectible/Stage2/Negi.png",
+            "Resource/Collectible/Stage2/Ponzu.png"
+        }},
+
+        // Stage3
+        {{
+            "Resource/Collectible/Stage3/Oil.png",
+            "Resource/Collectible/Stage3/Salt.png",
+            "Resource/Collectible/Stage3/Water.png"
+        }},
+
+        // Stage4
+        {{
+            "Resource/Collectible/Stage4/Miso.png",
+            "Resource/Collectible/Stage4/Negi.png",
+            "Resource/Collectible/Stage4/Wakame.png"
+        }},
+
+        // Stage5
+        {{
+            "Resource/Collectible/Stage5/Garlic.png",
+            "Resource/Collectible/Stage5/Hikiniku.png",
+            "Resource/Collectible/Stage5/Toubanjan.png"
+        }},
+
+        // Stage6
+        {{
+            "Resource/Collectible/Stage6/Gyuniku.png",
+            "Resource/Collectible/Stage6/Negi.png",
+            "Resource/Collectible/Stage6/Tare.png"
+        }},
+
+        // Stage7
+        {{
+            "Resource/Collectible/Stage7/Mentuyu.png",
+            "Resource/Collectible/Stage7/Negi.png",
+            "Resource/Collectible/Stage7/Oil.png"
+        }},
+
+        // Stage8
+        {{
+            "Resource/Collectible/Stage8/Kukonomi.png",
+            "Resource/Collectible/Stage8/Kyouninsou.png",
+            "Resource/Collectible/Stage8/Milk.png"
+        }}
+    } };
+
+    std::string GetCollectibleFilename(
+        int _stageNumber,
+        int _tile)
+    {
+        if (_stageNumber < 1 || _stageNumber > STAGE_COUNT)
+        {
+            return "";
+        }
+
+        if (_tile < 9 || _tile > 11)
+        {
+            return "";
+        }
+
+        return COLLECTIBLE_FILES[
+            _stageNumber - 1
+        ][
+            _tile - 9
+        ];
+    }
+}
+
+std::string Stage::GetCollectibleFilename(
+    int _itemIndex) const
+{
+    if (_itemIndex < 0 ||
+        _itemIndex >= COLLECTIBLE_TYPE_COUNT)
+    {
+        return "";
+    }
+
+    return ::GetCollectibleFilename(
+        mStageNumber,
+        _itemIndex + 9
+    );
+}
+
 void Stage::Load(const std::string& _filename)
 {
-	mStageData = CsvLoader::Load(_filename);
-    
+    // ファイル名からステージ番号を取得
+    size_t stagePos = _filename.rfind("Stage");
+
+    if (stagePos != std::string::npos)
+    {
+        stagePos += 5;
+
+        size_t extensionPos = _filename.find(".csv", stagePos);
+
+        if (extensionPos != std::string::npos)
+        {
+            std::string stageNumber =
+                _filename.substr(
+                    stagePos,
+                    extensionPos - stagePos
+                );
+
+            mStageNumber = std::stoi(stageNumber);
+        }
+    }
+
+    mStageData = CsvLoader::Load(_filename);
+
     if (mStageData.empty())
     {
         OutputDebugStringA("Stage CSVが読み込めていません\n");
@@ -39,7 +166,7 @@ void Stage::Load(const std::string& _filename)
         OutputDebugStringA("Stage CSV読み込み成功\n");
     }
 
-	CreateObjects();
+    CreateObjects();
 }
 
 void Stage::CreateObjects()
@@ -155,10 +282,22 @@ void Stage::CreateObjects()
             }
 
             case 9:
+            case 10:
+            case 11:
             {
-                // Collectibleを生成
-                auto collectible = objectManager
-                    ->CreateObject<Collectible>();
+                std::string filename =
+                    ::GetCollectibleFilename(
+                        mStageNumber,
+                        tile
+                    );
+
+                int itemIndex = tile - 9;
+
+                auto collectible =
+                    objectManager->CreateObject<Collectible>(
+                        filename,
+                        itemIndex
+                    );
 
                 collectible
                     ->GetModule<Transform>()

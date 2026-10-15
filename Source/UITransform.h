@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <DxLib.h>
 
-/* memo : 
+/* memo :
 * UIに用いる空間上の状態を管理するModule
 */
 

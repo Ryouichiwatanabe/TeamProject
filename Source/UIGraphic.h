@@ -10,6 +10,9 @@ public:
 
 	void Initialize(UI* _pUI, std::string _graphicFileName);
 
+	// 表示する画像を変更
+	void SetGraph(std::string _graphicFileName);
+
 	void Draw();
 
 private:

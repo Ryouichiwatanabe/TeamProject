@@ -32,6 +32,12 @@ void UIGraphic::Initialize(UI* _pUI, std::string _graphicFileName)
 	);
 }
 
+void UIGraphic::SetGraph(std::string _graphicFileName)
+{
+	mnGraphHandle =
+		Master::mpResource->LoadGraphics(_graphicFileName);
+}
+
 void UIGraphic::Draw()
 {
 	if (mnGraphHandle == -1)

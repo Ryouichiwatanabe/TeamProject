@@ -8,11 +8,16 @@ class Player;
 class Stage
 {
 public:
-	void Load(const std::string& _filename);
+    void Load(const std::string& _filename);
+
+    std::string GetCollectibleFilename(int _itemIndex) const;
 
 private:
-	void CreateObjects();
+    void CreateObjects();
 
 private:
-	std::vector<std::vector<int>> mStageData;
+    std::vector<std::vector<int>> mStageData;
+
+    // 現在のステージ番号
+    int mStageNumber = 0;
 };
