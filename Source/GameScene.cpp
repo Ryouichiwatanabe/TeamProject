@@ -242,7 +242,8 @@ void GameScene::Update(float deltaTime)
 	// 更新処理
 	Scene::Update(deltaTime);
 
-	if (mpGoal != nullptr)
+	if (mpGoal != nullptr &&
+		mpGoal->IsPlayerTouching())
 	{
 		mbIsClear = true;
 	}
