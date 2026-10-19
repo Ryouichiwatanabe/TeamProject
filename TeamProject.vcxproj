@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Collectible.cpp" />
+    <ClCompile Include="Source\CollectibleData.cpp" />
     <ClCompile Include="Source\CollectibleIconUI.cpp" />
     <ClCompile Include="Source\CollectibleUI.cpp" />
     <ClCompile Include="Source\ClickEffect.cpp" />
@@ -70,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Collectible.h" />
+    <ClInclude Include="Source\CollectibleData.h" />
     <ClInclude Include="Source\CollectibleIconUI.h" />
     <ClInclude Include="Source\CollectibleUI.h" />
     <ClInclude Include="Source\ClickEffect.h" />

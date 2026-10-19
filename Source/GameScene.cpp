@@ -28,6 +28,7 @@
 
 
 #include "InputManager.h"
+#include "CollectibleData.h"
 
 void GameScene::Initialize()
 {
