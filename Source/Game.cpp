@@ -2,6 +2,8 @@
 #include "ScreenConfig.h"
 #include "InputManager.h"
 #include "Master.h"
+#include "EffectManager.h"
+
 
 #include <algorithm>
 #include <chrono>
@@ -13,11 +15,18 @@ Game::Game()
     if (!InitializeDxLib()) {
         return;
     }
-
+   
+    if (!m_effectManager.Initialize
+    (static_cast<int>(ScreenConfig::SCREEN_WIDTH),
+    (static_cast<int>(ScreenConfig::SCREEN_HEIGHT))))
+    {
+        return;
+    }
     // 各マネージャーのポインタ受け渡し
     Master::mpResource = &m_resourceManager;
     Master::mpFontManager = &m_fontManager;
     Master::mpSceneManager = &m_sceneManager;
+    Master::mpEffectManager = &m_effectManager;
 
     InputManager::GetInstance().InitializeButton();
     InputManager::GetInstance().InitializeAxis();
@@ -39,6 +48,11 @@ Game::~Game()
         m_cursor.Finalize();
         m_sceneManager.Finalize();
         m_fontManager.Clear();
+
+
+        m_effectManager.Terminate();//Effecseerの終了
+        Master::mpEffectManager = nullptr;
+
 
         Master::mpSceneManager = nullptr;
         Master::mpFontManager = nullptr;
@@ -131,6 +145,8 @@ void Game::UpdateLogic(double deltaTime)
     // 各種エフェクト更新
     m_clickEffect.update(static_cast<float>(deltaTime));
     m_goalEffect.Update();
+
+    m_effectManager.Update();//エフェクトを更新
 }
 
 void Game::Draw()
@@ -151,6 +167,9 @@ void Game::Draw()
 
     m_clickEffect.draw();
     m_goalEffect.Draw();
+
+
+    m_effectManager.Draw();
 
     // 3. 最前面カーソル
     m_cursor.Draw();
