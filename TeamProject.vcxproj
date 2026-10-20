@@ -28,6 +28,7 @@
     <ClCompile Include="Source\Debug.cpp" />
     <ClCompile Include="Source\DisappearingBlock.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
+    <ClCompile Include="Source\Effekseer.cpp" />
     <ClCompile Include="Source\FakePlayer.cpp" />
     <ClCompile Include="Source\FakePlayerController.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />

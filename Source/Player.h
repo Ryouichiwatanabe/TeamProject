@@ -57,6 +57,7 @@ protected:
 		return "Resource/Player3.png";
 	}
 
+
 private:
 	PlayerPiece* mPieces[GameConfig::PLAYER_PIECE_SIZE][GameConfig::PLAYER_PIECE_SIZE]{};
 
