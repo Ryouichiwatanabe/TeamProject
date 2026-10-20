@@ -10,7 +10,6 @@
 #include "Cursor.h"
 #include "Mouse.h"          // 追加
 #include "ClickEffect.h"    // 追加
-#include "GoalEffect.h"
 #include "EffectManager.h"
 
 class Game {
@@ -52,6 +51,5 @@ private:
     Cursor                m_cursor{};
     Mouse                 m_mouse{};        // 追加
     TofuGame::ClickEffect m_clickEffect{};  // 追加
-    GoalEffect m_goalEffect;
     EffectManager m_effectManager;
 };

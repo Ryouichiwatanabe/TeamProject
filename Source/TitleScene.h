@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "FloatingMotion.h"
+#include "UIHoverScaler.h"
 
 class TitleScene : public Scene
 {

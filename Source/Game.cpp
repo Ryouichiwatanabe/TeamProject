@@ -13,6 +13,7 @@ using namespace std::chrono_literals;
 SceneManager* Master::mpSceneManager{ nullptr };
 ResourceManager* Master::mpResource{ nullptr };
 FontManager* Master::mpFontManager{ nullptr };
+EffectManager* Master::mpEffectManager{ nullptr };
 
 Game::Game()
 {
@@ -177,7 +178,6 @@ void Game::UpdateLogic(double deltaTime)
 
     // 各種エフェクト更新
     m_clickEffect.update(static_cast<float>(deltaTime));
-    m_goalEffect.Update();
 
     m_effectManager.Update();//エフェクトを更新
 }
@@ -198,7 +198,6 @@ void Game::Draw()
     SetUseLighting(FALSE);
 
     m_clickEffect.draw();
-    m_goalEffect.Draw();
 
 
     m_effectManager.Draw();
