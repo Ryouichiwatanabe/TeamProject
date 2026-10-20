@@ -14,11 +14,10 @@
 #include "MovingBlock.h"
 
 #include <string>
+#include <DxLib.h>
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
-#include "CollectibleIconUI.h"
-#include "Collectible.h"
 
 #include "Debug.h"
 #include "GameConfig.h"
@@ -28,7 +27,6 @@
 
 
 #include "InputManager.h"
-#include "CollectibleData.h"
 
 void GameScene::Initialize()
 {
@@ -39,17 +37,17 @@ void GameScene::Initialize()
 		this
 		->GetObjectManager()
 		->CreateObject<Player>();
+	mpPlayer
+		->InitPiece();
 
-	mpPlayer->InitPiece();
-
-	mpStage = new Stage();
+	auto* stage = new Stage();
 
 	std::string stageFileName =
 		"Resource/Stage/Stage"
 		+ std::to_string(mnStageNumber)
 		+ ".csv";
 
-	mpStage->Load(stageFileName);
+	stage->Load(stageFileName);
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
@@ -78,115 +76,25 @@ void GameScene::Initialize()
 
 
 	//Typewriter
-	mTypewriter = TypewriterText(3); //3フレームに1文字送る設定
 	mMessageMotion = FloatingMotion(90, 4.0f);
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
-	mTypewriter.SetText(startMessage);
 	mbIsMessageActive = true;//メッセージ表示開始
 
-    auto* fakePlayer = 
+   /* auto* fakePlayer = 
         this
         ->GetObjectManager()
-        ->CreateObject<FakePlayer>();
+        ->CreateObject<FakePlayer>();*/
 
     auto* testUI =
         this
         ->GetUIManager()
         ->CreateUI<PlayerShapeUI>();
 
-	mpCollectibleIconUI[0] =
-		this
-		->GetUIManager()
-		->CreateUI<CollectibleIconUI>();
-
-	mpCollectibleIconUI[1] =
-		this
-		->GetUIManager()
-		->CreateUI<CollectibleIconUI>();
-
-	mpCollectibleIconUI[2] =
-		this
-		->GetUIManager()
-		->CreateUI<CollectibleIconUI>();
-
-
-	// アイテムアイコンの設定
-	for (int i = 0; i < 3; i++)
-	{
-		// 右上に配置
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetAnchor(
-				VGet(0.0f, 0.0f, 0.0f)
-			);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetPosition(
-				VGet(
-					1000.0f + (i * 100.0f),
-					70.0f,
-					0.0f
-				)
-			);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetScale(
-				VGet(
-					0.65f,
-					0.65f,
-					1.0f
-				)
-			);
-
-		// ステージに対応した画像を設定
-		std::string filename =
-			mpStage->GetCollectibleFilename(i);
-
-		if (!filename.empty())
-		{
-			mpCollectibleIconUI[i]
-				->SetGraph(filename);
-		}
-	}
-
-	mPauseBoardHandle =
-		Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
+	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
 }
 
 void GameScene::Update(float deltaTime)
 {
-
-	auto collectibles =
-		GetObjectManager()->FindObjects<Collectible>();
-
-	for (auto* collectible : collectibles)
-	{
-		if (!collectible->IsPickedUp())
-		{
-			continue;
-		}
-
-		int itemIndex =
-			collectible->GetItemIndex();
-
-		if (itemIndex < 0 || itemIndex >= 3)
-		{
-			continue;
-		}
-
-		mbIsCollectibleCollected[itemIndex] = true;
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		mpCollectibleIconUI[i]
-			->SetCollected(
-				mbIsCollectibleCollected[i]
-			);
-	}
-
 	if (mbIsClear)
 	{
 		UpdateClear();
@@ -201,10 +109,9 @@ void GameScene::Update(float deltaTime)
 	}
 
 
-	//====メッセージ表示中の制御====//
+/*	//====メッセージ表示中の制御====//
 	if (mbIsMessageActive)
 	{
-		mTypewriter.Update();
 		mMessageMotion.Update();
 		// 左クリック または Zキー/SPACEキーが押されたか判定
 		bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
@@ -233,7 +140,7 @@ void GameScene::Update(float deltaTime)
 
 		// メッセージ表示中はゲーム本編の進行（移動など）を止める場合
 		return;
-	}
+	}*/
 
 
 	//==通常時：ステージ番号の文字を更新==//
@@ -242,6 +149,9 @@ void GameScene::Update(float deltaTime)
 
 	// 更新処理
 	Scene::Update(deltaTime);
+
+	auto player = GetObjectManager()
+		->FindObject<Player>();
 
 	if (mpGoal != nullptr &&
 		mpGoal->IsPlayerTouching())
@@ -273,7 +183,7 @@ void GameScene::Draw()
 
 
 	// ★ メッセージウィンドウ描画
-	if (mbIsMessageActive)
+/*	if (mbIsMessageActive)
 	{
 		// 背景の半透明黒帯ウィンドウ
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
@@ -294,7 +204,7 @@ void GameScene::Draw()
 		{
 			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
 		}
-	}
+	}*/
 
 
     if (mbIsPaused)
@@ -470,7 +380,7 @@ void GameScene::UpdateClear()
 
 void GameScene::UpdatePause()
 {
-	bool currentP = CheckHitKey(KEY_INPUT_P) != 0;
+	bool currentP = InputManager::GetInstance().GetButtonDown(Button::Pause);
 
 	if (currentP && !mbPreviousP)
 	{

@@ -21,7 +21,7 @@ void Cursor::Initialize()
     SetMouseDispFlag(FALSE);
 
     // ƒJ[ƒ\ƒ‹‰æ‘œ‚ğ“Ç‚İ‚Ş
-    mHandle = LoadGraph("Resource/Cursor.png");
+    mHandle = LoadGraph("Resource/Cursor4.png");
 }
 
 void Cursor::Update()

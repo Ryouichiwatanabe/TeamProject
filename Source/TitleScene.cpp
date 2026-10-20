@@ -16,6 +16,10 @@ TitleScene::TitleScene()
 
 void TitleScene::Initialize()
 {
+
+	// 初期値: 通常1.0倍, ホバー時1.08倍, クリック時0.94倍
+	mStartScaler.Initialize(1.0f, 1.08f, 0.94f, 20.0f);
+
 	// シーンに入った瞬間のマウス状態を記録
 	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
 
@@ -44,7 +48,6 @@ void TitleScene::Update(float _deltaTime)
 
 	int mouseX;
 	int mouseY;
-
 	GetMousePoint(&mouseX, &mouseY);
 
 	const int startX = 500;
@@ -60,12 +63,13 @@ void TitleScene::Update(float _deltaTime)
 		mouseY <= startY + startHeight;
 
 	// 現在マウス左クリックが押されているか
-	bool currentMouseLeft =
-		(GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
+	bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
+
+	// スケーラーの更新（ホバー中か、クリック押し込み中かを渡す）
+	mStartScaler.Update(mbStartSelected, currentMouseLeft, _deltaTime);
 
 	// 「押した瞬間」だけ判定
-	bool mouseLeftDown =
-		currentMouseLeft && !mbPreviousMouseLeft;
+	bool mouseLeftDown = currentMouseLeft && !mbPreviousMouseLeft;
 
 	if (mbStartSelected && mouseLeftDown)
 	{
@@ -96,9 +100,9 @@ void TitleScene::Draw()
 		TRUE
 	);
 
+	// タイトルロゴ描画
 	const int baseLogoX = 270;
 	const int baseLogoY = 100;
-	// FloatingMotionから取得したYオフセットを基準Y座標に加算
 	int drawLogoY = baseLogoY + static_cast<int>(mTitleFloatingMotion.GetOffsetY());
 
 	if (mTitleLogoHandle != -1)
@@ -110,51 +114,68 @@ void TitleScene::Draw()
 		DrawString(500, drawLogoY, "TITLE", GetColor(255, 255, 255));
 	}
 
-	// タイトル
-	if (mTitleLogoHandle != -1)
-	{
-		DrawGraph(270, 100, mTitleLogoHandle, TRUE);
-	}
-	else 
-	{
-		DrawString(500, 250, "TITLE", GetColor(255, 255, 255));
-	}
-
-
-
-
-	/*DrawString(
-		500,
-		250,
-		"AAAAAA",
-		GetColor(0, 0, 0)
-	);*/
-
-	// スタート
+	// --- STARTボタン描画 ---
 	const int startX = 500;
 	const int startY = 380;
 	const int startWidth = 280;
 	const int startHeight = 70;
 
+	// スケーラーから拡縮後の描画矩形を取得
+	int drawLeft, drawTop, drawRight, drawBottom;
+	mStartScaler.CalculateRect(startX, startY, startWidth, startHeight,
+		&drawLeft, &drawTop, &drawRight, &drawBottom);
+
 	if (mStartTofuHandle != -1)
 	{
-		DrawExtendGraph(
-			startX,
-			startY,
-			startX + startWidth,
-			startY + startHeight,
-			mStartTofuHandle,
-			TRUE
-		);
+		if (mbStartSelected)
+		{
+			//SetDrawBlendMode(DX_BLENDMODE_ADD, 80);
+			//DrawExtendGraph(drawLeft, drawTop, drawRight, drawBottom, mStartTofuHandle, TRUE);
+			//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); 
+		
+
+			// --- ホバー時: 少し暗めの黄色 ---
+			// 赤・緑を高めに残し、青(B)を極端に落とすことで黄色がはっきり出ます
+			SetDrawBright(180, 180, 180);
+
+			DrawExtendGraph(
+				drawLeft,
+				drawTop,
+				drawRight,
+				drawBottom,
+				mStartTofuHandle,
+				TRUE
+			);
+
+			SetDrawBright(255, 255, 255); // 必ず元の明るさに戻す
+		}
+		else
+		{
+			// --- 通常時: 元の色そのまま ---
+			DrawExtendGraph(
+				drawLeft,
+				drawTop,
+				drawRight,
+				drawBottom,
+				mStartTofuHandle,
+				TRUE
+			);
+		}
 	}
 
+	// ボタンのテキスト（ボタンの中心に合わせて追従）
+	unsigned int textColor = mbStartSelected ? GetColor(180, 140, 0) : GetColor(0, 0, 0);
+	int textX = (drawLeft + drawRight) / 2 - 25;
+	int textY = (drawTop + drawBottom) / 2 - 10;
+
 	DrawString(
-		startX + 115,
-		startY + 25,
+		textX,
+		textY,
 		"START",
-		GetColor(0, 0, 0)
+		textColor
 	);
 }
+
 
 void TitleScene::Finalize()
 {

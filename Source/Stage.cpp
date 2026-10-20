@@ -1,9 +1,6 @@
 ﻿#include "Stage.h"
 
 #include "CsvLoader.h"
-#include "CollectibleData.h"
-#include <string>
-#include <array>
 
 // Obj生成用
 #include "Master.h"
@@ -13,6 +10,7 @@
 #include "Player.h"
 
 // 生成するObj関係
+#include "Player.h"
 #include "StageBlock.h"
 #include "Goal.h"
 #include "MovingBlock.h"
@@ -28,41 +26,10 @@
 
 #include <DxLib.h>  // VECTOR用
 
-std::string Stage::GetCollectibleFilename(
-    int _itemIndex
-) const
-{
-    return ::GetCollectibleFilename(
-        mStageNumber,
-        _itemIndex
-    );
-}
-
 void Stage::Load(const std::string& _filename)
 {
-    // ファイル名からステージ番号を取得
-    size_t stagePos = _filename.rfind("Stage");
-
-    if (stagePos != std::string::npos)
-    {
-        stagePos += 5;
-
-        size_t extensionPos = _filename.find(".csv", stagePos);
-
-        if (extensionPos != std::string::npos)
-        {
-            std::string stageNumber =
-                _filename.substr(
-                    stagePos,
-                    extensionPos - stagePos
-                );
-
-            mStageNumber = std::stoi(stageNumber);
-        }
-    }
-
-    mStageData = CsvLoader::Load(_filename);
-
+	mStageData = CsvLoader::Load(_filename);
+    
     if (mStageData.empty())
     {
         OutputDebugStringA("Stage CSVが読み込めていません\n");
@@ -72,7 +39,7 @@ void Stage::Load(const std::string& _filename)
         OutputDebugStringA("Stage CSV読み込み成功\n");
     }
 
-    CreateObjects();
+	CreateObjects();
 }
 
 void Stage::CreateObjects()
@@ -89,8 +56,8 @@ void Stage::CreateObjects()
         {
             const int tile = mStageData[y][x];
             VECTOR initPosition = VGet(
-                (x * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE,
-                (y * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE,
+                (x * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
+                (y * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
                 0.0f
             );
 
@@ -188,21 +155,10 @@ void Stage::CreateObjects()
             }
 
             case 9:
-            case 10:
-            case 11:
             {
-                int itemIndex = tile - 9;
-
-                std::string filename =
-                    GetCollectibleFilename(
-                        itemIndex
-                    );
-
-                auto collectible =
-                    objectManager->CreateObject<Collectible>(
-                        filename,
-                        itemIndex
-                    );
+                // Collectibleを生成
+                auto collectible = objectManager
+                    ->CreateObject<Collectible>();
 
                 collectible
                     ->GetModule<Transform>()

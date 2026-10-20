@@ -18,13 +18,13 @@ private:
 	bool mbPreviousMouseLeft = false;
 
 private:
-	int mBgGroundHandle; //ï¿½wï¿½iï¿½æ‘œï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
-	int mTitleLogoHandle;//ï¿½^ï¿½Cï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Sï¿½æ‘œï¿½nï¿½ï¿½ï¿½hï¿½ï¿½
+	int mBgGroundHandle; //”wŒi‰æ‘œƒnƒ“ƒhƒ‹
+	int mTitleLogoHandle;//ƒ^ƒCƒgƒ‹ƒƒS‰æ‘œƒnƒ“ƒhƒ‹
 	int mStartTofuHandle = -1;
 private:
 	FloatingMotion mTitleFloatingMotion;
 
-	UIHoverScaler mStartScaler; // ï¿½éŒ¾
+	UIHoverScaler mStartScaler; // éŒ¾
 
 
 

@@ -39,11 +39,13 @@
     <ClCompile Include="Source\GamePad.cpp" />
     <ClCompile Include="Source\GameScene.cpp" />
     <ClCompile Include="Source\Goal.cpp" />
+    <ClCompile Include="Source\GoalEffect.cpp" />
     <ClCompile Include="Source\Graphic.cpp" />
     <ClCompile Include="Source\Gravity.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Master.cpp" />
     <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
@@ -70,6 +72,7 @@
     <ClCompile Include="Source\UIManager.cpp" />
     <ClCompile Include="Source\UIText.cpp" />
     <ClCompile Include="Source\UITransform.cpp" />
+    <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Collectible.h" />
@@ -95,6 +98,7 @@
     <ClInclude Include="Source\GamePad.h" />
     <ClInclude Include="Source\GameScene.h" />
     <ClInclude Include="Source\Goal.h" />
+    <ClInclude Include="Source\GoalEffect.h" />
     <ClInclude Include="Source\Graphic.h" />
     <ClInclude Include="Source\Gravity.h" />
     <ClInclude Include="Source\InputManager.h" />
@@ -120,7 +124,6 @@
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TextRenderer.h" />
     <ClInclude Include="Source\TitleScene.h" />
-    <ClInclude Include="Source\TypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />
@@ -129,6 +132,7 @@
     <ClInclude Include="Source\UIManager.h" />
     <ClInclude Include="Source\UIText.h" />
     <ClInclude Include="Source\UITransform.h" />
+    <ClInclude Include="Source\UITypewriterText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

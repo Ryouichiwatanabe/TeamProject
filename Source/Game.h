@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <DxLib.h>
 #include <chrono>
@@ -10,11 +10,12 @@
 #include "Cursor.h"
 #include "Mouse.h"          // 追加
 #include "ClickEffect.h"    // 追加
+#include "GoalEffect.h"
 #include "EffectManager.h"
 
 class Game {
 public:
-    // C++20 chrono�^��p�����Œ�^�C���X�e�b�v��`
+    // C++20 chrono型を用いた固定タイムステップ定義
     using FrameDuration = std::chrono::duration<double, std::ratio<1, 60>>;
     static constexpr FrameDuration FIXED_TIMESTEP{ 1.0 };
     static constexpr int MAX_SIMULATION_STEPS{ 5 };
@@ -22,7 +23,7 @@ public:
     Game();
     ~Game();
 
-    // �R�s�[�E���[�u�֎~
+    // コピー・ムーブ禁止
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     Game(Game&&) = delete;
@@ -33,7 +34,7 @@ public:
     bool IsInitialized() const noexcept { return m_initSuccess; }
 
 private:
-     bool InitializeDxLib();
+    bool InitializeDxLib();
     void UpdateLogic(double deltaTime);
     void Draw();
 
@@ -51,5 +52,6 @@ private:
     Cursor                m_cursor{};
     Mouse                 m_mouse{};        // 追加
     TofuGame::ClickEffect m_clickEffect{};  // 追加
+    GoalEffect m_goalEffect;
     EffectManager m_effectManager;
 };

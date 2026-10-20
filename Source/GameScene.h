@@ -1,19 +1,16 @@
 ﻿#pragma once
 #include "Scene.h"
 #include <cstddef>
-#include "DxLib.h"
 
 
 //---コンポジション系統
 #include "FloatingMotion.h"
 #include "UILabel.h"
-#include "TypewriterText.h"
+#include "UITypewriterText.h"
 
 class Player;
 class Goal;
 class MovingBlock;
-class Stage;
-class CollectibleIconUI;
 
 //class Player_test;
 
@@ -39,9 +36,6 @@ private:
 
     MovingBlock* mpMovingBlock = nullptr;
 
-    Stage* mpStage = nullptr;
-    CollectibleIconUI* mpCollectibleIconUI[3] = {};
-    bool mbIsCollectibleCollected[3] = {};
 private:
     int mnStageNumber = 1;
 
@@ -65,6 +59,6 @@ private:
     UILabel mStageTextMotion; //Stage用
     FloatingMotion mClearTextMotion; //Clear用
     FloatingMotion mMessageMotion;//メッセージ用
-    TypewriterText mTypewriter;
+
     bool mbIsMessageActive = false; //メッセージ表示フラグ
 };
