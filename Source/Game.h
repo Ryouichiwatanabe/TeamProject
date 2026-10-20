@@ -1,57 +1,53 @@
 ﻿#pragma once
-
-#include <DxLib.h>
-#include <chrono>
-#include <ratio>
-
-#include "SceneManager.h"
+#include "DxLib.h"
+#include "ScreenConfig.h"
+#include "InputManager.h"
 #include "ResourceManager.h"
 #include "FontManager.h"
-#include "Cursor.h"
-#include "Mouse.h"          // 追加
-#include "ClickEffect.h"    // 追加
-#include "GoalEffect.h"
+#include "SceneManager.h"
 #include "EffectManager.h"
+#include "Cursor.h"
+#include "GoalEffect.h"
+#include "Mouse.h"
 
-class Game {
+#include <chrono>
+
+class Game
+{
 public:
-    // C++20 chrono型を用いた固定タイムステップ定義
-    using FrameDuration = std::chrono::duration<double, std::ratio<1, 60>>;
-    static constexpr FrameDuration FIXED_TIMESTEP{ 1.0 };
-    static constexpr int MAX_SIMULATION_STEPS{ 5 };
-
     Game();
     ~Game();
 
-    // コピー・ムーブ禁止
-    Game(const Game&) = delete;
-    Game& operator=(const Game&) = delete;
-    Game(Game&&) = delete;
-    Game& operator=(Game&&) = delete;
-
     void Run();
-
-    bool IsInitialized() const noexcept { return m_initSuccess; }
-
-private:
     bool InitializeDxLib();
+private:
+   
     void UpdateLogic(double deltaTime);
     void Draw();
 
 private:
-    bool m_isRunning{ false };
-    bool m_initSuccess{ false };
+    // 各種マネージャー・オブジェクト
+    ResourceManager m_resourceManager;
+    FontManager m_fontManager;
+    SceneManager m_sceneManager;
+    EffectManager m_effectManager;
 
-    std::chrono::steady_clock::time_point m_lastFrameTime{};
+    Cursor m_cursor;
+    GoalEffect m_goalEffect;
+    Mouse m_mouse;
+
+    // ゲームループ制御
+    bool m_initSuccess = false;
+    bool m_isRunning = false;
+    std::chrono::steady_clock::time_point m_lastFrameTime;
     std::chrono::duration<double> m_accumulator{ 0.0 };
 
-    // 依存関係順に定義（下から上へ逆順に破棄される）
-    ResourceManager       m_resourceManager{};
-    FontManager           m_fontManager{};
-    SceneManager          m_sceneManager{};
-    Cursor                m_cursor{};
-    Mouse                 m_mouse{};        // 追加
-    TofuGame::ClickEffect m_clickEffect{};  // 追加
-    GoalEffect m_goalEffect;
-    EffectManager m_effectManager;
+    static constexpr std::chrono::duration<double> FIXED_TIMESTEP{ 1.0 / 60.0 };
+    static constexpr int MAX_SIMULATION_STEPS = 5;
+
+    // ★デバッグ表示用変数
+    int m_lastPlayHandle = -999;
+    float m_lastClickX = 0.0f;
+    float m_lastClickY = 0.0f;
+    int m_clickCount = 0;
 };
