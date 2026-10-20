@@ -37,7 +37,7 @@ namespace TofuGame {
         }
     };
 
-    // 豆乳の飛沫・衝撃波リング
+    // 衝撃波リング
     struct ShockwaveRing {
         Vector2 position;
         float currentRadius = 6.0f;
@@ -55,6 +55,7 @@ namespace TofuGame {
         }
     };
 
+    //ClickEffect
     class ClickEffect {
     public:
         ClickEffect();
@@ -65,17 +66,17 @@ namespace TofuGame {
         ClickEffect(ClickEffect&&) noexcept = default;
         ClickEffect& operator=(ClickEffect&&) noexcept = default;
 
-        /// @brief クリック地点に豆腐エフェクトを生成
+        //クリック地点に豆腐エフェクトを生成
         void spawn(const Vector2& clickPosition);
 
-        /// @brief 毎フレームの物理・寿命計算
-        /// @param deltaTime 経過秒数 (通常 1.0f / 60.0f)
+        //毎フレームの物理・寿命計算
+        // deltaTime 経過秒数 (通常 1.0f / 60.0f)
         void update(float deltaTime);
 
-        /// @brief DxLibを使った描画処理
+        //DxLibを使った描画処理
         void draw() const;
 
-        /// @brief 画面遷移時などのリセット
+        // 画面遷移時などのリセット
         void clear() noexcept;
 
         [[nodiscard]] const std::vector<DebrisParticle>& getDebrisParticles() const noexcept { return m_debrisParticles; }
@@ -87,9 +88,22 @@ namespace TofuGame {
 
         std::mt19937 m_rng;
 
+        // 共通物理定数
         static constexpr float Gravity = 480.0f;
         static constexpr float AirResistance = 0.94f;
-        static constexpr int DebrisSpawnCount = 10;
+        static constexpr int   DebrisSpawnCount = 10;
+
+        // 生成パラメータ定数 
+        static constexpr float DebrisAngleMin = 0.0f;
+        static constexpr float DebrisAngleMax = 2.0f;
+        static constexpr float DebrisSpeedMin = 100.0f;
+        static constexpr float DebrisSpeedMax = 220.0f;
+        static constexpr float DebrisSizeMin = 6.0f;
+        static constexpr float DebrisSizeMax = 12.0f;
+        static constexpr float DebrisRotSpeedMin = -8.0f;
+        static constexpr float DebrisRotSpeedMax = 8.0f;
+        static constexpr float DebrisLifeMin = 0.4f;
+        static constexpr float DebrisLifeMax = 0.6f;
     };
 
 } // namespace TofuGame

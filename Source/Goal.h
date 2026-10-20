@@ -22,9 +22,5 @@ private:
         { false, false, false }
     };*/
 
-protected:
-    const char* GetModelFilename() const override
-    {
-        return "Resource/Help.png";
-    }
+
 };

@@ -17,11 +17,11 @@ namespace TofuGame {
 
     void ClickEffect::spawn(const Vector2& clickPosition) {
         // パーティクルの初期パラメータ用の一様分布を定義
-        std::uniform_real_distribution<float> angleDist(0.0f, 2.0f * std::numbers::pi_v<float>);
-        std::uniform_real_distribution<float> speedDist(100.0f, 220.0f);
-        std::uniform_real_distribution<float> sizeDist(6.0f, 12.0f);
-        std::uniform_real_distribution<float> rotSpeedDist(-8.0f, 8.0f);
-        std::uniform_real_distribution<float> lifeDist(0.4f, 0.6f);
+        std::uniform_real_distribution<float> angleDist(DebrisAngleMin, DebrisAngleMax * std::numbers::pi_v<float>);
+        std::uniform_real_distribution<float> speedDist(DebrisSpeedMin, DebrisSpeedMax);
+        std::uniform_real_distribution<float> sizeDist(DebrisSizeMin, DebrisSizeMax);
+        std::uniform_real_distribution<float> rotSpeedDist(DebrisRotSpeedMin, DebrisRotSpeedMax);
+        std::uniform_real_distribution<float> lifeDist(DebrisLifeMin, DebrisLifeMax);
 
         // -------------------------------------------------------------------------
         // 1. 豆腐破片（角切りキューブ）の生成

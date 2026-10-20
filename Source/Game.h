@@ -11,6 +11,8 @@
 #include "Mouse.h"          // 追加
 #include "ClickEffect.h"    // 追加
 #include "GoalEffect.h"
+#include "EffectManager.h"
+
 class Game {
 public:
     // C++20 chrono型を用いた固定タイムステップ定義
@@ -51,4 +53,5 @@ private:
     Mouse                 m_mouse{};        // 追加
     TofuGame::ClickEffect m_clickEffect{};  // 追加
     GoalEffect m_goalEffect;
+    EffectManager m_effectManager;
 };

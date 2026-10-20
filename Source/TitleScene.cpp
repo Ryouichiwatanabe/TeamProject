@@ -4,6 +4,7 @@
 
 #include "Master.h"
 #include "SceneManager.h"
+#include "EffectManager.h"
 
 TitleScene::TitleScene()
 	:mTitleLogoHandle(-1)
@@ -25,6 +26,13 @@ void TitleScene::Initialize()
 	mTitleLogoHandle = LoadGraph("Resource/Logo/TitleLogo.png");
 
 	mStartTofuHandle = Master::mpResource->LoadGraphics("Resource/UI/Tofu.png");
+
+	// --- エフェクトの事前読み込み ---
+	if (Master::mpEffectManager != nullptr)
+	{
+		// 名前（キー）とファイルパスを指定
+		Master::mpEffectManager->Load("hit", L"Resource/Effekseer/hit_hanmado_0409.efkefc");
+	}
 
 	// 読み込み失敗の安全対策 (ロード失敗時は -1 が返る)
 	if (mBgGroundHandle == -1)
@@ -65,6 +73,14 @@ void TitleScene::Update(float _deltaTime)
 
 	if (mbStartSelected && mouseLeftDown)
 	{
+		if (Master::mpEffectManager != nullptr)
+		{
+
+			Master::mpEffectManager->PlayEffect("hit", static_cast<float>(mouseX), static_cast<float>(mouseY));
+
+
+
+		}
 		Master::mpSceneManager->RequestScene(
 			SCENE_TYPE::STAGE_SELECT_SCENE
 		);

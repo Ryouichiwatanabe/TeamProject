@@ -26,4 +26,6 @@ private:
 
 	UIHoverScaler mStartScaler; // éŒ¾
 
+
+
 };

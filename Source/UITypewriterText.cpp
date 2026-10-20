@@ -28,7 +28,7 @@ void UITypewriterText::Update()
         // 全角文字（先行バイト）なら2バイト進め、半角なら1バイト進める
         if (_ismbblead(c)) {
             // 安全のため終端チェック
-            if (mVisibleByteCount + 2 <= text.length()) {
+            if (mVisibleByteCount +mBite <= text.length()) {
                 mVisibleByteCount += 2;
             }
             else {

@@ -1,6 +1,12 @@
 ﻿#include "Cursor.h"
 #include "DxLib.h"
 
+namespace
+{
+    constexpr int offsetX = -10; // �E�B���h�E�g�̑������A���֊񂹂�
+    constexpr int offsetY = -1;  // �e�L�X�g�x�[�X���C���̔�����
+}
+
 Cursor::Cursor()
 {
 }
@@ -14,8 +20,8 @@ void Cursor::Initialize()
     // Windowsのマウスカーソルを非表示
     SetMouseDispFlag(FALSE);
 
-    // カーソル画像を読み込む
-    mHandle = LoadGraph("Resource/Cursor3.png");
+    // �J�[�\���摜���ǂݍ���
+    mHandle = LoadGraph("Resource/Cursor4.png");
 }
 
 void Cursor::Update()
@@ -32,9 +38,6 @@ void Cursor::Draw()
     int mouseY;
 
     GetMousePoint(&mouseX, &mouseY);
-
-    const int offsetX = -10;
-    const int offsetY = -1;
 
     DrawGraph(
         mouseX + offsetX,
