@@ -1,6 +1,10 @@
 #include "EffectManager.h"
 #include "EffekseerForDXLib.h"
 
+namespace EffectState
+{
+    constexpr int MaxParticle = 8000;
+}
 EffectManager::~EffectManager()
 {
     Terminate();
@@ -14,7 +18,7 @@ bool EffectManager::Initialize(int screenWidth, int screenHeight)
     screenHeight_ = screenHeight;
 
     // 初期化（パーティクル最大数: 8000）
-    if (Effekseer_Init(8000) == -1) {
+    if (Effekseer_Init(EffectState::MaxParticle) == -1) {
         return false;
     }
 
@@ -23,6 +27,10 @@ bool EffectManager::Initialize(int screenWidth, int screenHeight)
 
     // 2D表示用の画面解像度を設定
     Effekseer_Set2DSetting(screenWidth_, screenHeight_);
+
+    SetUseZBuffer3D(TRUE);
+    SetWriteZBuffer3D(TRUE);
+
 
     isInitialize_ = true;
     return true;
@@ -57,7 +65,8 @@ void EffectManager::Terminate()
     isInitialize_ = false;
 }
 
-bool EffectManager::Load(const std::string& name, const wchar_t* filePath)
+// 修正後
+bool EffectManager::Load(const std::string& name, const wchar_t* filePath, float scale)
 {
     if (!isInitialize_) return false;
 
@@ -65,7 +74,8 @@ bool EffectManager::Load(const std::string& name, const wchar_t* filePath)
         return true;
     }
 
-    int handle = LoadEffekseerEffect(filePath);
+    // 第2引数に scale を渡す
+    int handle = LoadEffekseerEffect(filePath, scale);
     if (handle == -1) {
         return false;
     }
@@ -105,4 +115,11 @@ void EffectManager::SetPosition(int playHandle, float x, float y)
     if (playHandle != -1) {
         SetPosPlayingEffekseer2DEffect(playHandle, x, y, 0.0f);
     }
+}
+
+bool EffectManager::IsPlaying(int playHandle) const
+{
+    if (playHandle == -1) return false;
+    // 0が再生中、-1が停止中/存在しない
+    return IsEffekseer2DEffectPlaying(playHandle) == 0;
 }

@@ -44,7 +44,6 @@ Game::~Game()
 {
     if (m_initSuccess) {
         m_goalEffect.Clear();
-        m_clickEffect.clear();
         m_cursor.Finalize();
         m_sceneManager.Finalize();
         m_fontManager.Clear();
@@ -74,9 +73,11 @@ bool Game::InitializeDxLib()
 
     SetWaitVSyncFlag(TRUE);
 
-    if (DxLib_Init() == -1) {
-        return false;
-    }
+    // 絶対Main.cpp (DxLib_Initの前)
+    SetUseDirect3DVersion(DX_DIRECT3D_11);
+    SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
+
+    if (DxLib_Init() == -1) return -1;
 
     SetDrawScreen(DX_SCREEN_BACK);
 
@@ -142,8 +143,7 @@ void Game::UpdateLogic(double deltaTime)
     // シーン更新
     m_sceneManager.Update(static_cast<float>(deltaTime));
 
-    // 各種エフェクト更新
-    m_clickEffect.update(static_cast<float>(deltaTime));
+   
     m_goalEffect.Update();
 
     m_effectManager.Update();//エフェクトを更新
@@ -164,8 +164,6 @@ void Game::Draw()
     SetUseZBufferFlag(FALSE);
     SetWriteZBufferFlag(FALSE);
     SetUseLighting(FALSE);
-
-    m_clickEffect.draw();
     m_goalEffect.Draw();
 
 
