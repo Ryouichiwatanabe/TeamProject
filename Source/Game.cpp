@@ -4,7 +4,6 @@
 #include "Master.h"
 #include "EffectManager.h"
 
-
 #include <algorithm>
 #include <chrono>
 
@@ -12,27 +11,40 @@ using namespace std::chrono_literals;
 
 Game::Game()
 {
+    // 1. DXライブラリ初期化
     if (!InitializeDxLib()) {
         return;
     }
-   
-    if (!m_effectManager.Initialize
-    (static_cast<int>(ScreenConfig::SCREEN_WIDTH),
-    (static_cast<int>(ScreenConfig::SCREEN_HEIGHT))))
-    {
+
+    const int screenWidth = static_cast<int>(ScreenConfig::SCREEN_WIDTH);
+    const int screenHeight = static_cast<int>(ScreenConfig::SCREEN_HEIGHT);
+
+    // 2. エフェクトマネージャー初期化
+    if (!m_effectManager.Initialize(screenWidth, screenHeight)) {
         return;
     }
-    // 各マネージャーのポインタ受け渡し
+
+    // 3. 各マネージャーのポインタ受け渡し（サービスロケータ等）
     Master::mpResource = &m_resourceManager;
     Master::mpFontManager = &m_fontManager;
     Master::mpSceneManager = &m_sceneManager;
     Master::mpEffectManager = &m_effectManager;
 
+    // 4. エフェクトのロード（自作リソースへの差し替え例）
+    // constexpr float kEffectClickScale = 1.0f;
+    // const bool isLoaded = m_effectManager.Load(
+    //     "EffectClick",
+    //     "Resource/Effect/EffectClick.png",
+    //     kEffectClickScale
+    // );
+    // if (!isLoaded) {
+    //     OutputDebugStringA("[WARN] EffectClick load failed!\n");
+    // }
+
     InputManager::GetInstance().InitializeButton();
     InputManager::GetInstance().InitializeAxis();
     m_cursor.Initialize();
 
-    // 最初のシーンを読み込む
     m_sceneManager.Initialize();
 
     m_initSuccess = true;
@@ -48,11 +60,10 @@ Game::~Game()
         m_sceneManager.Finalize();
         m_fontManager.Clear();
 
+        // エフェクトマネージャーの終了 (DxLib_End より前)
+        m_effectManager.Terminate();
 
-        m_effectManager.Terminate();//Effecseerの終了
         Master::mpEffectManager = nullptr;
-
-
         Master::mpSceneManager = nullptr;
         Master::mpFontManager = nullptr;
         Master::mpResource = nullptr;
@@ -63,8 +74,8 @@ Game::~Game()
 
 bool Game::InitializeDxLib()
 {
+    // 画面モード・ウィンドウ設定
     ChangeWindowMode(TRUE);
-
     SetGraphMode(
         static_cast<int>(ScreenConfig::SCREEN_WIDTH),
         static_cast<int>(ScreenConfig::SCREEN_HEIGHT),
@@ -73,14 +84,15 @@ bool Game::InitializeDxLib()
 
     SetWaitVSyncFlag(TRUE);
 
-    // 絶対Main.cpp (DxLib_Initの前)
-    SetUseDirect3DVersion(DX_DIRECT3D_11);
-    SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
+    // DXライブラリ初期化
+    if (DxLib_Init() == -1) {
+        return false;
+    }
 
-    if (DxLib_Init() == -1) return -1;
-
+    // 描画先を裏画面に設定
     SetDrawScreen(DX_SCREEN_BACK);
 
+    // 3D初期設定
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
@@ -104,14 +116,15 @@ void Game::Run()
             break;
         }
 
-        // マウス更新とクリック判定
+        // マウス入力更新
         m_mouse.Update();
-        if (m_mouse.IsDown(MOUSE_INPUT_LEFT)) {
-            const TofuGame::Vector2 clickPos{
-                static_cast<float>(m_mouse.GetX()),
-                static_cast<float>(m_mouse.GetY())
-            };
-            m_clickEffect.spawn(clickPos);
+
+        // クリック入力トリガー（必要に応じてInputManager側に集約推奨）
+        if (m_mouse.IsPress(MOUSE_INPUT_LEFT)) {
+            const float clickX = static_cast<float>(m_mouse.GetX());
+            const float clickY = static_cast<float>(m_mouse.GetY());
+
+            m_effectManager.PlayEffect("EffectClick", clickX, clickY);
         }
 
         const auto currentTime = std::chrono::steady_clock::now();
@@ -143,36 +156,35 @@ void Game::UpdateLogic(double deltaTime)
     // シーン更新
     m_sceneManager.Update(static_cast<float>(deltaTime));
 
-   
     m_goalEffect.Update();
 
-    m_effectManager.Update();//エフェクトを更新
+    // 2Dエフェクト更新（固定デルタタイムを渡す）
+    m_effectManager.Update(static_cast<float>(deltaTime));
 }
 
 void Game::Draw()
 {
     ClearDrawScreen();
 
-    // 1. 3Dシーン描画（3D用の深度・ライティング設定）
+    // 1. 3Dシーン描画
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
 
     m_sceneManager.Draw();
 
-    // 2. 2Dエフェクト描画（ライティング・ZテストをOFFにして最前面にクリア描画）
+    // 2. 2D描画（Zバッファ・ライティングをOFFにして最前面に描画）
     SetUseZBufferFlag(FALSE);
     SetWriteZBufferFlag(FALSE);
     SetUseLighting(FALSE);
+
     m_goalEffect.Draw();
-
-
     m_effectManager.Draw();
 
     // 3. 最前面カーソル
     m_cursor.Draw();
 
-    // 描画ステートを3D用のデフォルト状態に復帰
+    // 4. 次フレーム用（または3D用）にステートを復元
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);

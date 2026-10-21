@@ -8,8 +8,7 @@
 #include "ResourceManager.h"
 #include "FontManager.h"
 #include "Cursor.h"
-#include "Mouse.h"          // 追加
-#include "ClickEffect.h"    // 追加
+#include "Mouse.h"
 #include "GoalEffect.h"
 #include "EffectManager.h"
 
@@ -20,18 +19,21 @@ public:
     static constexpr FrameDuration FIXED_TIMESTEP{ 1.0 };
     static constexpr int MAX_SIMULATION_STEPS{ 5 };
 
+    static constexpr int SCREEN_WIDTH = 1280;
+    static constexpr int SCREEN_HEIGHT = 720;
+
     Game();
     ~Game();
 
     // コピー・ムーブ禁止
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
-    Game(Game&&) = delete;
-    Game& operator=(Game&&) = delete;
+    Game(Game&&) noexcept = delete;
+    Game& operator=(Game&&) noexcept = delete;
 
     void Run();
 
-    bool IsInitialized() const noexcept { return m_initSuccess; }
+    [[nodiscard]] bool IsInitialized() const noexcept { return m_initSuccess; }
 
 private:
     bool InitializeDxLib();
@@ -48,10 +50,9 @@ private:
     // 依存関係順に定義（下から上へ逆順に破棄される）
     ResourceManager       m_resourceManager{};
     FontManager           m_fontManager{};
+    EffectManager         m_effectManager{};  // 各種エフェクトより先に初期化、後に破棄
     SceneManager          m_sceneManager{};
     Cursor                m_cursor{};
-    Mouse                 m_mouse{};        // 追加
-    TofuGame::ClickEffect m_clickEffect{};  // 追加
-    GoalEffect m_goalEffect;
-    EffectManager m_effectManager;
+    Mouse                 m_mouse{};
+    GoalEffect            m_goalEffect{};     // m_effectManager に依存
 };

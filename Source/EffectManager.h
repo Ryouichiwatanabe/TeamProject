@@ -1,59 +1,41 @@
 #pragma once
-#include "DxLib.h"
 #include <string>
-#include <unordered_map>
+#include <string_view>
+#include <vector>
+#include <memory>
+#include "EffectBase.h"
 
-class EffectManager
+class EffectManager final
 {
 public:
-
-    // ★ここを追加：唯一のインスタンスを返す関数
-    static EffectManager& GetInstance()
-    {
-        static EffectManager instance;
-        return instance;
-    }
-
     EffectManager() = default;
     ~EffectManager();
 
-    // コピーと代入を禁止
+    // 単一管理クラスとしてコピー・ムーブを禁止
     EffectManager(const EffectManager&) = delete;
     EffectManager& operator=(const EffectManager&) = delete;
-   
+    EffectManager(EffectManager&&) noexcept = delete;
+    EffectManager& operator=(EffectManager&&) noexcept = delete;
 
-    // 画面の幅と高さを渡して初期化
+    // 初期化と終了処理
     bool Initialize(int screenWidth, int screenHeight);
-
-    // 毎フレームの更新
-    void Update();
-
-    // 描画（スプライトなどの2D画像を描いた後に呼ぶ）
-    void Draw();
-
-    // 終了処理
     void Terminate();
 
-    // 第3引数にデフォルト値 1.0f を追加
-    bool Load(const std::string& name, const wchar_t* filePath, float scale = 1.0f);
+    // 毎フレームの更新と描画（deltaTime を受け取る）
+    void Update(float deltaTime);
+    void Draw() const;
 
-    // 2D座標（X, Yピクセル）で再生
-    int PlayEffect(const std::string& name, float x, float y);
+    // エフェクト再生（名前指定でインスタンスを生成・登録）
+    void PlayEffect(std::string_view name, float x, float y);
 
-    // エフェクトの停止
-    void StopEffect(int playHandle);
-
-    // 再生中エフェクトの座標更新（キャラ追従用）
-    void SetPosition(int playHandle, float x, float y);
-
-    [[nodiscard]] bool IsPlaying(int playHandle) const;
-
+    // すべての再生中エフェクトを強制クリア
+    void ClearAll();
 
 private:
+    bool isInitialized_{ false };
+    int screenWidth_{ 0 };
+    int screenHeight_{ 0 };
 
-
-    std::unordered_map<std::string, int> effectMap_;
-    bool isInitialize_ = false;
-    int screenWidth_ = 0;
-    int screenHeight_ = 0;
-}; 
+    // 再生中エフェクトインスタンスの所有（RAII / コンポジション）
+    std::vector<std::unique_ptr<EffectBase>> activeEffects_;
+};

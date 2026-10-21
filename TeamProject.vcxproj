@@ -20,13 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Collectible.cpp" />
-    <ClCompile Include="Source\ClickEffect.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
     <ClCompile Include="Source\CsvLoader.cpp" />
     <ClCompile Include="Source\Cursor.cpp" />
     <ClCompile Include="Source\Debug.cpp" />
     <ClCompile Include="Source\DisappearingBlock.cpp" />
+    <ClCompile Include="Source\EffectClick.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\Effekseer.cpp" />
     <ClCompile Include="Source\FakePlayer.cpp" />
@@ -74,12 +74,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Collectible.h" />
-    <ClInclude Include="Source\ClickEffect.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
     <ClInclude Include="Source\CsvLoader.h" />
     <ClInclude Include="Source\Cursor.h" />
     <ClInclude Include="Source\Debug.h" />
+    <ClInclude Include="Source\EffectBase.h" />
+    <ClInclude Include="Source\EffectClick.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />

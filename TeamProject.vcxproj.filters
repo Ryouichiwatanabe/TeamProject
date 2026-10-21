@@ -82,6 +82,12 @@
     <Filter Include="ヘッダー ファイル\Obj\StageElement">
       <UniqueIdentifier>{c327de8e-fcca-4e4e-9f5d-a61a2f5e6fb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Effects">
+      <UniqueIdentifier>{418fa353-9374-4892-aebc-04cbc8b3914c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect">
+      <UniqueIdentifier>{2046ad7d-2139-43c4-961b-24e980b2c2d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GamePad.cpp">
@@ -216,13 +222,7 @@
     <ClCompile Include="Source\Collectible.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClickEffect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GoalEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Master.cpp">
@@ -236,6 +236,15 @@
     </ClCompile>
     <ClCompile Include="Source\EffectManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Effekseer.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GoalEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectClick.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,13 +404,7 @@
     <ClInclude Include="Source\Collectible.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ClickEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GoalEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\UIHoverScaler.h">
@@ -409,6 +412,15 @@
     </ClInclude>
     <ClInclude Include="Source\EffectManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GoalEffect.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectBase.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectClick.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
