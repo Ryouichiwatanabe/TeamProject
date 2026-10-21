@@ -9,12 +9,9 @@
 #include "FontManager.h"
 #include "Cursor.h"
 #include "Mouse.h"
-#include "GoalEffect.h"
-#include "EffectManager.h"
 
 class Game {
 public:
-    // C++20 chrono型を用いた固定タイムステップ定義
     using FrameDuration = std::chrono::duration<double, std::ratio<1, 60>>;
     static constexpr FrameDuration FIXED_TIMESTEP{ 1.0 };
     static constexpr int MAX_SIMULATION_STEPS{ 5 };
@@ -25,7 +22,6 @@ public:
     Game();
     ~Game();
 
-    // コピー・ムーブ禁止
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
     Game(Game&&) noexcept = delete;
@@ -48,11 +44,10 @@ private:
     std::chrono::duration<double> m_accumulator{ 0.0 };
 
     // 依存関係順に定義（下から上へ逆順に破棄される）
-    ResourceManager       m_resourceManager{};
-    FontManager           m_fontManager{};
-    EffectManager         m_effectManager{};  // 各種エフェクトより先に初期化、後に破棄
-    SceneManager          m_sceneManager{};
-    Cursor                m_cursor{};
-    Mouse                 m_mouse{};
-    GoalEffect            m_goalEffect{};     // m_effectManager に依存
+    ResourceManager   m_resourceManager{};
+    FontManager       m_fontManager{};
+    SceneManager      m_sceneManager{};
+    Cursor            m_cursor{};
+    Mouse             m_mouse{};
+  
 };

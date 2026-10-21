@@ -1,88 +1,43 @@
 #include "EffectManager.h"
-#include "EffectClick.h"
-#include <algorithm>
-
-EffectManager::~EffectManager()
-{
-    Terminate();
-}
-
-bool EffectManager::Initialize(int screenWidth, int screenHeight)
-{
-    if (isInitialized_)
-    {
-        return true;
-    }
-
-    screenWidth_ = screenWidth;
-    screenHeight_ = screenHeight;
-
-    isInitialized_ = true;
-    return true;
-}
-
-void EffectManager::Terminate()
-{
-    if (!isInitialized_)
-    {
-        return;
-    }
-
-    ClearAll();
-    isInitialized_ = false;
-}
 
 void EffectManager::Update(float deltaTime)
 {
-    if (!isInitialized_)
+    // 更新中に Play() で effects_ が増えても安全なインデックス走査
+    for (size_t i = 0; i < effects_.size(); ++i)
     {
-        return;
+        effects_[i]->Update(deltaTime);
     }
 
-    // 各エフェクトの更新
-    for (auto& effect : activeEffects_)
-    {
-        effect->Update(deltaTime);
-    }
-
-    // C++20: 寿命が尽きたエフェクトを一括安全削除（メモリも自動解放）
-    std::erase_if(activeEffects_, [](const std::unique_ptr<EffectBase>& effect) {
-        return !effect || effect->IsDead();
+    // IsDead() が true を返したエフェクトを一括削除
+    std::erase_if(effects_, [](const std::unique_ptr<EffectBase>& effect) {
+        return effect->IsDead();
         });
+
+    if (mpEffectClick)
+    {
+        mpEffectClick->Update(deltaTime);
+    }
+   
 }
+
+//unique_ptr   Delete漏れを防ぐ
 
 void EffectManager::Draw() const
 {
-    if (!isInitialized_)
+    for (const auto& effect : effects_)
     {
-        return;
+        effect->Draw();
     }
+    if (mpEffectClick)
+    {
+        mpEffectClick->Draw();
+    }
+   
 
-    // 登録されているエフェクトを順次描画
-    for (const auto& effect : activeEffects_)
-    {
-        if (effect && !effect->IsDead())
-        {
-            effect->Draw();
-        }
-    }
 }
 
-void EffectManager::PlayEffect(std::string_view name, float x, float y)
-{
-    if (!isInitialized_)
-    {
-        return;
-    }
 
-    // 名前判定で対応するエフェクトクラスを生成（簡易ファクトリ）
-    if (name == "EffectClick")
-    {
-        activeEffects_.emplace_back(std::make_unique<EffectClick>(x, y));
-    }
-}
-
-void EffectManager::ClearAll()
+void EffectManager::Clear()
 {
-    activeEffects_.clear();
+    effects_.clear();
 }

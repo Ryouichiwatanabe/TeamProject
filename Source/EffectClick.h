@@ -17,4 +17,7 @@ private:
     float currentRadius_{ 0.0f };
     float alpha_{ 255.0f };
     bool isDead_{ false };
+
+   
+
 };

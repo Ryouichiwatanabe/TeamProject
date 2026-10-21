@@ -2,12 +2,14 @@
 #include "ObjectManager.h"
 #include "UIManager.h"
 #include "CollisionManager.h"
+#include "EffectManager.h"
 
 Scene::Scene()
 {
 	mpObjectManager = new ObjectManager();
 	mpUIManager = new UIManager();
 	mpCollisionManager = new CollisionManager();
+	mpEffectManager = new EffectManager();
 }
 
 Scene::~Scene()
@@ -20,6 +22,9 @@ Scene::~Scene()
 	mpUIManager = nullptr;
 
 	delete mpCollisionManager;
+	mpCollisionManager = nullptr;
+
+	delete mpEffectManager;
 	mpCollisionManager = nullptr;
 }
 
@@ -39,6 +44,12 @@ void Scene::Finalize() {
 	if (mpUIManager != nullptr)
 	{
 		mpUIManager->Clear();
+	}
+
+	//EffectManagerの所有するObject群の開放 --//
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Clear();
 	}
 }
 
@@ -63,6 +74,10 @@ void Scene::Update(float _deltaTime)
 	{
 		mpUIManager->Update();
 	}
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Update(_deltaTime);
+	}
 }
 
 void Scene::Draw()
@@ -75,6 +90,10 @@ void Scene::Draw()
 	if (mpUIManager != nullptr)
 	{
 		mpUIManager->Draw();
+	}
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Draw();
 	}
 }
 

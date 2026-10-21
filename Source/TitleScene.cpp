@@ -70,6 +70,8 @@ void TitleScene::Update(float _deltaTime)
 
 	// ‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ•Û‘¶
 	mbPreviousMouseLeft = currentMouseLeft;
+
+	Scene::Update(_deltaTime);
 }
 
 void TitleScene::Draw()

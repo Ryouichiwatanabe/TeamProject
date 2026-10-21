@@ -1,41 +1,42 @@
 #pragma once
-#include <string>
-#include <string_view>
 #include <vector>
 #include <memory>
+#include <utility>
 #include "EffectBase.h"
+#include "EffectClick.h"
+
+//class EffectClick
 
 class EffectManager final
 {
 public:
     EffectManager() = default;
-    ~EffectManager();
+    ~EffectManager() = default;
 
-    // 単一管理クラスとしてコピー・ムーブを禁止
+    // コピー・ムーブ禁止
     EffectManager(const EffectManager&) = delete;
     EffectManager& operator=(const EffectManager&) = delete;
-    EffectManager(EffectManager&&) noexcept = delete;
-    EffectManager& operator=(EffectManager&&) noexcept = delete;
 
-    // 初期化と終了処理
-    bool Initialize(int screenWidth, int screenHeight);
-    void Terminate();
-
-    // 毎フレームの更新と描画（deltaTime を受け取る）
     void Update(float deltaTime);
     void Draw() const;
+    void Clear();
 
-    // エフェクト再生（名前指定でインスタンスを生成・登録）
-    void PlayEffect(std::string_view name, float x, float y);
-
-    // すべての再生中エフェクトを強制クリア
-    void ClearAll();
+    /**
+     * @brief 任意のエフェクトを生成して再生リストに追加
+     * 使用例: effectManager->Play<ClickEffect>(x, y);
+     */
+    template <typename T, typename... Args>
+    T* Play(Args&&... args)
+    {
+        auto effect = std::make_unique<T>(std::forward<Args>(args)...);
+        T* rawPtr = effect.get(); // 戻り値で受け取れば即座に操作も可能
+        effects_.push_back(std::move(effect));
+        return rawPtr;
+    }
 
 private:
-    bool isInitialized_{ false };
-    int screenWidth_{ 0 };
-    int screenHeight_{ 0 };
+    std::vector<std::unique_ptr<EffectBase>> effects_;
 
-    // 再生中エフェクトインスタンスの所有（RAII / コンポジション）
-    std::vector<std::unique_ptr<EffectBase>> activeEffects_;
+    EffectClick* mpEffectClick;
+
 };
