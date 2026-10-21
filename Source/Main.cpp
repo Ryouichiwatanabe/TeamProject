@@ -5,7 +5,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     auto game = std::make_unique<Game>();
 
-    if (!game->InitializeDxLib()) {
+    if (!game->IsInitialized()) {
         return -1;
     }
 

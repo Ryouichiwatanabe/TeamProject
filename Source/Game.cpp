@@ -4,9 +4,9 @@
 #include "Master.h"
 #include "EffectManager.h"
 
+
 #include <algorithm>
 #include <chrono>
-#include "ClickEffect.h"
 
 using namespace std::chrono_literals;
 
@@ -15,20 +15,13 @@ Game::Game()
     if (!InitializeDxLib()) {
         return;
     }
-
-    if (!m_effectManager.Initialize(
-        static_cast<int>(ScreenConfig::SCREEN_WIDTH),
-        static_cast<int>(ScreenConfig::SCREEN_HEIGHT)))
+   
+    if (!m_effectManager.Initialize
+    (static_cast<int>(ScreenConfig::SCREEN_WIDTH),
+    (static_cast<int>(ScreenConfig::SCREEN_HEIGHT))))
     {
         return;
     }
-
-    // クリックエフェクトの読み込み（見失わないよう scale を 100.0f に設定）
-    bool isLoaded = m_effectManager.Load("click", L"Resource/Effekseer/Effect.efk", 1.0f);
-    if (!isLoaded) {
-        MessageBox(nullptr, "ClickEffect.efk の読み込みに失敗しました！\nパスまたは配置場所を確認してください。", "エラー", MB_OK);
-    }
-
     // 各マネージャーのポインタ受け渡し
     Master::mpResource = &m_resourceManager;
     Master::mpFontManager = &m_fontManager;
@@ -55,8 +48,10 @@ Game::~Game()
         m_sceneManager.Finalize();
         m_fontManager.Clear();
 
-        m_effectManager.Terminate(); // Effekseerの終了
+
+        m_effectManager.Terminate();//Effecseerの終了
         Master::mpEffectManager = nullptr;
+
 
         Master::mpSceneManager = nullptr;
         Master::mpFontManager = nullptr;
@@ -78,11 +73,11 @@ bool Game::InitializeDxLib()
 
     SetWaitVSyncFlag(TRUE);
 
-    // DxLib_Init の前にDirectX 11を設定
+    // 絶対Main.cpp (DxLib_Initの前)
     SetUseDirect3DVersion(DX_DIRECT3D_11);
     SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
 
-    if (DxLib_Init() == -1) return false;
+    if (DxLib_Init() == -1) return -1;
 
     SetDrawScreen(DX_SCREEN_BACK);
 
@@ -109,20 +104,14 @@ void Game::Run()
             break;
         }
 
-        // マウス入力と再生ハンドルの記録
-      // Game.cpp の Run() 内
+        // マウス更新とクリック判定
         m_mouse.Update();
         if (m_mouse.IsDown(MOUSE_INPUT_LEFT)) {
             const TofuGame::Vector2 clickPos{
                 static_cast<float>(m_mouse.GetX()),
                 static_cast<float>(m_mouse.GetY())
             };
-
-            // ★自作ClickEffect呼び出しを無くし、Effekseerに一本化
-            m_lastPlayHandle = m_effectManager.PlayEffect("click", clickPos.x, clickPos.y);
-            m_lastClickX = clickPos.x;
-            m_lastClickY = clickPos.y;
-            m_clickCount++;
+            m_clickEffect.spawn(clickPos);
         }
 
         const auto currentTime = std::chrono::steady_clock::now();
@@ -154,70 +143,37 @@ void Game::UpdateLogic(double deltaTime)
     // シーン更新
     m_sceneManager.Update(static_cast<float>(deltaTime));
 
+   
     m_goalEffect.Update();
 
-    // エフェクトの更新
-    m_effectManager.Update();
+    m_effectManager.Update();//エフェクトを更新
 }
 
 void Game::Draw()
 {
     ClearDrawScreen();
 
-    // 1. 3Dシーン描画
+    // 1. 3Dシーン描画（3D用の深度・ライティング設定）
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
+
     m_sceneManager.Draw();
 
-    // 2. 2Dエフェクト描画
+    // 2. 2Dエフェクト描画（ライティング・ZテストをOFFにして最前面にクリア描画）
     SetUseZBufferFlag(FALSE);
     SetWriteZBufferFlag(FALSE);
     SetUseLighting(FALSE);
     m_goalEffect.Draw();
 
-    // ★ここで毎フレーム確実に更新してから描画する
-    m_effectManager.Update();
+
     m_effectManager.Draw();
 
     // 3. 最前面カーソル
     m_cursor.Draw();
 
-    // 描画ステート復帰
+    // 描画ステートを3D用のデフォルト状態に復帰
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
-
-    // --- デバッグ文字表示（画面最前面） ---
-    SetUseZBufferFlag(FALSE);
-    SetWriteZBufferFlag(FALSE);
-    SetUseLighting(FALSE);
-
-    unsigned int colorWhite = GetColor(255, 255, 255);
-    unsigned int colorGreen = GetColor(0, 255, 0);
-    unsigned int colorRed = GetColor(255, 0, 0);
-
-    DrawString(10, 10, "--- Effekseer Debug Info ---", colorWhite);
-    DrawFormatString(10, 30, colorWhite, "Click Count: %d", m_clickCount);
-    DrawFormatString(10, 50, colorWhite, "Last Click Pos: (%.1f, %.1f)", m_lastClickX, m_lastClickY);
-
-    if (m_lastPlayHandle == -999) {
-        DrawString(10, 70, "Status: Not Clicked Yet", colorWhite);
-    }
-    else if (m_lastPlayHandle == -1) {
-        DrawString(10, 70, "Status: Play Failed (-1: Effect not registered)", colorRed);
-    }
-    else {
-        bool isPlaying = m_effectManager.IsPlaying(m_lastPlayHandle);
-        DrawFormatString(10, 70, isPlaying ? colorGreen : colorRed,
-            "Status: Handle %d (%s)", m_lastPlayHandle, isPlaying ? "PLAYING" : "STOPPED / ENDED");
-    }
-
-    // クリック位置に赤い十字線を描画
-    if (m_clickCount > 0) {
-        DrawLine(static_cast<int>(m_lastClickX) - 10, static_cast<int>(m_lastClickY),
-            static_cast<int>(m_lastClickX) + 10, static_cast<int>(m_lastClickY), colorRed);
-        DrawLine(static_cast<int>(m_lastClickX), static_cast<int>(m_lastClickY) - 10,
-            static_cast<int>(m_lastClickX), static_cast<int>(m_lastClickY) + 10, colorRed);
-    }
 }
