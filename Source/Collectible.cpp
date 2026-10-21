@@ -1,15 +1,22 @@
-#include "Collectible.h"
+ï»¿#include "Collectible.h"
 
 #include "Transform.h"
 #include "Graphic.h"
 #include "Collider.h"
 
+Collectible::Collectible(
+    const std::string& _filename,
+    int _itemIndex
+)
+    : mFilename(_filename),
+    mItemIndex(_itemIndex)
+{
+}
+
 void Collectible::Init()
 {
-    // æ“¾ƒAƒCƒeƒ€‚Ìƒ^ƒO‚ğİ’è
     SetTag(Tag::COLLECTIBLE);
 
-    // ƒvƒŒƒCƒ„[‚Æ‚ÌÕ“Ë‚ğŒŸ’m‚·‚é
     auto collider = GetModule<Collider>();
     if (collider != nullptr)
     {
@@ -19,14 +26,8 @@ void Collectible::Init()
 
 void Collectible::InitComponent()
 {
-    // À•WE‰ñ“]EŠg‘å—¦
     AddModule<Transform>();
-
-    // æ“¾ƒAƒCƒeƒ€‚Ì‰æ‘œ
-    // ¦‰æ‘œƒpƒX‚ÍÀÛ‚Ìƒtƒ@ƒCƒ‹–¼‚É‡‚í‚¹‚Ä•ÏX‚·‚é
-    AddModule<Graphic>("Resource/Cursor2.png");
-
-    // “–‚½‚è”»’è
+    AddModule<Graphic>(mFilename);
     AddModule<Collider>();
 
     auto collider = GetModule<Collider>();
@@ -40,38 +41,82 @@ void Collectible::InitComponent()
 
 void Collectible::Update(float _deltaTime)
 {
-    // ƒ|[ƒY’†‚Íˆ—‚µ‚È‚¢
     if (_deltaTime <= 0.0f)
     {
         return;
     }
 
-    // æ“¾Ï‚İ‚È‚ç‰½‚à‚µ‚È‚¢
-    if (mbIsCollected)
+    auto transform = GetModule<Transform>();
+
+    if (transform == nullptr)
     {
         return;
     }
 
-    // GameObject‚ÌXV
+    // å–å¾—ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ä¸­
+    if (mbIsPickedUp)
+    {
+        mPickupTimer += _deltaTime;
+
+        float rate = mPickupTimer / mPickupDuration;
+
+        if (rate > 1.0f)
+        {
+            rate = 1.0f;
+        }
+
+        float scale = 1.0f;
+
+        // å‰åŠï¼šå°‘ã—å¤§ãããªã‚‹
+        if (rate < 0.5f)
+        {
+            float expandRate = rate / 0.5f;
+            scale = 1.0f + expandRate * 0.3f;
+        }
+        // å¾ŒåŠï¼šç¸®ã‚“ã§æ¶ˆãˆã‚‹
+        else
+        {
+            float shrinkRate = (rate - 0.5f) / 0.5f;
+            scale = 1.3f * (1.0f - shrinkRate);
+        }
+
+        auto transform = GetModule<Transform>();
+
+        if (transform != nullptr)
+        {
+            transform->SetScale(
+                VGet(scale, scale, 1.0f)
+            );
+        }
+
+        if (rate >= 1.0f)
+        {
+            mbIsCollected = true;
+            Destroy();
+        }
+
+        return;
+    }
+
     GameObject::Update(_deltaTime);
 
     auto collider = GetModule<Collider>();
+
     if (collider == nullptr)
     {
         return;
     }
 
-    // ƒvƒŒƒCƒ„[‚ÉG‚ê‚½‚çæ“¾
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è§¦ã‚ŒãŸ
     if (collider->IsColliding(Tag::PLAYER_CELL))
     {
-        mbIsCollected = true;
-        Destroy();
+        mbIsPickedUp = true;
+        mPickupTimer = 0.0f;
     }
 }
 
 void Collectible::Draw()
 {
-    // æ“¾Ï‚İ‚È‚ç•`‰æ‚µ‚È‚¢
     if (mbIsCollected)
     {
         return;

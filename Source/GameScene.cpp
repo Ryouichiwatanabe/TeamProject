@@ -18,6 +18,8 @@
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
+#include "CollectibleIconUI.h"
+#include "Collectible.h"
 
 #include "Debug.h"
 #include "GameConfig.h"
@@ -85,10 +87,46 @@ void GameScene::Initialize()
         ->GetObjectManager()
         ->CreateObject<FakePlayer>();*/
 
-    auto* testUI =
-        this
-        ->GetUIManager()
-        ->CreateUI<PlayerShapeUI>();
+	auto* testUI =
+		this
+		->GetUIManager()
+		->CreateUI<PlayerShapeUI>();
+
+	for (int i = 0; i < 3; i++)
+	{
+		mpCollectibleIconUI[i] =
+			this
+			->GetUIManager()
+			->CreateUI<CollectibleIconUI>();
+
+		mpCollectibleIconUI[i]->SetGraph(
+			stage->GetCollectibleFilename(i)
+		);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetAnchor(
+				VGet(0.0f, 0.0f, 0.0f)
+			);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetPosition(
+				VGet(
+					1080.0f + i * 80.0f,
+					50.0f,
+					0.0f
+				)
+			);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(0.8f, 0.8f, 1.0f)
+			);
+
+		mpCollectibleIconUI[i]->SetEnabled(false);
+	}
 
 	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
 }
@@ -152,6 +190,33 @@ void GameScene::Update(float deltaTime)
 
 	auto player = GetObjectManager()
 		->FindObject<Player>();
+
+	// Collectibleの取得状態を確認
+	auto collectibles =
+		GetObjectManager()->FindObjects<Collectible>();
+
+	for (auto collectible : collectibles)
+	{
+		int itemIndex = collectible->GetItemIndex();
+
+		if (itemIndex < 0 || itemIndex >= 3)
+		{
+			continue;
+		}
+
+		if (collectible->IsPickedUp())
+		{
+			mbIsCollectibleCollected[itemIndex] = true;
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (mbIsCollectibleCollected[i])
+		{
+			mpCollectibleIconUI[i]->SetCollected(true);
+		}
+	}
 
 	if (mpGoal != nullptr &&
 		mpGoal->IsPlayerTouching())

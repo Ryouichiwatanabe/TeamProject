@@ -11,6 +11,8 @@
 class Player;
 class Goal;
 class MovingBlock;
+class CollectibleIconUI;
+class ClearCollectibleUI;
 
 //class Player_test;
 
@@ -52,6 +54,11 @@ private:
     bool mbIsClear = false;
 
     Goal* mpGoal = nullptr;
+
+    CollectibleIconUI* mpCollectibleIconUI[3] = {};
+    ClearCollectibleUI* mpClearCollectibleUI[3] = {};
+
+    bool mbIsCollectibleCollected[3] = {};
 
     //FontやTitleLogoなどのアニメーションをするためのコンポジション
 private:
