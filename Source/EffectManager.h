@@ -34,6 +34,15 @@ public:
         return rawPtr;
     }
 
+
+    void SpawnClickEffect(float x, float y)
+    {
+        // Šù‚É‘¶İ‚µ‚Ä‚¢‚ê‚ÎAŒÃ‚¢‚à‚Ì‚ğíœ‚µ‚Äƒƒ‚ƒŠƒŠ[ƒN‚ğ–h‚®
+        delete mpEffectClick;
+        mpEffectClick = new EffectClick(x, y);
+    }
+
+
 private:
     std::vector<std::unique_ptr<EffectBase>> effects_;
 

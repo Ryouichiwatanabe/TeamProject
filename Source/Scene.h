@@ -18,6 +18,7 @@ public:
 
 
 
+
 	ObjectManager* GetObjectManager() {return mpObjectManager;}
 	UIManager* GetUIManager() { return mpUIManager; }
 	CollisionManager* GetCollisionManager() {return mpCollisionManager;}
@@ -25,6 +26,10 @@ public:
 
 
 private:
+
+	void UpdateClickEffect();
+
+
 	ObjectManager* mpObjectManager;			// ObjectManager(所有権はScene)
 	UIManager* mpUIManager;
 	CollisionManager* mpCollisionManager;	// CollisionManager(所有権はScene)

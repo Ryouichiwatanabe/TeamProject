@@ -3,6 +3,7 @@
 #include "UIManager.h"
 #include "CollisionManager.h"
 #include "EffectManager.h"
+#include "InputManager.h"
 
 Scene::Scene()
 {
@@ -25,7 +26,7 @@ Scene::~Scene()
 	mpCollisionManager = nullptr;
 
 	delete mpEffectManager;
-	mpCollisionManager = nullptr;
+	mpEffectManager = nullptr;
 }
 
 void Scene::Finalize() {
@@ -78,6 +79,8 @@ void Scene::Update(float _deltaTime)
 	{
 		mpEffectManager->Update(_deltaTime);
 	}
+	UpdateClickEffect();
+
 }
 
 void Scene::Draw()
@@ -97,6 +100,21 @@ void Scene::Draw()
 	}
 }
 
+// クリック状態を取得してエフェクトを生成する処理
+// どのシーンでも使用するからここで呼び出し
+void Scene::UpdateClickEffect()
+{
+	if (InputManager::GetInstance().GetButtonDown(Button::Confirm))
+	{
+		int mouseX = 0, mouseY = 0;
+		GetMousePoint(&mouseX, &mouseY); // 現在のマウス座標を取得
+
+		if (mpEffectManager != nullptr)
+		{
+			mpEffectManager->SpawnClickEffect(static_cast<float>(mouseX), static_cast<float>(mouseY));
+		}
+	}
+}
 
 
 

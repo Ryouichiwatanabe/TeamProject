@@ -152,6 +152,9 @@ void TitleScene::Draw()
 		"START",
 		textColor
 	);
+
+	Scene::Draw();
+
 }
 
 void TitleScene::Finalize()

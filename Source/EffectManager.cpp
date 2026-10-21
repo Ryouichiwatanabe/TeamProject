@@ -40,4 +40,7 @@ void EffectManager::Draw() const
 void EffectManager::Clear()
 {
     effects_.clear();
+    delete mpEffectClick;
+    mpEffectClick = nullptr;
+
 }
