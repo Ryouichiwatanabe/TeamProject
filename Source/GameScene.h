@@ -66,6 +66,7 @@ private:
     UILabel mStageTextMotion; //Stage用
     FloatingMotion mClearTextMotion; //Clear用
     FloatingMotion mMessageMotion;//メッセージ用
+    float mfClearItemTimer = 0.0f;
 
     bool mbIsMessageActive = false; //メッセージ表示フラグ
 };
