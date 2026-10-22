@@ -243,6 +243,9 @@
     <ClCompile Include="Source\EffectClick.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EffectClear.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
@@ -417,6 +420,9 @@
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
     <ClInclude Include="Source\EffectClick.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectClear.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
   </ItemGroup>

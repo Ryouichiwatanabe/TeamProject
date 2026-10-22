@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Scene.h"
 #include <cstddef>
+#include "EffectClear.h"
 
 
 //---コンポジション系統
@@ -22,17 +23,20 @@ public:
     void Draw();
     void Finalize();
     void SetStageNumber(int _stageNumber);
+    std::unique_ptr<EffectManager> mpEffectManager;
 
 private:
     int StageNumberFontHandle = -1;//左上のステージ番号用フォントハンドル
     int mMessageFontHandle = -1;   //下のTypeWriter用のフォントハンドル
     int mPauseBoardHandle = -1;
 		
-        void*  mAddedFontHandle = nullptr; // フォントハンドル
+    void*  mAddedFontHandle = nullptr; // フォントハンドル
 
     int mCursorHandle = -1;
 
-    void DrawCursor();
+  //  void DrawCursor();
+
+    float mClearTimer = 0.0f;
 
     MovingBlock* mpMovingBlock = nullptr;
 

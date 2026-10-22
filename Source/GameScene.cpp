@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
+//-- Effect --//
+#include "EffectClear.h"
 
 // -- GameObject -- //
 #include "Stage.h"
@@ -25,20 +27,22 @@
 
 #include "FontManager.h"
 
+#include "EffectManager.h"
+
 
 #include "InputManager.h"
+#include "ScreenConfig.h"
 
 void GameScene::Initialize()
 {
 	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
 
+	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
+	mpEffectManager = std::make_unique<EffectManager>();
+
 	// 初期化処理
-	mpPlayer =
-		this
-		->GetObjectManager()
-		->CreateObject<Player>();
-	mpPlayer
-		->InitPiece();
+	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
+	mpPlayer->InitPiece();
 
 	auto* stage = new Stage();
 
@@ -92,12 +96,23 @@ void GameScene::Initialize()
 
 	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
 }
-
 void GameScene::Update(float deltaTime)
 {
+	// 1. エフェクトマネージャーの更新（クリア中も動かすため最優先）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Update(deltaTime);
+	}
+
+	// 2. クリア状態の処理
 	if (mbIsClear)
 	{
-		UpdateClear();
+		// エフェクトを1秒ほど見せてからクリアUIを操作可能にする
+		mClearTimer += deltaTime;
+		if (mClearTimer >= 1.0f)
+		{
+			UpdateClear();
+		}
 		return;
 	}
 
@@ -108,57 +123,31 @@ void GameScene::Update(float deltaTime)
 		deltaTime = 0.0f;
 	}
 
-
-/*	//====メッセージ表示中の制御====//
-	if (mbIsMessageActive)
-	{
-		mMessageMotion.Update();
-		// 左クリック または Zキー/SPACEキーが押されたか判定
-		bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-		bool isClickTriggered = currentMouseLeft && !mbPreviousMouseLeft;
-		mbPreviousMouseLeft = currentMouseLeft;
-
-		// キーボード入力判定（必要に応じて）
-		static bool prevActionKey = false;
-		bool curActionKey = (CheckHitKey(KEY_INPUT_Z) != 0 || CheckHitKey(KEY_INPUT_SPACE) != 0);
-		bool isKeyTriggered = curActionKey && !prevActionKey;
-		prevActionKey = curActionKey;
-
-		if (isClickTriggered || isKeyTriggered)
-		{
-			if (!mTypewriter.IsFinished())
-			{
-				// ① まだ流れている最中なら全文スキップ
-				mTypewriter.Skip();
-			}
-			else
-			{
-				// ② 既に全部出ているならメッセージを閉じてゲーム開始
-				mbIsMessageActive = false;
-			}
-		}
-
-		// メッセージ表示中はゲーム本編の進行（移動など）を止める場合
-		return;
-	}*/
-
-
 	//==通常時：ステージ番号の文字を更新==//
 	mStageTextMotion.Update();
-
 
 	// 更新処理
 	Scene::Update(deltaTime);
 
-	auto player = GetObjectManager()
-		->FindObject<Player>();
+	auto player = GetObjectManager()->FindObject<Player>();
 
-	if (mpGoal != nullptr &&
-		mpGoal->IsPlayerTouching())
+	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
 	{
 		mbIsClear = true;
+		mClearTimer = 0.0f; // タイマー初期化
+
+		// クリアエフェクトの再生
+		if (mpEffectManager != nullptr)
+		{
+			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
+			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
+			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
+
+			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
+		}
 	}
 }
+
 
 
 void GameScene::Draw()
@@ -207,12 +196,19 @@ void GameScene::Draw()
 	}*/
 
 
-    if (mbIsPaused)
-    {
-        DrawPause();
-    }
+	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Draw();
+	}
 
-	if (mbIsClear)
+	if (mbIsPaused)
+	{
+		DrawPause();
+	}
+
+	// エフェクトが弾けた後（1秒後）にクリア画面を表示
+	if (mbIsClear && mClearTimer >= 1.0f)
 	{
 		DrawClear();
 	}

@@ -337,3 +337,14 @@ bool Player::IsPieceEnabled(int _column, int _row)
 {
 	return mPieces[_column][_row]->GetEnabled();
 }
+
+VECTOR Player::GetPosition() noexcept
+{
+	auto transform = GetModule<Transform>();
+	if (transform == nullptr)
+	{
+		return VGet(0.0f, 0.0f, 0.0f);
+	}
+
+	return transform->GetPosition();
+}

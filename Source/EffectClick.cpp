@@ -1,64 +1,23 @@
 ﻿#include "EffectClick.h"
-#include <DxLib.h>
-#include <algorithm>
-
-namespace
-{
-    // エフェクトの挙動パラメータ
-    constexpr float kInitialRadius = 5.0f;
-    constexpr float kExpandSpeed = 120.0f;  // 1秒間に広がる半径（ピクセル）
-    constexpr float kFadeSpeed = 450.0f;    // 1秒間に減少するアルファ値
-    constexpr int kCircleColor = 0xFFFFFF;  // 白色（RGB: 255, 255, 255）
-}
 
 EffectClick::EffectClick(float fX, float fY)
-    : m_fX(fX)
-    , m_fY(fY)
-    , m_fCurrentRadius(kInitialRadius)
-    , m_fAlpha(255.0f)
-    , m_bIsDead(false)
+    : EffectBase(fX, fY, DURATION) // 寿命を基底クラスに渡すだけ
 {
 }
 
-void EffectClick::Update(float fDeltaTime)
+void EffectClick::OnUpdate(float fDeltaTime)
 {
-    if (m_bIsDead)
-    {
-        return;
-    }
+    // GetProgress() は 0.0f ～ 1.0f を返す
+    const float progress = GetProgress();
 
-    // 半径の拡大とアルファ値の減衰
-    m_fCurrentRadius += kExpandSpeed * fDeltaTime;
-    m_fAlpha -= kFadeSpeed * fDeltaTime;
-
-    // 完全に透明になったら死亡フラグを立てる
-    if (m_fAlpha <= 0.0f)
-    {
-        m_fAlpha = 0.0f;
-        m_bIsDead = true;
-    }
+    // 進行度に応じて半径を広げ、アルファを薄くするだけ
+    m_fCurrentRadius = MAX_RADIUS * progress;
+    m_fAlpha = 255.0f * (1.0f - progress);
 }
 
 void EffectClick::Draw() const
 {
-    if (m_bIsDead)
-    {
-        return;
-    }
-
-    // アルファブレンドを有効化
-    const int blendAlpha = std::clamp(static_cast<int>(m_fAlpha), 0, 255);
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, blendAlpha);
-
-    // 波紋の輪郭線を描画
-    DrawCircle(
-        static_cast<int>(m_fX),
-        static_cast<int>(m_fY),
-        static_cast<int>(m_fCurrentRadius),
-        kCircleColor,
-        FALSE // 塗りつぶしなし（枠線のみ）
-    );
-
-    // ブレンドモードを通常描画に戻す
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(m_fAlpha));
+    DrawCircle(static_cast<int>(m_fX), static_cast<int>(m_fY), static_cast<int>(m_fCurrentRadius), GetColor(255, 255, 255), FALSE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
