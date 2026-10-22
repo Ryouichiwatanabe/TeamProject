@@ -1,15 +1,15 @@
-#include "EffectManager.h"
+ï»¿#include "EffectManager.h"
 #include "InputManager.h"
 
 void EffectManager::Update(float deltaTime)
 {
-    // XV’†‚É Play() ‚Å effects_ ‚ª‘‚¦‚Ä‚àˆÀ‘S‚ÈƒCƒ“ƒfƒbƒNƒX‘–¸
+    // æ›´æ–°ä¸­ã« Play() ã§ effects_ ãŒå¢—ãˆã¦ã‚‚å®‰å…¨ãªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èµ°æŸ»
     for (size_t i = 0; i < effects_.size(); ++i)
     {
         effects_[i]->Update(deltaTime);
     }
 
-    // IsDead() ‚ª true ‚ğ•Ô‚µ‚½ƒGƒtƒFƒNƒg‚ğˆêŠ‡íœ
+    // IsDead() ãŒ true ã‚’è¿”ã—ãŸã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ä¸€æ‹¬å‰Šé™¤
     std::erase_if(effects_, [](const std::unique_ptr<EffectBase>& effect) {
         return effect->IsDead();
         });
@@ -18,7 +18,7 @@ void EffectManager::Update(float deltaTime)
    
 }
 
-//unique_ptr   Delete˜R‚ê‚ğ–h‚®
+//unique_ptr   Deleteæ¼ã‚Œã‚’é˜²ã
 
 void EffectManager::Draw() const
 {
@@ -38,20 +38,18 @@ void EffectManager::Clear()
 
 }
 
-// ƒNƒŠƒbƒNó‘Ô‚ğæ“¾‚µ‚ÄƒGƒtƒFƒNƒg‚ğ¶¬‚·‚éˆ—
-// ‚Ç‚ÌƒV[ƒ“‚Å‚àg—p‚·‚é‚©‚ç‚±‚±‚ÅŒÄ‚Ño‚µ
+// ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’å–å¾—ã—ã¦ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹å‡¦ç†
+// ã©ã®ã‚·ãƒ¼ãƒ³ã§ã‚‚ä½¿ç”¨ã™ã‚‹ã‹ã‚‰ã“ã“ã§å‘¼ã³å‡ºã—
 void EffectManager::PlayClickRipple()
 {
-    if (InputManager::GetInstance().GetButtonDown(Button::Confirm))
+    auto& inputManager = InputManager::GetInstance();
+    if (inputManager.GetButtonDown(Button::Confirm))
     {
-        int mouseX = 0, mouseY = 0;
-        GetMousePoint(&mouseX, &mouseY); // Œ»İ‚Ìƒ}ƒEƒXÀ•W‚ğæ“¾
+        const auto& mouse = inputManager.GetMouse();
+        const float posX = static_cast<float>(mouse.GetX());
+        const float posY = static_cast<float>(mouse.GetY());
 
-        // •‚“®¬”“_”ifloatj‚Æ‚µ‚Äˆµ‚¤ê‡‚Í static_cast
-        const float posX = static_cast<float>(mouseX);
-        const float posY = static_cast<float>(mouseY);
-
-        // ClickEffect ‚ğ¶¬‚µ‚Ä effects_ ‚É’Ç‰Á
+        // ClickEffect ã‚’ç”Ÿæˆã—ã¦ effects_ ã«è¿½åŠ 
         effects_.emplace_back(std::make_unique<EffectClick>(posX, posY));
     }
 }

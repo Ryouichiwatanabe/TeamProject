@@ -1,14 +1,14 @@
-#include "EffectClick.h"
+ï»¿#include "EffectClick.h"
 #include <DxLib.h>
 #include <algorithm>
 
 namespace
 {
-    // ƒGƒtƒFƒNƒg‚Ì‹““®ƒpƒ‰ƒ[ƒ^
+    // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æŒ™å‹•ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
     constexpr float kInitialRadius = 5.0f;
-    constexpr float kExpandSpeed = 120.0f;  // 1•bŠÔ‚ÉL‚ª‚é”¼ŒaiƒsƒNƒZƒ‹j
-    constexpr float kFadeSpeed = 450.0f;    // 1•bŠÔ‚ÉŒ¸­‚·‚éƒAƒ‹ƒtƒ@’l
-    constexpr int kCircleColor = 0xFFFFFF;  // ”’FiRGB: 255, 255, 255j
+    constexpr float kExpandSpeed = 120.0f;  // 1ç§’é–“ã«åºƒãŒã‚‹åŠå¾„ï¼ˆãƒ”ã‚¯ã‚»ãƒ«ï¼‰
+    constexpr float kFadeSpeed = 450.0f;    // 1ç§’é–“ã«æ¸›å°‘ã™ã‚‹ã‚¢ãƒ«ãƒ•ã‚¡å€¤
+    constexpr int kCircleColor = 0xFFFFFF;  // ç™½è‰²ï¼ˆRGB: 255, 255, 255ï¼‰
 }
 
 EffectClick::EffectClick(float fX, float fY)
@@ -27,11 +27,11 @@ void EffectClick::Update(float fDeltaTime)
         return;
     }
 
-    // ”¼Œa‚ÌŠg‘å‚ÆƒAƒ‹ƒtƒ@’l‚ÌŒ¸Š
+    // åŠå¾„ã®æ‹¡å¤§ã¨ã‚¢ãƒ«ãƒ•ã‚¡å€¤ã®æ¸›è¡°
     m_fCurrentRadius += kExpandSpeed * fDeltaTime;
     m_fAlpha -= kFadeSpeed * fDeltaTime;
 
-    // Š®‘S‚É“§–¾‚É‚È‚Á‚½‚ç€–Sƒtƒ‰ƒO‚ğ—§‚Ä‚é
+    // å®Œå…¨ã«é€æ˜ã«ãªã£ãŸã‚‰æ­»äº¡ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
     if (m_fAlpha <= 0.0f)
     {
         m_fAlpha = 0.0f;
@@ -46,19 +46,19 @@ void EffectClick::Draw() const
         return;
     }
 
-    // ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒh‚ğ—LŒø‰»
+    // ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚’æœ‰åŠ¹åŒ–
     const int blendAlpha = std::clamp(static_cast<int>(m_fAlpha), 0, 255);
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, blendAlpha);
 
-    // ”g–ä‚Ì—ÖŠsü‚ğ•`‰æ
+    // æ³¢ç´‹ã®è¼ªéƒ­ç·šã‚’æç”»
     DrawCircle(
         static_cast<int>(m_fX),
         static_cast<int>(m_fY),
         static_cast<int>(m_fCurrentRadius),
         kCircleColor,
-        FALSE // “h‚è‚Â‚Ô‚µ‚È‚µi˜gü‚Ì‚İj
+        FALSE // å¡—ã‚Šã¤ã¶ã—ãªã—ï¼ˆæ ç·šã®ã¿ï¼‰
     );
 
-    // ƒuƒŒƒ“ƒhƒ‚[ƒh‚ğ’Êí•`‰æ‚É–ß‚·
+    // ãƒ–ãƒ¬ãƒ³ãƒ‰ãƒ¢ãƒ¼ãƒ‰ã‚’é€šå¸¸æç”»ã«æˆ»ã™
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
