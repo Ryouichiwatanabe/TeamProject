@@ -1,4 +1,5 @@
 #include "EffectManager.h"
+#include "InputManager.h"
 
 void EffectManager::Update(float deltaTime)
 {
@@ -13,10 +14,7 @@ void EffectManager::Update(float deltaTime)
         return effect->IsDead();
         });
 
-    if (mpEffectClick)
-    {
-        mpEffectClick->Update(deltaTime);
-    }
+ 
    
 }
 
@@ -28,10 +26,7 @@ void EffectManager::Draw() const
     {
         effect->Draw();
     }
-    if (mpEffectClick)
-    {
-        mpEffectClick->Draw();
-    }
+   
    
 
 }
@@ -40,7 +35,23 @@ void EffectManager::Draw() const
 void EffectManager::Clear()
 {
     effects_.clear();
-    delete mpEffectClick;
-    mpEffectClick = nullptr;
 
+}
+
+// クリック状態を取得してエフェクトを生成する処理
+// どのシーンでも使用するからここで呼び出し
+void EffectManager::PlayClickRipple()
+{
+    if (InputManager::GetInstance().GetButtonDown(Button::Confirm))
+    {
+        int mouseX = 0, mouseY = 0;
+        GetMousePoint(&mouseX, &mouseY); // 現在のマウス座標を取得
+
+        // 浮動小数点数（float）として扱う場合は static_cast
+        const float posX = static_cast<float>(mouseX);
+        const float posY = static_cast<float>(mouseY);
+
+        // ClickEffect を生成して effects_ に追加
+        effects_.emplace_back(std::make_unique<EffectClick>(posX, posY));
+    }
 }

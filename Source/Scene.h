@@ -25,9 +25,9 @@ public:
 	EffectManager* GetEffectManager() { return mpEffectManager; }
 
 
+
 private:
 
-	void UpdateClickEffect();
 
 
 	ObjectManager* mpObjectManager;			// ObjectManager(所有権はScene)

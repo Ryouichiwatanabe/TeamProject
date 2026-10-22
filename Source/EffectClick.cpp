@@ -11,50 +11,50 @@ namespace
     constexpr int kCircleColor = 0xFFFFFF;  // 白色（RGB: 255, 255, 255）
 }
 
-EffectClick::EffectClick(float x, float y)
-    : x_(x)
-    , y_(y)
-    , currentRadius_(kInitialRadius)
-    , alpha_(255.0f)
-    , isDead_(false)
+EffectClick::EffectClick(float fX, float fY)
+    : m_fX(fX)
+    , m_fY(fY)
+    , m_fCurrentRadius(kInitialRadius)
+    , m_fAlpha(255.0f)
+    , m_bIsDead(false)
 {
 }
 
-void EffectClick::Update(float deltaTime)
+void EffectClick::Update(float fDeltaTime)
 {
-    if (isDead_)
+    if (m_bIsDead)
     {
         return;
     }
 
     // 半径の拡大とアルファ値の減衰
-    currentRadius_ += kExpandSpeed * deltaTime;
-    alpha_ -= kFadeSpeed * deltaTime;
+    m_fCurrentRadius += kExpandSpeed * fDeltaTime;
+    m_fAlpha -= kFadeSpeed * fDeltaTime;
 
     // 完全に透明になったら死亡フラグを立てる
-    if (alpha_ <= 0.0f)
+    if (m_fAlpha <= 0.0f)
     {
-        alpha_ = 0.0f;
-        isDead_ = true;
+        m_fAlpha = 0.0f;
+        m_bIsDead = true;
     }
 }
 
 void EffectClick::Draw() const
 {
-    if (isDead_)
+    if (m_bIsDead)
     {
         return;
     }
 
     // アルファブレンドを有効化
-    const int blendAlpha = std::clamp(static_cast<int>(alpha_), 0, 255);
+    const int blendAlpha = std::clamp(static_cast<int>(m_fAlpha), 0, 255);
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, blendAlpha);
 
-    // 波紋の輪郭線を描画（太さを持たせるため半径を少しずらして2重描画するのも有効）
+    // 波紋の輪郭線を描画
     DrawCircle(
-        static_cast<int>(x_),
-        static_cast<int>(y_),
-        static_cast<int>(currentRadius_),
+        static_cast<int>(m_fX),
+        static_cast<int>(m_fY),
+        static_cast<int>(m_fCurrentRadius),
         kCircleColor,
         FALSE // 塗りつぶしなし（枠線のみ）
     );

@@ -4,20 +4,22 @@
 class EffectClick final : public EffectBase
 {
 public:
-    EffectClick(float x, float y);
+    // 引数に float 型を表す 'f' プレフィックスを適用
+    EffectClick(float fX, float fY);
     ~EffectClick() override = default;
 
-    void Update(float deltaTime) override;
+    // deltaTime も float 型のため 'f' を付与
+    void Update(float fDeltaTime) override;
     void Draw() const override;
-    [[nodiscard]] bool IsDead() const override { return isDead_; }
+
+    // 戻り値 bool のゲッター、メンバ変数の参照を対応
+    [[nodiscard]] bool IsDead() const override { return m_bIsDead; }
 
 private:
-    float x_{ 0.0f };
-    float y_{ 0.0f };
-    float currentRadius_{ 0.0f };
-    float alpha_{ 255.0f };
-    bool isDead_{ false };
-
-   
-
+    // メンバ変数を表す 'm_' ＋ 各型のプレフィックス
+    float m_fX = 0.0f;
+    float m_fY = 0.0f;
+    float m_fCurrentRadius = 0.0f;
+    float m_fAlpha = 255.0f;
+    bool  m_bIsDead = false;
 };

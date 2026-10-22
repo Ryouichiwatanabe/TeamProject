@@ -21,6 +21,8 @@ public:
     void Draw() const;
     void Clear();
 
+    void PlayClickRipple();
+
     /**
      * @brief 任意のエフェクトを生成して再生リストに追加
      * 使用例: effectManager->Play<ClickEffect>(x, y);
@@ -35,17 +37,16 @@ public:
     }
 
 
-    void SpawnClickEffect(float x, float y)
-    {
-        // 既に存在していれば、古いものを削除してメモリリークを防ぐ
-        delete mpEffectClick;
-        mpEffectClick = new EffectClick(x, y);
-    }
+    //void SpawnClickEffect(float x, float y)
+    //{
+    //    // 既に存在していれば、古いものを削除してメモリリークを防ぐ
+    //    delete mpEffectClick;
+    //    mpEffectClick = new EffectClick(x, y);
+    //}
 
 
 private:
     std::vector<std::unique_ptr<EffectBase>> effects_;
 
-    EffectClick* mpEffectClick;
 
 };

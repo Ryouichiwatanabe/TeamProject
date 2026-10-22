@@ -78,8 +78,10 @@ void Scene::Update(float _deltaTime)
 	if (mpEffectManager != nullptr)
 	{
 		mpEffectManager->Update(_deltaTime);
+
+		//メンバ変数で呼び出し
+		mpEffectManager->PlayClickRipple();
 	}
-	UpdateClickEffect();
 
 }
 
@@ -99,24 +101,3 @@ void Scene::Draw()
 		mpEffectManager->Draw();
 	}
 }
-
-// クリック状態を取得してエフェクトを生成する処理
-// どのシーンでも使用するからここで呼び出し
-void Scene::UpdateClickEffect()
-{
-	if (InputManager::GetInstance().GetButtonDown(Button::Confirm))
-	{
-		int mouseX = 0, mouseY = 0;
-		GetMousePoint(&mouseX, &mouseY); // 現在のマウス座標を取得
-
-		if (mpEffectManager != nullptr)
-		{
-			mpEffectManager->SpawnClickEffect(static_cast<float>(mouseX), static_cast<float>(mouseY));
-		}
-	}
-}
-
-
-
-
-
