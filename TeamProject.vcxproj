@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ClearCollectibleUI.cpp" />
     <ClCompile Include="Source\Collectible.cpp" />
     <ClCompile Include="Source\CollectibleData.cpp" />
     <ClCompile Include="Source\CollectibleIconUI.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\ClearCollectibleUI.h" />
     <ClInclude Include="Source\Collectible.h" />
     <ClInclude Include="Source\CollectibleData.h" />
     <ClInclude Include="Source\CollectibleIconUI.h" />

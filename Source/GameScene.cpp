@@ -20,6 +20,7 @@
 #include "PlayerShapeUI.h"
 #include "CollectibleIconUI.h"
 #include "Collectible.h"
+#include "ClearCollectibleUI.h"
 
 #include "Debug.h"
 #include "GameConfig.h"
@@ -82,6 +83,8 @@ void GameScene::Initialize()
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
 	mbIsMessageActive = true;//メッセージ表示開始
 
+	mClearTextMotion = FloatingMotion(120, 5.0f);
+
    /* auto* fakePlayer = 
         this
         ->GetObjectManager()
@@ -126,6 +129,42 @@ void GameScene::Initialize()
 			);
 
 		mpCollectibleIconUI[i]->SetEnabled(false);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		mpClearCollectibleUI[i] =
+			this
+			->GetUIManager()
+			->CreateUI<ClearCollectibleUI>();
+
+		mpClearCollectibleUI[i]->SetGraph(
+			stage->GetCollectibleFilename(i)
+		);
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetAnchor(
+				VGet(0.0f, 0.0f, 0.0f)
+			);
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetPosition(
+				VGet(
+					550.0f + i * 90.0f,
+					315.0f,
+					0.0f
+				)
+			);
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(0.5f, 0.5f, 1.0f)
+			);
+
+		mpClearCollectibleUI[i]->SetEnabled(false);
 	}
 
 	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
@@ -383,42 +422,194 @@ void GameScene::DrawClear()
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	DrawString(
-		570, 250,
-		"CLEAR!",
-		GetColor(255, 255, 255)
+	// クリアパネル
+	SetDrawBlendMode(
+		DX_BLENDMODE_ALPHA,
+		220
 	);
 
+	// 外側
+	DrawBox(
+		400,
+		180,
+		880,
+		600,
+		GetColor(80, 65, 45),
+		TRUE
+	);
+
+	// 内側
+	SetDrawBlendMode(
+		DX_BLENDMODE_ALPHA,
+		210
+	);
+
+	DrawBox(
+		410,
+		190,
+		870,
+		590,
+		GetColor(245, 230, 190),
+		TRUE
+	);
+
+	// 中央部分
+	SetDrawBlendMode(
+		DX_BLENDMODE_ALPHA,
+		230
+	);
+
+	DrawBox(
+		425,
+		205,
+		855,
+		575,
+		GetColor(45, 40, 35),
+		TRUE
+	);
+
+	SetDrawBlendMode(
+		DX_BLENDMODE_NOBLEND,
+		0
+	);
+
+	// 上側のアクセントライン
+	DrawBox(
+		425,
+		205,
+		855,
+		215,
+		GetColor(210, 170, 90),
+		TRUE
+	);
+
+	// 下側のアクセントライン
+	DrawBox(
+		425,
+		565,
+		855,
+		575,
+		GetColor(210, 170, 90),
+		TRUE
+	);
+
+	int clearOffsetY =
+		static_cast<int>(mClearTextMotion.GetOffsetY());
+
 	DrawString(
-		500, 350,
-		"ステージクリア！",
+		620,
+		220 + clearOffsetY,
+		"CLEAR!",
 		GetColor(255, 255, 255)
 	);
 
 	// ステージ選択へ戻るボタン
 	DrawBox(
-		500, 400,
-		780, 470,
+		500, 450,
+		780, 520,
 		GetColor(80, 80, 80),
 		TRUE
 	);
 
 	DrawBox(
-		500, 400,
-		780, 470,
+		500, 450,
+		780, 520,
 		GetColor(255, 255, 255),
 		FALSE
 	);
 
 	DrawString(
-		570, 425,
+		570, 475,
 		"ステージ選択へ戻る",
 		GetColor(255, 255, 255)
 	);
+
+	for (int i = 0; i < 3; i++)
+	{
+		// アイテムごとに少し時間差をつける
+		float startTime = i * 0.15f;
+
+		if (mfClearItemTimer < startTime)
+		{
+			continue;
+		}
+
+		float animationTime =
+			mfClearItemTimer - startTime;
+
+		const float animationDuration = 0.35f;
+
+		float rate =
+			animationTime / animationDuration;
+
+		if (rate > 1.0f)
+		{
+			rate = 1.0f;
+		}
+
+		// 小さい状態から元の大きさへ
+		float scale =
+			0.2f + 0.3f * rate;
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(
+					scale,
+					scale,
+					1.0f
+				)
+			);
+
+		mpClearCollectibleUI[i]->Draw();
+
+		// 獲得状態
+		if (mbIsCollectibleCollected[i])
+		{
+			DrawString(
+				530 + i * 90,
+				365,
+				"獲得",
+				GetColor(255, 255, 255)
+			);
+		}
+		else
+		{
+			SetDrawBlendMode(
+				DX_BLENDMODE_ALPHA,
+				150
+			);
+
+			DrawString(
+				530 + i * 90,
+				365,
+				"未獲得",
+				GetColor(160, 160, 160)
+			);
+
+			SetDrawBlendMode(
+				DX_BLENDMODE_NOBLEND,
+				0
+			);
+		}
+	}
 }
 
 void GameScene::UpdateClear()
 {
+
+	mfClearItemTimer += 1.0f / 60.0f;
+
+	mClearTextMotion.Update();
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (mbIsCollectibleCollected[i])
+		{
+			mpClearCollectibleUI[i]->SetCollected(true);
+		}
+	}
+
 	int mouseX;
 	int mouseY;
 
@@ -432,12 +623,11 @@ void GameScene::UpdateClear()
 
 	if (mouseLeftDown &&
 		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 400 && mouseY <= 470)
+		mouseY >= 430 && mouseY <= 500)
 	{
 		Master::mpSceneManager->RequestScene(
 			SCENE_TYPE::STAGE_SELECT_SCENE
 		);
-		
 	}
 
 	mbPreviousMouseLeft = currentMouseLeft;
