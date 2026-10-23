@@ -14,6 +14,8 @@ class Goal;
 class MovingBlock;
 class CollectibleIconUI;
 class ClearCollectibleUI;
+class PauseUI;
+class ClearUI;
 
 //class Player_test;
 
@@ -42,6 +44,9 @@ private:
 
     MovingBlock* mpMovingBlock = nullptr;
 
+    PauseUI* mpPauseUI = nullptr;
+    ClearUI* mpClearUI = nullptr;
+
 private:
     int mnStageNumber = 1;
 
@@ -50,8 +55,6 @@ private:
     bool mbPreviousMouseLeft = false;
 
     void UpdatePause();
-    void DrawPause();
-    void DrawClear();
     void UpdateClear();
 
     Player* mpPlayer = nullptr;
