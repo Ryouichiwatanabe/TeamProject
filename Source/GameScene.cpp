@@ -7,6 +7,7 @@
 #include "UIManager.h"
 //-- Effect --//
 #include "EffectClear.h"
+#include "EffectSmokeSpriteSheet.h"
 
 // -- GameObject -- //
 #include "Stage.h"
@@ -42,7 +43,27 @@ void GameScene::Initialize()
 
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
+	// 画像のロード
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke.png", 16, 4, 4);
 
+	// 画面中央の座標を計算
+	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
+	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
+
+	// 画面中央で常にループ再生
+	if (pSmokeData != nullptr)
+	{
+		mpEffectManager->Play<EffectSmokeSpriteSheet>(
+			screenCenterX,   // X座標（画面中央）
+			screenCenterY,   // Y座標（画面中央）
+			pSmokeData,      // 画像データ
+			0.05f,           // 1コマの表示秒数
+			true,            // ★ bIsLoop: true でループ再生
+			false,           // 加算ブレンド
+			1.0,             // スケール
+			0.0              // 角度
+		);
+	}
 	// 初期化処理
 	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
 	mpPlayer->InitPiece();
