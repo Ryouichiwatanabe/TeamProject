@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\ClearCollectibleUI.cpp" />
+    <ClCompile Include="Source\ClearUI.cpp" />
     <ClCompile Include="Source\Collectible.cpp" />
     <ClCompile Include="Source\CollectibleData.cpp" />
     <ClCompile Include="Source\CollectibleIconUI.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
+    <ClCompile Include="Source\PauseUI.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerController.cpp" />
     <ClCompile Include="Source\PlayerPiece.cpp" />
@@ -77,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ClearCollectibleUI.h" />
+    <ClInclude Include="Source\ClearUI.h" />
     <ClInclude Include="Source\Collectible.h" />
     <ClInclude Include="Source\CollectibleData.h" />
     <ClInclude Include="Source\CollectibleIconUI.h" />
@@ -109,6 +112,7 @@
     <ClInclude Include="Source\Mouse.h" />
     <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ObjectManager.h" />
+    <ClInclude Include="Source\PauseUI.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\PlayerController.h" />
     <ClInclude Include="Source\PlayerPieceUI.h" />

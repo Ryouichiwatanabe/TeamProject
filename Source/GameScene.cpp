@@ -21,6 +21,8 @@
 #include "CollectibleIconUI.h"
 #include "Collectible.h"
 #include "ClearCollectibleUI.h"
+#include "PauseUI.h"
+#include "ClearUI.h"
 
 #include "Debug.h"
 #include "GameConfig.h"
@@ -167,7 +169,39 @@ void GameScene::Initialize()
 		mpClearCollectibleUI[i]->SetEnabled(false);
 	}
 
+	mpClearUI =
+		this->GetUIManager()
+		->CreateUI<ClearUI>();
+
+	for (int i = 0; i < 3; i++)
+	{
+		mpClearUI->SetCollectibleUI(
+			i,
+			mpClearCollectibleUI[i]
+		);
+	}
+
+	mpClearUI->SetEnabled(false);
+
 	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
+
+	mpPauseUI =
+		this->GetUIManager()
+		->CreateUI<PauseUI>();
+
+	mpPauseUI->SetTitleFontHandle(
+		StageNumberFontHandle
+	);
+
+	mpPauseUI->SetMessageFontHandle(
+		mMessageFontHandle
+	);
+
+	mpPauseUI->SetButtonGraphHandle(
+		mPauseBoardHandle
+	);
+
+	mpPauseUI->SetEnabled(false);
 }
 
 void GameScene::Update(float deltaTime)
@@ -175,6 +209,9 @@ void GameScene::Update(float deltaTime)
 	if (mbIsClear)
 	{
 		UpdateClear();
+
+		GetUIManager()->Update();
+
 		return;
 	}
 
@@ -261,6 +298,8 @@ void GameScene::Update(float deltaTime)
 		mpGoal->IsPlayerTouching())
 	{
 		mbIsClear = true;
+		mpPauseUI->SetEnabled(false);
+		mpClearUI->SetEnabled(true);
 	}
 }
 
@@ -309,305 +348,16 @@ void GameScene::Draw()
 			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
 		}
 	}*/
-
-
-    if (mbIsPaused)
-    {
-        DrawPause();
-    }
-
-	if (mbIsClear)
-	{
-		DrawClear();
-	}
-}
-
-void GameScene::DrawPause()
-{
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
-	DrawBox(
-		0, 0,
-		1280, 720,
-		GetColor(0, 0, 0),
-		TRUE
-	);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// Pauseタイトル
-	DrawStringToHandle(
-		570,
-		200,
-		"Pause",
-		GetColor(255, 255, 255),
-		StageNumberFontHandle
-	);
-
-	const int buttonWidth = 280;
-	const int buttonHeight = 70;
-
-	// 再開ボタン
-	if (mPauseBoardHandle != -1)
-	{
-		DrawExtendGraph(
-			500,
-			300,
-			500 + buttonWidth,
-			300 + buttonHeight,
-			mPauseBoardHandle,
-			TRUE
-		);
-	}
-
-	DrawStringToHandle(
-		605,
-		325,
-		"再開",
-		GetColor(0, 0, 0),
-		mMessageFontHandle
-	);
-
-	// ステージ選択
-	if (mPauseBoardHandle != -1)
-	{
-		DrawExtendGraph(
-			500,
-			400,
-			500 + buttonWidth,
-			400 + buttonHeight,
-			mPauseBoardHandle,
-			TRUE
-		);
-	}
-
-	DrawStringToHandle(
-		505,
-		425,
-		"ステージ選択に戻る",
-		GetColor(0, 0, 0),
-		mMessageFontHandle
-	);
-
-	// タイトルへ戻る
-	if (mPauseBoardHandle != -1)
-	{
-		DrawExtendGraph(
-			500,
-			500,
-			500 + buttonWidth,
-			500 + buttonHeight,
-			mPauseBoardHandle,
-			TRUE
-		);
-	}
-
-	DrawStringToHandle(
-		540,
-		525,
-		"タイトルへ戻る",
-		GetColor(0, 0, 0),
-		mMessageFontHandle
-	);
-}
-
-void GameScene::DrawClear()
-{
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
-
-	DrawBox(
-		0, 0,
-		1280, 720,
-		GetColor(0, 0, 0),
-		TRUE
-	);
-
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-	// クリアパネル
-	SetDrawBlendMode(
-		DX_BLENDMODE_ALPHA,
-		220
-	);
-
-	// 外側
-	DrawBox(
-		400,
-		180,
-		880,
-		600,
-		GetColor(80, 65, 45),
-		TRUE
-	);
-
-	// 内側
-	SetDrawBlendMode(
-		DX_BLENDMODE_ALPHA,
-		210
-	);
-
-	DrawBox(
-		410,
-		190,
-		870,
-		590,
-		GetColor(245, 230, 190),
-		TRUE
-	);
-
-	// 中央部分
-	SetDrawBlendMode(
-		DX_BLENDMODE_ALPHA,
-		230
-	);
-
-	DrawBox(
-		425,
-		205,
-		855,
-		575,
-		GetColor(45, 40, 35),
-		TRUE
-	);
-
-	SetDrawBlendMode(
-		DX_BLENDMODE_NOBLEND,
-		0
-	);
-
-	// 上側のアクセントライン
-	DrawBox(
-		425,
-		205,
-		855,
-		215,
-		GetColor(210, 170, 90),
-		TRUE
-	);
-
-	// 下側のアクセントライン
-	DrawBox(
-		425,
-		565,
-		855,
-		575,
-		GetColor(210, 170, 90),
-		TRUE
-	);
-
-	int clearOffsetY =
-		static_cast<int>(mClearTextMotion.GetOffsetY());
-
-	DrawString(
-		620,
-		220 + clearOffsetY,
-		"CLEAR!",
-		GetColor(255, 255, 255)
-	);
-
-	// ステージ選択へ戻るボタン
-	DrawBox(
-		500, 450,
-		780, 520,
-		GetColor(80, 80, 80),
-		TRUE
-	);
-
-	DrawBox(
-		500, 450,
-		780, 520,
-		GetColor(255, 255, 255),
-		FALSE
-	);
-
-	DrawString(
-		570, 475,
-		"ステージ選択へ戻る",
-		GetColor(255, 255, 255)
-	);
-
-	for (int i = 0; i < 3; i++)
-	{
-		// アイテムごとに少し時間差をつける
-		float startTime = i * 0.15f;
-
-		if (mfClearItemTimer < startTime)
-		{
-			continue;
-		}
-
-		float animationTime =
-			mfClearItemTimer - startTime;
-
-		const float animationDuration = 0.35f;
-
-		float rate =
-			animationTime / animationDuration;
-
-		if (rate > 1.0f)
-		{
-			rate = 1.0f;
-		}
-
-		// 小さい状態から元の大きさへ
-		float scale =
-			0.2f + 0.3f * rate;
-
-		mpClearCollectibleUI[i]
-			->GetTransform()
-			.SetScale(
-				VGet(
-					scale,
-					scale,
-					1.0f
-				)
-			);
-
-		mpClearCollectibleUI[i]->Draw();
-
-		// 獲得状態
-		if (mbIsCollectibleCollected[i])
-		{
-			DrawString(
-				530 + i * 90,
-				365,
-				"獲得",
-				GetColor(255, 255, 255)
-			);
-		}
-		else
-		{
-			SetDrawBlendMode(
-				DX_BLENDMODE_ALPHA,
-				150
-			);
-
-			DrawString(
-				530 + i * 90,
-				365,
-				"未獲得",
-				GetColor(160, 160, 160)
-			);
-
-			SetDrawBlendMode(
-				DX_BLENDMODE_NOBLEND,
-				0
-			);
-		}
-	}
 }
 
 void GameScene::UpdateClear()
 {
-
-	mfClearItemTimer += 1.0f / 60.0f;
-
-	mClearTextMotion.Update();
-
 	for (int i = 0; i < 3; i++)
 	{
-		if (mbIsCollectibleCollected[i])
-		{
-			mpClearCollectibleUI[i]->SetCollected(true);
-		}
+		mpClearUI->SetCollected(
+			i,
+			mbIsCollectibleCollected[i]
+		);
 	}
 
 	int mouseX;
@@ -623,7 +373,7 @@ void GameScene::UpdateClear()
 
 	if (mouseLeftDown &&
 		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 430 && mouseY <= 500)
+		mouseY >= 450 && mouseY <= 520)
 	{
 		Master::mpSceneManager->RequestScene(
 			SCENE_TYPE::STAGE_SELECT_SCENE
@@ -641,6 +391,8 @@ void GameScene::UpdatePause()
 	{
 		mbIsPaused = !mbIsPaused;
 	}
+
+	mpPauseUI->SetEnabled(mbIsPaused);
 
 	mbPreviousP = currentP;
 
