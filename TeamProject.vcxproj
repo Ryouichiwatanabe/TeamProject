@@ -34,8 +34,6 @@
     <ClCompile Include="Source\EffectClick.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp" />
-    <ClCompile Include="Source\FakePlayer.cpp" />
-    <ClCompile Include="Source\FakePlayerController.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
@@ -55,8 +53,11 @@
     <ClCompile Include="Source\PauseUI.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerController.cpp" />
+    <ClCompile Include="Source\PlayerGround.cpp" />
     <ClCompile Include="Source\PlayerPiece.cpp" />
     <ClCompile Include="Source\PlayerPieceUI.cpp" />
+    <ClCompile Include="Source\PlayerRotation.cpp" />
+    <ClCompile Include="Source\PlayerShape.cpp" />
     <ClCompile Include="Source\PlayerShapeUI.cpp" />
     <ClCompile Include="Source\ResourceManager.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
@@ -79,6 +80,7 @@
     <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Box2D.h" />
     <ClInclude Include="Source\ClearCollectibleUI.h" />
     <ClInclude Include="Source\ClearUI.h" />
     <ClInclude Include="Source\Collectible.h" />
@@ -119,6 +121,7 @@
     <ClInclude Include="Source\PauseUI.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\PlayerController.h" />
+    <ClInclude Include="Source\PlayerMath.h" />
     <ClInclude Include="Source\PlayerPieceUI.h" />
     <ClInclude Include="Source\PlayerShapeUI.h" />
     <ClInclude Include="Source\ResourceManager.h" />

@@ -68,7 +68,11 @@ void GameScene::Initialize()
 	}
 	// 初期化処理
 	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
-	mpPlayer->InitPiece();
+	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
+	if (mpPlayer != nullptr)
+	{
+		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
+	}
 
 	auto* stage = new Stage();
 
@@ -256,6 +260,9 @@ void GameScene::Update(float deltaTime)
 	//==通常時：ステージ番号の文字を更新==//
 	mStageTextMotion.Update();
 
+	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
+	UpdateShapeUIToggle();
+
 	// 更新処理
 	Scene::Update(deltaTime);
 
@@ -354,6 +361,38 @@ void GameScene::Draw()
 			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
 		}
 	}*/
+
+	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Draw();
+	}
+
+	if (mbIsPaused)
+	{
+		DrawPause();
+	}
+
+	// エフェクトが弾けた後（1秒後）にクリア画面を表示
+	if (mbIsClear && mClearTimer >= 1.0f)
+	{
+		DrawClear();
+	}
+}
+
+void GameScene::UpdateShapeUIToggle()
+{
+	if (mpShapeUI == nullptr)
+		return;
+
+	if (!InputManager::GetInstance().GetButtonDown(Button::Shape))
+		return;
+
+	// ※企画書の「接地中のみ変形可」の条件は今回は加味しない
+	if (mpShapeUI->IsEnabled())
+		mpShapeUI->Close();
+	else
+		mpShapeUI->Open();
 }
 
 void GameScene::UpdateClear()

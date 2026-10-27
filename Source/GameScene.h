@@ -17,6 +17,8 @@ class ClearCollectibleUI;
 class PauseUI;
 class ClearUI;
 
+class PlayerShapeUI;
+
 //class Player_test;
 
 class GameScene : public Scene
@@ -68,6 +70,9 @@ private:
     bool mbIsCollectibleCollected[3] = {};
 
     //FontやTitleLogoなどのアニメーションをするためのコンポジション
+
+
+    void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
 private:
 
     UILabel mStageTextMotion; //Stage用
@@ -76,4 +81,6 @@ private:
     float mfClearItemTimer = 0.0f;
 
     bool mbIsMessageActive = false; //メッセージ表示フラグ
+
+    PlayerShapeUI* mpShapeUI = nullptr;
 };

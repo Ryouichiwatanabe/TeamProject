@@ -5,7 +5,7 @@
 
 #include <DxLib.h>
 #include <vector>
-
+#include "Box2D.h"
 
 class CollisionManager;
 
@@ -25,6 +25,7 @@ public:
 	void SetHalfSize(const VECTOR& _halfSize) { mvHalfSize = _halfSize; }
 
 	VECTOR GetWorldPosition() const;	// Collider中心座標(Transform + Offset)を返す
+	Box2D GetBox2D() const;				// 回転を考慮したBox2Dデータを返す
 
 	bool IsColliding() const;				// 何かしらに当たったら反応
 	bool IsColliding(Tag _tag) const;		// 指定タグのColliderに衝突時、反応

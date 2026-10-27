@@ -68,3 +68,10 @@ VECTOR Collider::GetWorldPosition() const
 			mvOffSetPos
 		);
 }
+
+Box2D Collider::GetBox2D() const
+{
+	auto transform = mpGameObject ? mpGameObject->GetModule<Transform>() : nullptr;
+	const float rotZ = transform ? transform->GetRotation().z : 0.0f;
+	return Box2D::Make(GetWorldPosition(), mvHalfSize, rotZ);
+}
