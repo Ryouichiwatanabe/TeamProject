@@ -6,7 +6,7 @@ void UI::Initialize(UIManager* _manager)
 	mpUIManager = _manager;
 
 	mText.Initialize(this);
-	mTypeWriterText.Initialize(this);
+	//mTypeWriterText.Initialize(this);
 	mButton.Initialize(this);
 
 	Init();
@@ -19,7 +19,7 @@ void UI::LoadUIGraph(std::string filename)
 
 void UI::Update()
 {
-	mTypeWriterText.Update();
+	//mTypeWriterText.Update();
 }
 
 void UI::Draw()

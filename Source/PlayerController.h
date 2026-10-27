@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 class Player;
 
@@ -12,11 +12,10 @@ public:
 	void Update();
 
 private:
-	void UpdateMove();					// 移動キーの入力をPlayerに渡す
-	void UpdateOperationChange();		// (Debag用)FakePlayerに操作を切り替える
 	void UpdateRotation();				// 回転キーの入力をPlayerに渡す
-	void UpdatePlayerDeformationUI();	// 変形キーの入力をPlayerに渡す
 
 private:
-	Player* mpPlayer;
+	Player* mpPlayer = nullptr;
+	float mfPrevRotation = 0.0f;
+	float mfRepeatTimer = 0.0f;
 };

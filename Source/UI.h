@@ -5,7 +5,6 @@
 #include "UIGraphic.h"
 #include "UIText.h"
 #include "UIButton.h"
-#include "UITypewriterText.h"
 
 #include <vector>
 #include <string>	// filenameの指定用
@@ -43,18 +42,17 @@ public:
 	UIGraphic& GetGraphic() { return mGraphic; }
 	UIText& GetText() { return mText; }
 	UIButton& GetButton() { return mButton; }
-	UITypewriterText& GetTypewriterText() { return mTypeWriterText; }
 
 	// -- Managerの取得 -- //
 	UIManager* GetUIManager() { return mpUIManager; }
 
 private:
 	friend class UIManager;
-	UIManager* mpUIManager;
+	UIManager* mpUIManager = nullptr;
 	void Initialize(UIManager* _manager);	// Manager内でUI生成時に通る
 
 private:
-	UI* mpParent;
+	UI* mpParent = nullptr;
 	std::vector<UI*> mChildren;
 
 	// Todo : コンポジットする部品の実体の宣言をここへ
@@ -62,7 +60,6 @@ private:
 	UIGraphic mGraphic;
 	UIText mText;
 	UIButton mButton;
-	UITypewriterText mTypeWriterText;
 
 	bool mbIsEnabled = false;
 
