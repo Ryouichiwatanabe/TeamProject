@@ -1,5 +1,6 @@
 ﻿#include "EffectManager.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 
 void EffectManager::Update(float deltaTime)
 {
@@ -51,5 +52,7 @@ void EffectManager::PlayClickRipple()
 
         // ClickEffect を生成して effects_ に追加
         effects_.emplace_back(std::make_unique<EffectClick>(posX, posY));
+        // SE
+        SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_DECIDE);
     }
 }

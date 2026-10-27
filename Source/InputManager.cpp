@@ -352,3 +352,15 @@ float InputManager::GetAxis(
 	];
 }
 
+void InputManager::ConsumeButton(Button _button)
+{
+	size_t index = static_cast<size_t>(_button);
+	if (index < static_cast<size_t>(Button::Max))
+	{
+		// このフレームの Down（押した瞬間）と Press（押下中）を潰す
+		mButtonStates[index].Down = false;
+		mButtonStates[index].Press = false;
+	}
+
+
+}

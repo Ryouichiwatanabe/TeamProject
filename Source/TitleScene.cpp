@@ -5,6 +5,8 @@
 #include "Master.h"
 #include "SceneManager.h"
 
+#include "SoundManager.h"
+
 TitleScene::TitleScene()
 	: mTitleLogoHandle(-1)
 	, mbPreviousMouseLeft(false)
@@ -29,6 +31,9 @@ void TitleScene::Initialize()
 	{
 		// ログ出力やエラーハンドリング
 	}
+	// タイトルBGMをループ再生 (第2引数の isTop = true で最初から再生)
+	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
+
 }
 
 void TitleScene::Update(float _deltaTime)
@@ -63,6 +68,12 @@ void TitleScene::Update(float _deltaTime)
 
 	if (mbStartSelected && mouseLeftDown)
 	{
+
+		//  Confirm を消費し、共通のクリックSE判定をスキップ
+		InputManager::GetInstance().ConsumeButton(Button::Confirm);
+
+		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
+
 		Master::mpSceneManager->RequestScene(
 			SCENE_TYPE::STAGE_SELECT_SCENE
 		);
@@ -159,6 +170,9 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
+	// タイトルBGMを停止
+	SoundManager::GetInstance()->StopBGM();
+
 	// 画像メモリ解放
 	if (mTitleLogoHandle != -1)
 	{

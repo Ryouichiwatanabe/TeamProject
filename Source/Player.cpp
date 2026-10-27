@@ -1,5 +1,8 @@
 ﻿#include "Player.h"
 
+//SE・BGM
+#include "SoundManager.h"
+
 // Module関係
 #include "Transform.h"
 #include "Graphic.h"
@@ -310,7 +313,10 @@ void Player::Rotation(float _rotateDirection)
 	transform->SetRotation(VAdd(prevRot, VGet(0.0f, 0.0f, rotationRadian)));
 	UpdatePieceRotation();
 
+	// SE_MOVE を再生
+	SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_MOVE);
 }
+
 
 void Player::ApplyShapeFromUI()
 {

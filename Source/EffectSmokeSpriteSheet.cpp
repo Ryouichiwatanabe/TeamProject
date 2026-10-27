@@ -1,6 +1,7 @@
 #include "EffectSmokeSpriteSheet.h"
 #include "ResourceManager.h"
 #include <algorithm>
+#include <DxLib.h>
 
 EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
     float fX,
@@ -10,10 +11,12 @@ EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
     bool bIsLoop,
     bool bIsAddBlend,
     double dScale,
-    double dAngle
+    double dAngle,
+    int nAlpha,
+    int nRed,
+    int nGreen,
+    int nBlue
 )
-// ループ時は寿命を 0.0f に設定（EffectBase仕様により時間経過で自動消滅しない）
-// ループしない場合は「総コマ数 * 1コマ秒数」を寿命にする
     : EffectBase(fX, fY, (bIsLoop || pData == nullptr) ? 0.0f : (static_cast<float>(pData->allNum) * fFrameDuration))
     , m_pDivData(pData)
     , m_fFrameDuration(fFrameDuration)
@@ -21,6 +24,10 @@ EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
     , m_bIsAddBlend(bIsAddBlend)
     , m_dScale(dScale)
     , m_dAngle(dAngle)
+    , m_nAlpha(std::clamp(nAlpha, 0, 255))
+    , m_nRed(std::clamp(nRed, 0, 255))
+    , m_nGreen(std::clamp(nGreen, 0, 255))
+    , m_nBlue(std::clamp(nBlue, 0, 255))
 {
     if (!m_pDivData || m_pDivData->allNum <= 0)
     {
@@ -36,17 +43,15 @@ void EffectSmokeSpriteSheet::Draw() const
 {
     if (m_bIsDead || !m_pDivData) return;
 
+    // コマ番号の算出
     int currentIndex = 0;
-
     if (m_bIsLoop)
     {
-        // ループ時はコマ数を剰余演算で巡回させる
         int totalFrames = static_cast<int>(m_fElapsedTime / m_fFrameDuration);
         currentIndex = totalFrames % m_pDivData->allNum;
     }
     else
     {
-        // 単発再生時は最後のコマでクランプ
         const int maxIndex = m_pDivData->allNum - 1;
         currentIndex = std::clamp(
             static_cast<int>(m_fElapsedTime / m_fFrameDuration),
@@ -58,15 +63,24 @@ void EffectSmokeSpriteSheet::Draw() const
     const int currentHandle = m_pDivData->divHandleList[currentIndex];
     if (currentHandle == -1) return;
 
-    if (m_bIsAddBlend)
+    // 1. 描画輝度（カラーブレンド）の設定
+    const bool bHasCustomColor = (m_nRed != 255 || m_nGreen != 255 || m_nBlue != 255);
+    if (bHasCustomColor)
     {
-        SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+        SetDrawBright(m_nRed, m_nGreen, m_nBlue);
     }
 
+    // 2. ブレンドモードの設定（加算または半透明）
+    const int blendMode = m_bIsAddBlend ? DX_BLENDMODE_ADD : DX_BLENDMODE_ALPHA;
+    SetDrawBlendMode(blendMode, m_nAlpha);
+
+    // 3. 描画
     DrawRotaGraphF(m_fX, m_fY, m_dScale, m_dAngle, currentHandle, TRUE);
 
-    if (m_bIsAddBlend)
+    // 4. 描画ステートのリセット（描画ステート汚染の防止）
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+    if (bHasCustomColor)
     {
-        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+        SetDrawBright(255, 255, 255);
     }
 }

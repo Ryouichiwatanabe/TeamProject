@@ -1,36 +1,51 @@
 #pragma once
-#include "DxLib.h"
 #include "EffectBase.h"
+#include <algorithm>
 
+// 前方宣言（定義元ヘッダーを直接 include しても構いません）
 struct DivGraphData;
 
 class EffectSmokeSpriteSheet : public EffectBase
 {
 public:
-    // bIsLoop: true にすると消滅せずループ再生し続ける
     EffectSmokeSpriteSheet(
         float fX,
         float fY,
         const DivGraphData* pData,
-        float fFrameDuration = 0.05f,
+        float fFrameDuration,
         bool bIsLoop = false,
         bool bIsAddBlend = false,
         double dScale = 1.0,
-        double dAngle = 0.0
+        double dAngle = 0.0,
+        int nAlpha = 255,
+        int nRed = 255,
+        int nGreen = 255,
+        int nBlue = 255
     );
 
-    ~EffectSmokeSpriteSheet() override = default;
+    virtual ~EffectSmokeSpriteSheet() override = default;
 
-    void Draw() const override;
+    virtual void OnUpdate(float fDeltaTime) override;
+    virtual void Draw() const override;
 
-protected:
-    void OnUpdate(float fDeltaTime) override;
+    void SetAlpha(int nAlpha) { m_nAlpha = std::clamp(nAlpha, 0, 255); }
+    void SetColor(int nRed, int nGreen, int nBlue)
+    {
+        m_nRed = std::clamp(nRed, 0, 255);
+        m_nGreen = std::clamp(nGreen, 0, 255);
+        m_nBlue = std::clamp(nBlue, 0, 255);
+    }
 
 private:
-    const DivGraphData* m_pDivData = nullptr;
-    float               m_fFrameDuration = 0.05f;
-    bool                m_bIsLoop = false; // ループ再生フラグ
-    bool                m_bIsAddBlend = false;
-    double              m_dScale = 1.0;
-    double              m_dAngle = 0.0;
+    const DivGraphData* m_pDivData{ nullptr }; // ここが認識されていないと m_pDivData 関連のエラーになる
+    float  m_fFrameDuration{ 0.1f };
+    bool   m_bIsLoop{ false };
+    bool   m_bIsAddBlend{ false };
+    double m_dScale{ 1.0 };
+    double m_dAngle{ 0.0 };
+
+    int m_nAlpha{ 255 };
+    int m_nRed{ 255 };
+    int m_nGreen{ 255 };
+    int m_nBlue{ 255 };
 };

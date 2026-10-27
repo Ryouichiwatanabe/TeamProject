@@ -20,7 +20,8 @@ public:     // enum, struct ‚È‚Ç‚Ì’è‹`
 	enum SOUND_SE
 	{
 		SE_DECIDE = 0,          // Œˆ’è‰¹
-
+		SE_MOVE = 1,
+		SE_SELECTUI = 2,
 	};
 
 	static SoundManager* GetInstance();
