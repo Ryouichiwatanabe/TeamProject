@@ -367,17 +367,6 @@ void GameScene::Draw()
 	{
 		mpEffectManager->Draw();
 	}
-
-	if (mbIsPaused)
-	{
-		DrawPause();
-	}
-
-	// エフェクトが弾けた後（1秒後）にクリア画面を表示
-	if (mbIsClear && mClearTimer >= 1.0f)
-	{
-		DrawClear();
-	}
 }
 
 void GameScene::UpdateShapeUIToggle()
