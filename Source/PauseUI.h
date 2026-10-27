@@ -9,14 +9,29 @@ public:
     ~PauseUI() = default;
 
     void Init() override;
+    void Update() override;
     void Draw() override;
 
     void SetTitleFontHandle(int _fontHandle);
     void SetMessageFontHandle(int _fontHandle);
-    void SetButtonGraphHandle(int _graphHandle);
+
+    bool IsResumeRequested() const
+    {
+        return mbIsResumeRequested;
+    }
+
+    void ResetResumeRequest()
+    {
+        mbIsResumeRequested = false;
+    }
 
 private:
     int mTitleFontHandle = -1;
     int mMessageFontHandle = -1;
-    int mButtonGraphHandle = -1;
+
+    UI* mpResumeUI = nullptr;
+    UI* mpStageSelectUI = nullptr;
+    UI* mpTitleUI = nullptr;
+
+    bool mbIsResumeRequested = false;
 };
