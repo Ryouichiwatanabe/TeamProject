@@ -1,41 +1,52 @@
 #pragma once
-#include "DxLib.h"
-#include <string>
-#include <unordered_map>
+#include <vector>
+#include <memory>
+#include <utility>
+#include "EffectBase.h"
+#include "EffectClick.h"
 
-class EffectManager
+//class EffectClick
+
+class EffectManager final
 {
 public:
     EffectManager() = default;
-    ~EffectManager();
+    ~EffectManager() = default;
 
-    // 画面の幅と高さを渡して初期化
-    bool Initialize(int screenWidth, int screenHeight);
+    // コピー・ムーブ禁止
+    EffectManager(const EffectManager&) = delete;
+    EffectManager& operator=(const EffectManager&) = delete;
 
-    // 毎フレームの更新
-    void Update();
+    void Update(float deltaTime);
+    void Draw() const;
+    void Clear();
 
-    // 描画（スプライトなどの2D画像を描いた後に呼ぶ）
-    void Draw();
+    void PlayClickRipple();
 
-    // 終了処理
-    void Terminate();
+    /**
+     * @brief 任意のエフェクトを生成して再生リストに追加
+     * 使用例: effectManager->Play<ClickEffect>(x, y);
+     */
+    template <typename T, typename... Args>
+    T* Play(Args&&... args)
+    {
+        auto effect = std::make_unique<T>(std::forward<Args>(args)...);
+        T* rawPtr = effect.get(); // 戻り値で受け取れば即座に操作も可能
+        effects_.push_back(std::move(effect));
+        return rawPtr;
+    }
 
-    // エフェクトの読み込み
-    bool Load(const std::string& name, const wchar_t* filePath);
 
-    // 2D座標（X, Yピクセル）で再生
-    int PlayEffect(const std::string& name, float x, float y);
+    //void SpawnClickEffect(float x, float y)
+    //{
+    //    // 既に存在していれば、古いものを削除してメモリリークを防ぐ
+    //    delete mpEffectClick;
+    //    mpEffectClick = new EffectClick(x, y);
+    //}
 
-    // エフェクトの停止
-    void StopEffect(int playHandle);
-
-    // 再生中エフェクトの座標更新（キャラ追従用）
-    void SetPosition(int playHandle, float x, float y);
 
 private:
-    std::unordered_map<std::string, int> effectMap_;
-    bool isInitialize_ = false;
-    int screenWidth_ = 0;
-    int screenHeight_ = 0;
-}; 
+    std::vector<std::unique_ptr<EffectBase>> effects_;
+
+
+};

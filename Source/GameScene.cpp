@@ -5,6 +5,9 @@
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
+//-- Effect --//
+#include "EffectClear.h"
+#include "EffectSmokeSpriteSheet.h"
 
 // -- GameObject -- //
 #include "Stage.h"
@@ -18,6 +21,9 @@
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
+#include "CollectibleIconUI.h"
+#include "Collectible.h"
+#include "ClearCollectibleUI.h"
 
 #include "Debug.h"
 #include "GameConfig.h"
@@ -25,18 +31,42 @@
 
 #include "FontManager.h"
 
+#include "EffectManager.h"
+
 
 #include "InputManager.h"
+#include "ScreenConfig.h"
 
 void GameScene::Initialize()
 {
 	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
 
+	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
+	mpEffectManager = std::make_unique<EffectManager>();
+	// 画像のロード
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke.png", 16, 4, 4);
+
+	// 画面中央の座標を計算
+	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
+	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
+
+	// 画面中央で常にループ再生
+	if (pSmokeData != nullptr)
+	{
+		mpEffectManager->Play<EffectSmokeSpriteSheet>(
+			screenCenterX,   // X座標（画面中央）
+			screenCenterY,   // Y座標（画面中央）
+			pSmokeData,      // 画像データ
+			0.05f,           // 1コマの表示秒数
+			true,            // ★ bIsLoop: true でループ再生
+			false,           // 加算ブレンド
+			1.0,             // スケール
+			0.0              // 角度
+		);
+	}
 	// 初期化処理
-	mpPlayer =
-		this
-		->GetObjectManager()
-		->CreateObject<Player>();
+	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
+	mpPlayer->InitPiece();
 
 	auto* stage = new Stage();
 
@@ -78,24 +108,109 @@ void GameScene::Initialize()
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
 	mbIsMessageActive = true;//メッセージ表示開始
 
+	mClearTextMotion = FloatingMotion(120, 5.0f);
+
    /* auto* fakePlayer = 
         this
         ->GetObjectManager()
         ->CreateObject<FakePlayer>();*/
 
-    auto* testUI =
-        this
-        ->GetUIManager()
-        ->CreateUI<PlayerShapeUI>();
+	auto* testUI =
+		this
+		->GetUIManager()
+		->CreateUI<PlayerShapeUI>();
+
+	for (int i = 0; i < 3; i++)
+	{
+		mpCollectibleIconUI[i] =
+			this
+			->GetUIManager()
+			->CreateUI<CollectibleIconUI>();
+
+		mpCollectibleIconUI[i]->SetGraph(
+			stage->GetCollectibleFilename(i)
+		);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetAnchor(
+				VGet(0.0f, 0.0f, 0.0f)
+			);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetPosition(
+				VGet(
+					1080.0f + i * 80.0f,
+					50.0f,
+					0.0f
+				)
+			);
+
+		mpCollectibleIconUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(0.8f, 0.8f, 1.0f)
+			);
+
+		mpCollectibleIconUI[i]->SetEnabled(false);
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		mpClearCollectibleUI[i] =
+			this
+			->GetUIManager()
+			->CreateUI<ClearCollectibleUI>();
+
+		mpClearCollectibleUI[i]->SetGraph(
+			stage->GetCollectibleFilename(i)
+		);
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetAnchor(
+				VGet(0.0f, 0.0f, 0.0f)
+			);
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetPosition(
+				VGet(
+					550.0f + i * 90.0f,
+					315.0f,
+					0.0f
+				)
+			);
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(0.5f, 0.5f, 1.0f)
+			);
+
+		mpClearCollectibleUI[i]->SetEnabled(false);
+	}
 
 	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
 }
-
 void GameScene::Update(float deltaTime)
 {
+	// 1. エフェクトマネージャーの更新（クリア中も動かすため最優先）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Update(deltaTime);
+	}
+
+	// 2. クリア状態の処理
 	if (mbIsClear)
 	{
-		UpdateClear();
+		// エフェクトを1秒ほど見せてからクリアUIを操作可能にする
+		mClearTimer += deltaTime;
+		if (mClearTimer >= 1.0f)
+		{
+			UpdateClear();
+		}
 		return;
 	}
 
@@ -106,57 +221,59 @@ void GameScene::Update(float deltaTime)
 		deltaTime = 0.0f;
 	}
 
-
-/*	//====メッセージ表示中の制御====//
-	if (mbIsMessageActive)
-	{
-		mMessageMotion.Update();
-		// 左クリック または Zキー/SPACEキーが押されたか判定
-		bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-		bool isClickTriggered = currentMouseLeft && !mbPreviousMouseLeft;
-		mbPreviousMouseLeft = currentMouseLeft;
-
-		// キーボード入力判定（必要に応じて）
-		static bool prevActionKey = false;
-		bool curActionKey = (CheckHitKey(KEY_INPUT_Z) != 0 || CheckHitKey(KEY_INPUT_SPACE) != 0);
-		bool isKeyTriggered = curActionKey && !prevActionKey;
-		prevActionKey = curActionKey;
-
-		if (isClickTriggered || isKeyTriggered)
-		{
-			if (!mTypewriter.IsFinished())
-			{
-				// ① まだ流れている最中なら全文スキップ
-				mTypewriter.Skip();
-			}
-			else
-			{
-				// ② 既に全部出ているならメッセージを閉じてゲーム開始
-				mbIsMessageActive = false;
-			}
-		}
-
-		// メッセージ表示中はゲーム本編の進行（移動など）を止める場合
-		return;
-	}*/
-
-
 	//==通常時：ステージ番号の文字を更新==//
 	mStageTextMotion.Update();
-
 
 	// 更新処理
 	Scene::Update(deltaTime);
 
-	auto player = GetObjectManager()
-		->FindObject<Player>();
+	auto player = GetObjectManager()->FindObject<Player>();
+
+	// Collectibleの取得状態を確認
+	auto collectibles =
+		GetObjectManager()->FindObjects<Collectible>();
+
+	for (auto collectible : collectibles)
+	{
+		int itemIndex = collectible->GetItemIndex();
+
+		if (itemIndex < 0 || itemIndex >= 3)
+		{
+			continue;
+		}
+
+		if (collectible->IsPickedUp())
+		{
+			mbIsCollectibleCollected[itemIndex] = true;
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (mbIsCollectibleCollected[i])
+		{
+			mpCollectibleIconUI[i]->SetCollected(true);
+		}
+	}
 
 	if (mpGoal != nullptr &&
 		mpGoal->IsPlayerTouching())
 	{
 		mbIsClear = true;
+		mClearTimer = 0.0f; // タイマー初期化
+
+		// クリアエフェクトの再生
+		if (mpEffectManager != nullptr)
+		{
+			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
+			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
+			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
+
+			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
+		}
 	}
 }
+
 
 
 void GameScene::Draw()
@@ -205,12 +322,19 @@ void GameScene::Draw()
 	}*/
 
 
-    if (mbIsPaused)
-    {
-        DrawPause();
-    }
+	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Draw();
+	}
 
-	if (mbIsClear)
+	if (mbIsPaused)
+	{
+		DrawPause();
+	}
+
+	// エフェクトが弾けた後（1秒後）にクリア画面を表示
+	if (mbIsClear && mClearTimer >= 1.0f)
 	{
 		DrawClear();
 	}
@@ -316,42 +440,194 @@ void GameScene::DrawClear()
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	DrawString(
-		570, 250,
-		"CLEAR!",
-		GetColor(255, 255, 255)
+	// クリアパネル
+	SetDrawBlendMode(
+		DX_BLENDMODE_ALPHA,
+		220
 	);
 
+	// 外側
+	DrawBox(
+		400,
+		180,
+		880,
+		600,
+		GetColor(80, 65, 45),
+		TRUE
+	);
+
+	// 内側
+	SetDrawBlendMode(
+		DX_BLENDMODE_ALPHA,
+		210
+	);
+
+	DrawBox(
+		410,
+		190,
+		870,
+		590,
+		GetColor(245, 230, 190),
+		TRUE
+	);
+
+	// 中央部分
+	SetDrawBlendMode(
+		DX_BLENDMODE_ALPHA,
+		230
+	);
+
+	DrawBox(
+		425,
+		205,
+		855,
+		575,
+		GetColor(45, 40, 35),
+		TRUE
+	);
+
+	SetDrawBlendMode(
+		DX_BLENDMODE_NOBLEND,
+		0
+	);
+
+	// 上側のアクセントライン
+	DrawBox(
+		425,
+		205,
+		855,
+		215,
+		GetColor(210, 170, 90),
+		TRUE
+	);
+
+	// 下側のアクセントライン
+	DrawBox(
+		425,
+		565,
+		855,
+		575,
+		GetColor(210, 170, 90),
+		TRUE
+	);
+
+	int clearOffsetY =
+		static_cast<int>(mClearTextMotion.GetOffsetY());
+
 	DrawString(
-		500, 350,
-		"ステージクリア！",
+		620,
+		220 + clearOffsetY,
+		"CLEAR!",
 		GetColor(255, 255, 255)
 	);
 
 	// ステージ選択へ戻るボタン
 	DrawBox(
-		500, 400,
-		780, 470,
+		500, 450,
+		780, 520,
 		GetColor(80, 80, 80),
 		TRUE
 	);
 
 	DrawBox(
-		500, 400,
-		780, 470,
+		500, 450,
+		780, 520,
 		GetColor(255, 255, 255),
 		FALSE
 	);
 
 	DrawString(
-		570, 425,
+		570, 475,
 		"ステージ選択へ戻る",
 		GetColor(255, 255, 255)
 	);
+
+	for (int i = 0; i < 3; i++)
+	{
+		// アイテムごとに少し時間差をつける
+		float startTime = i * 0.15f;
+
+		if (mfClearItemTimer < startTime)
+		{
+			continue;
+		}
+
+		float animationTime =
+			mfClearItemTimer - startTime;
+
+		const float animationDuration = 0.35f;
+
+		float rate =
+			animationTime / animationDuration;
+
+		if (rate > 1.0f)
+		{
+			rate = 1.0f;
+		}
+
+		// 小さい状態から元の大きさへ
+		float scale =
+			0.2f + 0.3f * rate;
+
+		mpClearCollectibleUI[i]
+			->GetTransform()
+			.SetScale(
+				VGet(
+					scale,
+					scale,
+					1.0f
+				)
+			);
+
+		mpClearCollectibleUI[i]->Draw();
+
+		// 獲得状態
+		if (mbIsCollectibleCollected[i])
+		{
+			DrawString(
+				530 + i * 90,
+				365,
+				"獲得",
+				GetColor(255, 255, 255)
+			);
+		}
+		else
+		{
+			SetDrawBlendMode(
+				DX_BLENDMODE_ALPHA,
+				150
+			);
+
+			DrawString(
+				530 + i * 90,
+				365,
+				"未獲得",
+				GetColor(160, 160, 160)
+			);
+
+			SetDrawBlendMode(
+				DX_BLENDMODE_NOBLEND,
+				0
+			);
+		}
+	}
 }
 
 void GameScene::UpdateClear()
 {
+
+	mfClearItemTimer += 1.0f / 60.0f;
+
+	mClearTextMotion.Update();
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (mbIsCollectibleCollected[i])
+		{
+			mpClearCollectibleUI[i]->SetCollected(true);
+		}
+	}
+
 	int mouseX;
 	int mouseY;
 
@@ -365,12 +641,11 @@ void GameScene::UpdateClear()
 
 	if (mouseLeftDown &&
 		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 400 && mouseY <= 470)
+		mouseY >= 430 && mouseY <= 500)
 	{
 		Master::mpSceneManager->RequestScene(
 			SCENE_TYPE::STAGE_SELECT_SCENE
 		);
-		
 	}
 
 	mbPreviousMouseLeft = currentMouseLeft;

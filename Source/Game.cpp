@@ -2,7 +2,6 @@
 #include "ScreenConfig.h"
 #include "InputManager.h"
 #include "Master.h"
-#include "EffectManager.h"
 
 
 #include <algorithm>
@@ -15,24 +14,16 @@ Game::Game()
     if (!InitializeDxLib()) {
         return;
     }
-   
-    if (!m_effectManager.Initialize
-    (static_cast<int>(ScreenConfig::SCREEN_WIDTH),
-    (static_cast<int>(ScreenConfig::SCREEN_HEIGHT))))
-    {
-        return;
-    }
-    // 各マネージャーのポインタ受け渡し
+
+    // 各マネージャーのポインタ受け渡し（EffectManagerはScene側で持つため除外）
     Master::mpResource = &m_resourceManager;
     Master::mpFontManager = &m_fontManager;
     Master::mpSceneManager = &m_sceneManager;
-    Master::mpEffectManager = &m_effectManager;
 
     InputManager::GetInstance().InitializeButton();
     InputManager::GetInstance().InitializeAxis();
     m_cursor.Initialize();
 
-    // 最初のシーンを読み込む
     m_sceneManager.Initialize();
 
     m_initSuccess = true;
@@ -43,16 +34,9 @@ Game::Game()
 Game::~Game()
 {
     if (m_initSuccess) {
-        m_goalEffect.Clear();
-        m_clickEffect.clear();
         m_cursor.Finalize();
         m_sceneManager.Finalize();
         m_fontManager.Clear();
-
-
-        m_effectManager.Terminate();//Effecseerの終了
-        Master::mpEffectManager = nullptr;
-
 
         Master::mpSceneManager = nullptr;
         Master::mpFontManager = nullptr;
@@ -65,7 +49,6 @@ Game::~Game()
 bool Game::InitializeDxLib()
 {
     ChangeWindowMode(TRUE);
-
     SetGraphMode(
         static_cast<int>(ScreenConfig::SCREEN_WIDTH),
         static_cast<int>(ScreenConfig::SCREEN_HEIGHT),
@@ -103,16 +86,9 @@ void Game::Run()
             break;
         }
 
-        // マウス更新とクリック判定
         m_mouse.Update();
-        if (m_mouse.IsDown(MOUSE_INPUT_LEFT)) {
-            const TofuGame::Vector2 clickPos{
-                static_cast<float>(m_mouse.GetX()),
-                static_cast<float>(m_mouse.GetY())
-            };
-            m_clickEffect.spawn(clickPos);
-        }
 
+        
         const auto currentTime = std::chrono::steady_clock::now();
         std::chrono::duration<double> frameTime = currentTime - m_lastFrameTime;
         m_lastFrameTime = currentTime;
@@ -139,42 +115,33 @@ void Game::UpdateLogic(double deltaTime)
 {
     m_cursor.Update();
 
-    // シーン更新
+    // シーンの更新（この中でシーンが所有するEffectManagerが更新される）
     m_sceneManager.Update(static_cast<float>(deltaTime));
 
-    // 各種エフェクト更新
-    m_clickEffect.update(static_cast<float>(deltaTime));
-    m_goalEffect.Update();
 
-    m_effectManager.Update();//エフェクトを更新
 }
 
 void Game::Draw()
 {
     ClearDrawScreen();
 
-    // 1. 3Dシーン描画（3D用の深度・ライティング設定）
+    // 1. 3Dシーン描画
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);
 
     m_sceneManager.Draw();
 
-    // 2. 2Dエフェクト描画（ライティング・ZテストをOFFにして最前面にクリア描画）
+    // 2. 2D描画（ZバッファOFF）
     SetUseZBufferFlag(FALSE);
     SetWriteZBufferFlag(FALSE);
     SetUseLighting(FALSE);
 
-    m_clickEffect.draw();
-    m_goalEffect.Draw();
-
-
-    m_effectManager.Draw();
 
     // 3. 最前面カーソル
     m_cursor.Draw();
 
-    // 描画ステートを3D用のデフォルト状態に復帰
+    // 4. ステート復元
     SetUseZBufferFlag(TRUE);
     SetWriteZBufferFlag(TRUE);
     SetUseLighting(TRUE);

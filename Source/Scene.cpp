@@ -2,12 +2,15 @@
 #include "ObjectManager.h"
 #include "UIManager.h"
 #include "CollisionManager.h"
+#include "EffectManager.h"
+#include "InputManager.h"
 
 Scene::Scene()
 {
 	mpObjectManager = new ObjectManager();
 	mpUIManager = new UIManager();
 	mpCollisionManager = new CollisionManager();
+	mpEffectManager = new EffectManager();
 }
 
 Scene::~Scene()
@@ -21,6 +24,9 @@ Scene::~Scene()
 
 	delete mpCollisionManager;
 	mpCollisionManager = nullptr;
+
+	delete mpEffectManager;
+	mpEffectManager = nullptr;
 }
 
 void Scene::Finalize() {
@@ -39,6 +45,12 @@ void Scene::Finalize() {
 	if (mpUIManager != nullptr)
 	{
 		mpUIManager->Clear();
+	}
+
+	//EffectManagerの所有するObject群の開放 --//
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Clear();
 	}
 }
 
@@ -63,6 +75,14 @@ void Scene::Update(float _deltaTime)
 	{
 		mpUIManager->Update();
 	}
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Update(_deltaTime);
+
+		//メンバ変数で呼び出し
+		mpEffectManager->PlayClickRipple();
+	}
+
 }
 
 void Scene::Draw()
@@ -76,10 +96,8 @@ void Scene::Draw()
 	{
 		mpUIManager->Draw();
 	}
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Draw();
+	}
 }
-
-
-
-
-
-

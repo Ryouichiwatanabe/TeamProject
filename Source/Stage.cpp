@@ -19,6 +19,7 @@
 #include "Switch.h"
 #include "SwitchBlock.h"
 #include "Collectible.h"
+#include "CollectibleData.h"
 
 #include "Transform.h"
 
@@ -28,7 +29,29 @@
 
 void Stage::Load(const std::string& _filename)
 {
-	mStageData = CsvLoader::Load(_filename);
+    size_t stagePos = _filename.rfind("Stage");
+
+    if (stagePos != std::string::npos)
+    {
+        stagePos += 5;
+
+        size_t extensionPos =
+            _filename.find(".csv", stagePos);
+
+        if (extensionPos != std::string::npos)
+        {
+            std::string stageNumber =
+                _filename.substr(
+                    stagePos,
+                    extensionPos - stagePos
+                );
+
+            mStageNumber = std::stoi(stageNumber);
+        }
+    }
+
+
+    mStageData = CsvLoader::Load(_filename);
     
     if (mStageData.empty())
     {
@@ -40,6 +63,14 @@ void Stage::Load(const std::string& _filename)
     }
 
 	CreateObjects();
+}
+
+std::string Stage::GetCollectibleFilename(int _itemIndex) const
+{
+    return ::GetCollectibleFilename(
+        mStageNumber,
+        _itemIndex
+    );
 }
 
 void Stage::CreateObjects()
@@ -155,10 +186,20 @@ void Stage::CreateObjects()
             }
 
             case 9:
+            case 10:
+            case 11:
             {
                 // Collectibleを生成
+                int itemIndex = tile - 9;
+
+                std::string filename =
+                    GetCollectibleFilename(itemIndex);
+
                 auto collectible = objectManager
-                    ->CreateObject<Collectible>();
+                    ->CreateObject<Collectible>(
+                        filename,
+                        itemIndex
+                    );
 
                 collectible
                     ->GetModule<Transform>()

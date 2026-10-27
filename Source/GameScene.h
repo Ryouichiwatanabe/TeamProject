@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Scene.h"
 #include <cstddef>
+#include "EffectClear.h"
 
 
 //---コンポジション系統
@@ -11,6 +12,8 @@
 class Player;
 class Goal;
 class MovingBlock;
+class CollectibleIconUI;
+class ClearCollectibleUI;
 
 //class Player_test;
 
@@ -22,13 +25,20 @@ public:
     void Draw();
     void Finalize();
     void SetStageNumber(int _stageNumber);
+    std::unique_ptr<EffectManager> mpEffectManager;
 
 private:
     int StageNumberFontHandle = -1;//左上のステージ番号用フォントハンドル
     int mMessageFontHandle = -1;   //下のTypeWriter用のフォントハンドル
     int mPauseBoardHandle = -1;
 		
-        void*  mAddedFontHandle = nullptr; // フォントハンドル
+    void*  mAddedFontHandle = nullptr; // フォントハンドル
+
+    int mCursorHandle = -1;
+
+  //  void DrawCursor();
+
+    float mClearTimer = 0.0f;
 
     MovingBlock* mpMovingBlock = nullptr;
 
@@ -49,12 +59,18 @@ private:
 
     Goal* mpGoal = nullptr;
 
+    CollectibleIconUI* mpCollectibleIconUI[3] = {};
+    ClearCollectibleUI* mpClearCollectibleUI[3] = {};
+
+    bool mbIsCollectibleCollected[3] = {};
+
     //FontやTitleLogoなどのアニメーションをするためのコンポジション
 private:
 
     UILabel mStageTextMotion; //Stage用
     FloatingMotion mClearTextMotion; //Clear用
     FloatingMotion mMessageMotion;//メッセージ用
+    float mfClearItemTimer = 0.0f;
 
     bool mbIsMessageActive = false; //メッセージ表示フラグ
 };
