@@ -1,9 +1,12 @@
 ﻿#include "Player.h"
 
-//SE・BGM
-#include "SoundManager.h"
+/* memo :
+* Player の「基本」部分。
+*   生成(Init) → 毎フレームの更新(Update) → Pieceの座標同期 → リスポーン
+* 回転・接地・形状変更は別ファイル(Player.h の memo 参照)。
+*/
 
-// Module関係
+// -- Module -- //
 #include "Transform.h"
 #include "Gravity.h"
 
@@ -202,68 +205,8 @@ void Player::CheckRespawn()
 	if (!transform)
 		return;
 
-	// -- 移動量を取得 & 座標反映 -- //
-	VECTOR moveAmount = VScale(_direction, mfSpeed);
-
-	auto transform = GetModule<Transform>();
-	VECTOR nextPos = VAdd(
-		transform->GetPosition(),
-		moveAmount
-	);
-
-	transform->SetPosition(nextPos);
-
-	UpdatePiecePosition();
-}
-
-void Player::Rotation(float _rotateDirection)
-{
-	//// -- 回転値を取得 -- //
-	//float rotationAmount = _rotateDirection * mfRotationPower;	// 回転の値(度数)
-	//float rotationRadian = rotationAmount * DX_PI_F / 180.0f;	// 回転の値(ラジアン)
-
-	//// -- 回転値を適用 -- //
-	//if (auto transform = GetModule<Transform>())
-	//	transform->SetRotation(
-	//		VAdd(
-	//			transform->GetRotation(),
-	//			VGet(0.0f, 0.0f, rotationRadian)
-	//		)
-	//	);
-
-	//UpdatePieceRotation();
-
-	// 挟まれている間は回転入力を無視する！
-	if (mbIsPinched) return;
-
-	auto transform = GetModule<Transform>();
-	if (!transform) return;
-	VECTOR prevRot = transform->GetRotation();
-	float rotationAmount = _rotateDirection * mfRotationPower;
-	float rotationRadian = rotationAmount * DX_PI_F / 180.0f;
-	// 一旦回転させる
-	transform->SetRotation(VAdd(prevRot, VGet(0.0f, 0.0f, rotationRadian)));
-	UpdatePieceRotation();
-
-	// SE_MOVE を再生
-	SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_MOVE);
-}
-
-
-void Player::ApplyShapeFromUI()
-{
-	for (int row = 0;
-		row < GameConfig::PLAYER_PIECE_SIZE;
-		++row)
-	{
-		for (int column = 0;
-			column < GameConfig::PLAYER_PIECE_SIZE;
-			++column)
-		{
-			bool selected = mpShapeUI->IsPieceSelected(column, row);
-			mPieces[column][row]->SetEnabled(selected);
-		}
-	}
+	if (transform->GetPosition().y > ScreenConfig::SCREEN_HEIGHT)
+		Respawn();
 }
 
 void Player::Respawn()
