@@ -102,6 +102,8 @@ public:
 
 		return result;
 	}
+
+	const std::vector<GameObject*> GetObjects() { return mObjects; }
 	
 	void Clear();	// 全てのObjectを解放する(シーン終了時など)
 

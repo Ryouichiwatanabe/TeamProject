@@ -1,10 +1,10 @@
-#include "Cursor.h"
+ï»¿#include "Cursor.h"
 #include "DxLib.h"
 
 namespace
 {
-    constexpr int offsetX = -10; // ƒEƒBƒ“ƒhƒE˜g‚Ì‘•ü•ªA¶‚ÖŠñ‚¹‚é
-    constexpr int offsetY = -1;  // ƒeƒLƒXƒgƒx[ƒXƒ‰ƒCƒ“‚Ì”÷’²®
+    constexpr int offsetX = -10; // ï¿½Eï¿½Bï¿½ï¿½ï¿½hï¿½Eï¿½gï¿½Ì‘ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ÖŠñ‚¹‚ï¿½
+    constexpr int offsetY = -1;  // ï¿½eï¿½Lï¿½Xï¿½gï¿½xï¿½[ï¿½Xï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Ì”ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 Cursor::Cursor()
@@ -17,16 +17,16 @@ Cursor::~Cursor()
 
 void Cursor::Initialize()
 {
-    // Windows‚Ìƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ”ñ•\¦
+    // Windowsã®ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤º
     SetMouseDispFlag(FALSE);
 
-    // ƒJ[ƒ\ƒ‹‰æ‘œ‚ğ“Ç‚İ‚Ş
+    // ï¿½Jï¿½[ï¿½\ï¿½ï¿½ï¿½æ‘œï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
     mHandle = LoadGraph("Resource/Cursor4.png");
 }
 
 void Cursor::Update()
 {
-    // ¡‚Í“Á‚Éˆ—‚È‚µ
+    // ä»Šã¯ç‰¹ã«å‡¦ç†ãªã—
 }
 
 void Cursor::Draw()
@@ -55,6 +55,6 @@ void Cursor::Finalize()
         mHandle = -1;
     }
 
-    // Windows‚Ìƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğÄ•\¦
+    // Windowsã®ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’å†è¡¨ç¤º
     SetMouseDispFlag(TRUE);
 }

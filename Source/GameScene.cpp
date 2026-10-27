@@ -66,7 +66,11 @@ void GameScene::Initialize()
 	}
 	// 初期化処理
 	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
-	mpPlayer->InitPiece();
+	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
+	if (mpPlayer != nullptr)
+	{
+		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
+	}
 
 	auto* stage = new Stage();
 
@@ -224,6 +228,9 @@ void GameScene::Update(float deltaTime)
 	//==通常時：ステージ番号の文字を更新==//
 	mStageTextMotion.Update();
 
+	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
+	UpdateShapeUIToggle();
+
 	// 更新処理
 	Scene::Update(deltaTime);
 
@@ -338,6 +345,21 @@ void GameScene::Draw()
 	{
 		DrawClear();
 	}
+}
+
+void GameScene::UpdateShapeUIToggle()
+{
+	if (mpShapeUI == nullptr)
+		return;
+
+	if (!InputManager::GetInstance().GetButtonDown(Button::Shape))
+		return;
+
+	// ※企画書の「接地中のみ変形可」の条件は今回は加味しない
+	if (mpShapeUI->IsEnabled())
+		mpShapeUI->Close();
+	else
+		mpShapeUI->Open();
 }
 
 void GameScene::DrawPause()

@@ -12,93 +12,37 @@
 #include "ObjectManager.h"	// Playerのアドレス取得用
 #include "Player.h"
 
-// -- Module -- //
-#include "Transform.h"
+namespace
+{
+	constexpr float BUTTON_OFFSET_X = 180.0f;	// OK / Back ボタンの左右位置
+	constexpr float BUTTON_OFFSET_Y = 300.0f;	// OK / Back ボタンの縦位置
+	constexpr float MESSAGE_OFFSET_Y = -280.0f;	// メッセージの縦位置
+
+	constexpr int LAYER_FRAME = 0;
+	constexpr int LAYER_PIECE = 1;
+	constexpr int LAYER_BUTTON = 2;
+}
 
 void PlayerShapeUI::Init()
 {
 	LoadUIGraph("Resource/UI/外側.png");
+	SetLayer(LAYER_FRAME);
+	SetEnabled(false);	// 初期状態は非表示
 
 	// -- piece生成 & 初期処理 -- //
-	for (int row = 0;
-		row < GameConfig::PLAYER_PIECE_SIZE;
-		++row)
+	for (int row = 0; row < GameConfig::PLAYER_PIECE_SIZE; ++row)
 	{
-		for (int column = 0;
-			column < GameConfig::PLAYER_PIECE_SIZE;
-			++column)
+		for (int column = 0; column < GameConfig::PLAYER_PIECE_SIZE; ++column)
 		{
 			CreatePieceUI(column, row);
 		}
 	}
 
-	mpConfirmUI =
-		Master::mpSceneManager
-		->GetCurrentScene()
-		->GetUIManager()
-		->CreateUI<UI>();
-	// Todo : 画像が決まり次第ロード
-	mpConfirmUI->LoadUIGraph("Resource/Obj/test_field.png");
-	mpConfirmUI->SetLayer(2);
-	mpConfirmUI
-		->GetTransform()
-		.SetScale(
-			VGet(2.0f,
-				1.0f,
-				1.0f
-			)
-		);
-	mpConfirmUI
-		->GetTransform().SetPosition(
-			VGet(
-				-180.0f,
-				300.0f,
-				0.0f
-			)
-		);
-	mpConfirmUI
-		->GetText()
-		.SetText(
-			"OK"
-		);
-
-	// -- 親子の設定 -- //
-	this->AddChild(mpConfirmUI);
-	mpConfirmUI->SetParent(this);
-
-	mpBackUI =
-		Master::mpSceneManager
-		->GetCurrentScene()
-		->GetUIManager()
-		->CreateUI<UI>();
-	// Todo : 画像が決まり次第ロード
-	mpBackUI->LoadUIGraph("Resource/Obj/test_field.png");
-	mpBackUI->SetLayer(2);
-	mpBackUI
-		->GetTransform()
-		.SetScale(
-			VGet(2.0f,
-				1.0f,
-				1.0f
-			)
-		);
-	mpBackUI
-		->GetTransform().SetPosition(
-			VGet(
-				180.0f,
-				300.0f,
-				0.0f
-			)
-		);
-	mpBackUI
-		->GetText()
-		.SetText(
-			"Back"
-		);
-
-	// -- 親子の設定 -- //
-	this->AddChild(mpBackUI);
-	mpBackUI->SetParent(this);
+	// -- ボタン・メッセージ生成 -- //
+	// Todo : 画像が決まり次第差し替え
+	mpConfirmUI = CreateButtonUI("OK", -BUTTON_OFFSET_X, BUTTON_OFFSET_Y);
+	mpBackUI = CreateButtonUI("Back", BUTTON_OFFSET_X, BUTTON_OFFSET_Y);
+	mpMessageUI = CreateMessageUI(0.0f, MESSAGE_OFFSET_Y);
 
 	// -- Playerのアドレス取得 -- //
 	mpPlayer =
@@ -106,39 +50,86 @@ void PlayerShapeUI::Init()
 		->GetCurrentScene()
 		->GetObjectManager()
 		->FindObject<Player>();
-	mpPlayer->SetShapeUI(this);
 }
 
 void PlayerShapeUI::CreatePieceUI(int _column, int _row)
 {
-	// -- PieceUIの生成 -- //
-	auto pieceUI =
-		Master::mpSceneManager
-		->GetCurrentScene()
-		->GetUIManager()
-		->CreateUI<PlayerPieceUI>();
-
+	auto pieceUI = GetUIManager()->CreateUI<PlayerPieceUI>();
 	if (pieceUI == nullptr)
 		return;
 
 	pieceUI->LoadUIGraph("Resource/UI/内側.png");
-	pieceUI->SetLayer(1);
-	mPieceUI[_row][_column] = pieceUI;
+	pieceUI->SetLayer(LAYER_PIECE);
+	mPieceUI[_column][_row] = pieceUI;
 
 	// -- 親子の設定 -- //
+	// 子は常に有効にしておき、表示/非表示は親(this)の有効状態だけで切り替える
 	this->AddChild(pieceUI);
 	pieceUI->SetParent(this);
+	pieceUI->SetEnabled(true);
 
-	// -- 初期座標の設定 -- //
+	// -- 初期座標の設定 (中央マス(1,1)を原点とする) -- //
 	auto& pieceTransform = pieceUI->GetTransform();
-	VECTOR size = pieceTransform.GetSize();
-	VECTOR localPosition = VGet(
+	const VECTOR size = pieceTransform.GetSize();
+	pieceTransform.SetPosition(VGet(
 		(_column - 1) * size.x,
 		(_row - 1) * size.y,
 		0.0f
-	);
+	));
+}
 
-	pieceTransform.SetPosition(localPosition);
+UI* PlayerShapeUI::CreateButtonUI(const std::string& _text, float _x, float _y)
+{
+	UI* button = GetUIManager()->CreateUI<UI>();
+
+	button->LoadUIGraph("Resource/UI/内側.png");
+	button->SetLayer(LAYER_BUTTON);
+	button->GetTransform().SetScale(VGet(2.0f, 1.0f, 1.0f));
+	button->GetTransform().SetPosition(VGet(_x, _y, 0.0f));
+	button->GetText().SetText(_text);
+
+	this->AddChild(button);
+	button->SetParent(this);
+	button->SetEnabled(true);
+
+	return button;
+}
+
+UI* PlayerShapeUI::CreateMessageUI(float _x, float _y)
+{
+	// 画像なし・テキストのみのUI
+	UI* message = GetUIManager()->CreateUI<UI>();
+
+	message->SetLayer(LAYER_BUTTON);
+	message->GetTransform().SetPosition(VGet(_x, _y, 0.0f));
+	message->GetText().SetColor(GetColor(255, 80, 80));
+
+	this->AddChild(message);
+	message->SetParent(this);
+	message->SetEnabled(true);
+
+	return message;
+}
+
+void PlayerShapeUI::Open()
+{
+	if (mpPlayer == nullptr)
+		return;
+
+	// 基盤ブロックを決めて Player を停止 → その状態をUIへ反映
+	mpPlayer->BeginShapeEdit();
+	SyncFromPlayer();
+	ShowMessage("");
+
+	SetEnabled(true);
+}
+
+void PlayerShapeUI::Close()
+{
+	if (mpPlayer != nullptr)
+		mpPlayer->EndShapeEdit();
+
+	SetEnabled(false);
 }
 
 void PlayerShapeUI::Update()
@@ -147,47 +138,15 @@ void PlayerShapeUI::Update()
 
 	if (mpConfirmUI->GetButton().IsClicked())
 	{
-		mpPlayer->ApplyShapeFromUI();
-		this->SetEnabled(false);
+		ApplyShapeFromUI();
+		return;
 	}
 
+	// Back ボタンで変更せずに閉じる (変形キーでの開閉は GameScene 側)
 	if (mpBackUI->GetButton().IsClicked())
 	{
-		this->SetEnabled(false);
-	}
-
-	if (IsEnabled())
-	{
-		for (int row = 0;
-			row < GameConfig::PLAYER_PIECE_SIZE;
-			++row)
-		{
-			for (int column = 0;
-				column < GameConfig::PLAYER_PIECE_SIZE;
-				++column)
-			{
-				mPieceUI[column][row]->SetEnabled(true);
-				mpConfirmUI->SetEnabled(true);
-				mpBackUI->SetEnabled(true);
-			}
-		}
-	}
-
-	else
-	{
-		for (int row = 0;
-			row < GameConfig::PLAYER_PIECE_SIZE;
-			++row)
-		{
-			for (int column = 0;
-				column < GameConfig::PLAYER_PIECE_SIZE;
-				++column)
-			{
-				mPieceUI[column][row]->SetEnabled(false);
-				mpConfirmUI->SetEnabled(false);
-				mpBackUI->SetEnabled(false);
-			}
-		}
+		Close();
+		return;
 	}
 }
 
@@ -196,9 +155,66 @@ void PlayerShapeUI::Draw()
 	UI::Draw();
 }
 
-bool PlayerShapeUI::IsPieceSelected(int _x, int _y)
+bool PlayerShapeUI::IsPieceSelected(int _column, int _row) const
 {
-	return mPieceUI[_x][_y]->IsSelected();
+	return mPieceUI[_column][_row]->IsSelected();
 }
 
+void PlayerShapeUI::SyncFromPlayer()
+{
+	const PlayerShapeMask shape = mpPlayer->GetScreenShape();
 
+	int baseColumn = -1;
+	int baseRow = -1;
+	mpPlayer->GetScreenBaseCell(baseColumn, baseRow);
+
+	for (int row = 0; row < GameConfig::PLAYER_PIECE_SIZE; ++row)
+	{
+		for (int column = 0; column < GameConfig::PLAYER_PIECE_SIZE; ++column)
+		{
+			auto pieceUI = mPieceUI[column][row];
+			pieceUI->SetSelected(shape[column][row]);
+			pieceUI->SetBase(column == baseColumn && row == baseRow);
+		}
+	}
+}
+
+void PlayerShapeUI::ApplyShapeFromUI()
+{
+	if (mpPlayer == nullptr)
+		return;
+
+	PlayerShapeMask shape{};
+	for (int row = 0; row < GameConfig::PLAYER_PIECE_SIZE; ++row)
+	{
+		for (int column = 0; column < GameConfig::PLAYER_PIECE_SIZE; ++column)
+		{
+			shape[column][row] = IsPieceSelected(column, row);
+		}
+	}
+
+	switch (mpPlayer->TryChangeShapeFromScreen(shape))
+	{
+	case ShapeChangeResult::Success:
+		Close();
+		break;
+
+	case ShapeChangeResult::BaseRemoved:
+		ShowMessage("基盤ブロック(赤枠)は外せません");
+		break;
+
+	case ShapeChangeResult::Disconnected:
+		ShowMessage("ブロックはひとつにつなげてください");
+		break;
+
+	case ShapeChangeResult::Overlapping:
+		ShowMessage("地形に重なるため変形できません");
+		break;
+	}
+}
+
+void PlayerShapeUI::ShowMessage(const std::string& _message)
+{
+	if (mpMessageUI != nullptr)
+		mpMessageUI->GetText().SetText(_message);
+}
