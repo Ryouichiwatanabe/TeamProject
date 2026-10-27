@@ -23,7 +23,6 @@
 #include "PlayerShapeUI.h"
 #include "CollectibleIconUI.h"
 #include "Collectible.h"
-#include "ClearCollectibleUI.h"
 #include "PauseUI.h"
 #include "ClearUI.h"
 
@@ -162,57 +161,16 @@ void GameScene::Initialize()
 		mpCollectibleIconUI[i]->SetEnabled(false);
 	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		mpClearCollectibleUI[i] =
-			this
-			->GetUIManager()
-			->CreateUI<ClearCollectibleUI>();
-
-		mpClearCollectibleUI[i]->SetGraph(
-			stage->GetCollectibleFilename(i)
-		);
-
-		mpClearCollectibleUI[i]
-			->GetTransform()
-			.SetAnchor(
-				VGet(0.0f, 0.0f, 0.0f)
-			);
-
-		mpClearCollectibleUI[i]
-			->GetTransform()
-			.SetPosition(
-				VGet(
-					550.0f + i * 90.0f,
-					315.0f,
-					0.0f
-				)
-			);
-
-		mpClearCollectibleUI[i]
-			->GetTransform()
-			.SetScale(
-				VGet(0.5f, 0.5f, 1.0f)
-			);
-
-		mpClearCollectibleUI[i]->SetEnabled(false);
-	}
-
+	// クリアUI
 	mpClearUI =
 		this->GetUIManager()
-		->CreateUI<ClearUI>();
-
-	for (int i = 0; i < 3; i++)
-	{
-		mpClearUI->SetCollectibleUI(
-			i,
-			mpClearCollectibleUI[i]
+		->CreateUI<ClearUI>(
+			stage->GetCollectibleFilename(0),
+			stage->GetCollectibleFilename(1),
+			stage->GetCollectibleFilename(2)
 		);
-	}
 
 	mpClearUI->SetEnabled(false);
-
-	mPauseBoardHandle = Master::mpResource->LoadGraphics("Resource/UI/PauseBoard.png");
 
 	mpPauseUI =
 		this->GetUIManager()
@@ -224,10 +182,6 @@ void GameScene::Initialize()
 
 	mpPauseUI->SetMessageFontHandle(
 		mMessageFontHandle
-	);
-
-	mpPauseUI->SetButtonGraphHandle(
-		mPauseBoardHandle
 	);
 
 	mpPauseUI->SetEnabled(false);
@@ -393,86 +347,24 @@ void GameScene::UpdateClear()
 			mbIsCollectibleCollected[i]
 		);
 	}
-
-	int mouseX;
-	int mouseY;
-
-	GetMousePoint(&mouseX, &mouseY);
-
-	bool currentMouseLeft =
-		(GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-
-	bool mouseLeftDown =
-		currentMouseLeft && !mbPreviousMouseLeft;
-
-	if (mouseLeftDown &&
-		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 450 && mouseY <= 520)
-	{
-		Master::mpSceneManager->RequestScene(
-			SCENE_TYPE::STAGE_SELECT_SCENE
-		);
-	}
-
-	mbPreviousMouseLeft = currentMouseLeft;
 }
 
 void GameScene::UpdatePause()
 {
-	bool currentP = InputManager::GetInstance().GetButtonDown(Button::Pause);
-
-	if (currentP && !mbPreviousP)
+	if (InputManager::GetInstance()
+		.GetButtonDown(Button::Pause))
 	{
 		mbIsPaused = !mbIsPaused;
 	}
 
-	mpPauseUI->SetEnabled(mbIsPaused);
-
-	mbPreviousP = currentP;
-
-	if (!mbIsPaused)
-	{
-		return;
-	}
-
-	// マウス座標
-	int mouseX;
-	int mouseY;
-	GetMousePoint(&mouseX, &mouseY);
-
-	// 左クリック判定
-	bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-	bool mouseLeftDown = currentMouseLeft && !mbPreviousMouseLeft;
-
-	//  再開ボタン
-	if (mouseLeftDown &&
-		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 300 && mouseY <= 370)
+	if (mbIsPaused &&
+		mpPauseUI->IsResumeRequested())
 	{
 		mbIsPaused = false;
+		mpPauseUI->ResetResumeRequest();
 	}
 
-	//  ステージ選択へ戻るボタン
-	if (mouseLeftDown &&
-		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 400 && mouseY <= 470)
-	{
-		
-		// フェードアウトを開始してステージセレクトへ
-		Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
-	}
-
-	// タイトルへ戻るボタン
-	if (mouseLeftDown &&
-		mouseX >= 500 && mouseX <= 780 &&
-		mouseY >= 500 && mouseY <= 570)
-	{
-		
-		// フェードアウトを開始してタイトルへ
-		Master::mpSceneManager->RequestScene(SCENE_TYPE::TITLE_SCENE);
-	}
-
-	mbPreviousMouseLeft = currentMouseLeft;
+	mpPauseUI->SetEnabled(mbIsPaused);
 }
 
 void GameScene::SetStageNumber(int _stageNumber)

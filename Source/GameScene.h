@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include "Scene.h"
 #include <cstddef>
 #include "EffectClear.h"
@@ -13,7 +14,6 @@ class Player;
 class Goal;
 class MovingBlock;
 class CollectibleIconUI;
-class ClearCollectibleUI;
 class PauseUI;
 class ClearUI;
 
@@ -32,11 +32,10 @@ public:
     std::unique_ptr<EffectManager> mpEffectManager;
 
 private:
-    int StageNumberFontHandle = -1;//左上のステージ番号用フォントハンドル
-    int mMessageFontHandle = -1;   //下のTypeWriter用のフォントハンドル
-    int mPauseBoardHandle = -1;
-		
-    void*  mAddedFontHandle = nullptr; // フォントハンドル
+    int StageNumberFontHandle = -1; // 左上のステージ番号用フォントハンドル
+    int mMessageFontHandle = -1;    // 下のTypeWriter用のフォントハンドル
+
+    void* mAddedFontHandle = nullptr; // フォントハンドル
 
     int mCursorHandle = -1;
 
@@ -65,7 +64,6 @@ private:
     Goal* mpGoal = nullptr;
 
     CollectibleIconUI* mpCollectibleIconUI[3] = {};
-    ClearCollectibleUI* mpClearCollectibleUI[3] = {};
 
     bool mbIsCollectibleCollected[3] = {};
 
@@ -75,9 +73,9 @@ private:
     void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
 private:
 
-    UILabel mStageTextMotion; //Stage用
-    FloatingMotion mClearTextMotion; //Clear用
-    FloatingMotion mMessageMotion;//メッセージ用
+    UILabel mStageTextMotion;          // Stage用
+    FloatingMotion mClearTextMotion;   // Clear用
+    FloatingMotion mMessageMotion;     // メッセージ用
     float mfClearItemTimer = 0.0f;
 
     bool mbIsMessageActive = false; //メッセージ表示フラグ

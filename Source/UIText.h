@@ -36,6 +36,10 @@ public:
 	void SetAlign(UITextAlign _align) { mAlign = _align; }
 	UITextAlign GetAlign() { return mAlign; }
 
+	void SetFontHandle(int _fontHandle) { mnFontHandle = _fontHandle; }
+
+	void SetOffset(VECTOR _offset) { mvOffset = _offset; }
+
 	void Draw();
 
 private:
@@ -48,6 +52,10 @@ private:
 	unsigned int mColor = GetColor(255, 255, 255);
 
 	UITextAlign mAlign = UITextAlign::CENTER;	// テキストの配置(デフォルトは中央揃え)
+
+	VECTOR mvOffset = VGet(0.0f, 0.0f, 0.0f);
+
+	int mnFontHandle = -1;
 
 	UI* mpUI;
 };
