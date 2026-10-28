@@ -12,7 +12,6 @@
 // -- GameObject -- //
 #include "Stage.h"
 #include "Player.h"
-#include "FakePlayer.h" // デバック用
 #include "StageBlock.h"
 #include "MovingBlock.h"
 
@@ -105,7 +104,6 @@ void GameScene::Initialize()
 	//Stage文字ラベルの初期化
 	std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
 	FloatingMotion stageMotion(120, 15.0f);
-	mStageTextMotion = UILabel(10, 10, stageText, GetColor(0, 0, 0), StageNumberFontHandle,stageMotion);
 
 
 	//Typewriter
@@ -211,9 +209,6 @@ void GameScene::Update(float deltaTime)
 		deltaTime = 0.0f;
 	}
 
-	//==通常時：ステージ番号の文字を更新==//
-	mStageTextMotion.Update();
-
 	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
 	UpdateShapeUIToggle();
 
@@ -279,9 +274,6 @@ void GameScene::Draw()
         GetColor(217, 198, 143),
         TRUE
     );
-	//Stage文字描画
-	mStageTextMotion.Draw();
-
 
     Debug::Print(
         "InputMode : ",
@@ -290,31 +282,6 @@ void GameScene::Draw()
 
     Debug::Draw();
     Scene::Draw();
-
-
-	// ★ メッセージウィンドウ描画
-/*	if (mbIsMessageActive)
-	{
-		// 背景の半透明黒帯ウィンドウ
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
-		DrawBox(140, 520, 1140, 680, GetColor(0, 0, 0), TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-		// ウィンドウの外枠
-		DrawBox(140, 520, 1140, 680, GetColor(255, 255, 255), FALSE);
-
-		//TypeWriter用
-		int offsetY = static_cast<int>(mMessageMotion.GetOffsetY());
-
-		// 文字の描画（PixelMplus10 フォントを適用）
-		mTypewriter.Draw(170, 550 + offsetY, GetColor(255, 255, 255), mMessageFontHandle);
-
-		// 読み終えて次に進める合図（点滅アイコンなど）
-		if (mTypewriter.IsFinished())
-		{
-			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
-		}
-	}*/
 
 	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
 	if (mpEffectManager != nullptr)

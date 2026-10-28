@@ -44,6 +44,8 @@
     <ClCompile Include="Source\Graphic.cpp" />
     <ClCompile Include="Source\Gravity.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
+    <ClCompile Include="Source\Item.cpp" />
+    <ClCompile Include="Source\ItemTable.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Master.cpp" />
@@ -110,6 +112,8 @@
     <ClInclude Include="Source\Graphic.h" />
     <ClInclude Include="Source\Gravity.h" />
     <ClInclude Include="Source\InputManager.h" />
+    <ClInclude Include="Source\Item.h" />
+    <ClInclude Include="Source\ItemTable.h" />
     <ClInclude Include="Source\Keyboard.h" />
     <ClInclude Include="Source\Master.h" />
     <ClInclude Include="Source\Module.h" />

@@ -2,12 +2,12 @@
 
 #include "Scene.h"
 #include <cstddef>
+#include <memory>
 #include "EffectClear.h"
 
 
 //---コンポジション系統
 #include "FloatingMotion.h"
-#include "UILabel.h"
 #include "UITypewriterText.h"
 
 class Player;
@@ -73,7 +73,6 @@ private:
     void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
 private:
 
-    UILabel mStageTextMotion;          // Stage用
     FloatingMotion mClearTextMotion;   // Clear用
     FloatingMotion mMessageMotion;     // メッセージ用
     float mfClearItemTimer = 0.0f;
