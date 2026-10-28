@@ -8,5 +8,8 @@ public:
 
 	// -- IDからアイテム情報を取得 -- //
 	const ItemDef* GetItemDef(int _stage, int _slot) const;
+
+	// -- IDをステージ番号,スロット番号から取得する -- //
+	const int ToItemId(int _stage, int _slot) const;
 private:
 };

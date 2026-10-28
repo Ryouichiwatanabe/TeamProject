@@ -1,9 +1,6 @@
 ﻿#include "ItemTable.h"
 
-
-
-#include "Master.h"
-#include "SceneManager.h"
+#include "GameConfig.h"	// MAX_ITEMS_PER_STAGE
 
 namespace {
 	struct ItemDef {
@@ -28,12 +25,12 @@ void ItemTable::Release() {
 }
 
 const ItemDef* ItemTable::GetItemDef(int _stage, int _slot) const {
-	for (auto& def : ItemDefs)
-		if (def.stage == _stage
-			&& def.slot == _slot)
-			return &def;
-	
-	return nullptr;
+	return &ItemDefs[ToItemId(_stage, _slot)];
+}
+
+const int ItemTable::ToItemId(int _stage, int _slot) const {
+	return (_stage - 1) * GameConfig::MAX_ITEMS_PER_STAGE
+		+ _slot;
 }
 
 

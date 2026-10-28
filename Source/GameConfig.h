@@ -13,6 +13,10 @@ public:
 	static constexpr float GLAVITY = 9.8f;				// 重力加速度
 	static constexpr float MAX_FALLSPEED = 49.0f;		// 落下速度の上限
 
+	// -- ステージ・アイテム -- //
+	static constexpr int STAGE_COUNT = 8;                                   // ステージ総数
+	static constexpr int MAX_ITEMS_PER_STAGE = 3;                                   // 1ステージのアイテム上限
+
 	// -- 物理・回転・倒れ込み用定数 -- //
 	static constexpr float ALLOWED_PENETRATION = CELL_SIZE * 0.1f;	// 回転判定における許容めり込み量
 	static constexpr float ROTATION_STEP_DEG = 5.0f;	// 1回の回転角度（度数法）
