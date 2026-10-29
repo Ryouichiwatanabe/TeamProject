@@ -8,7 +8,6 @@
 //---コンポジション系統
 #include "FloatingMotion.h"
 #include "UILabel.h"
-#include "UITypewriterText.h"
 #include "UIBackground.h"
 
 class Player;

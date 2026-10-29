@@ -267,10 +267,6 @@ void GameScene::Update(float deltaTime)
 		}
 	}
 
-	// Collectibleの取得状態を確認
-	auto collectibles =
-		GetObjectManager()->FindObjects<Collectible>();
-
 	for (auto collectible : collectibles)
 	{
 		int itemIndex = collectible->GetItemIndex();
