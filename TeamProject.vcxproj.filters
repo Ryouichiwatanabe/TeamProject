@@ -270,6 +270,9 @@
     <ClCompile Include="Source\UIHoverScaler.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UIBackground.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
@@ -466,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="Source\Box2D.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UIBackground.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
