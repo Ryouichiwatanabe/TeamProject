@@ -47,7 +47,7 @@ void GameScene::Initialize()
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
 	// 画像のロード
-	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke.png", 9, 3, 3);
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smok1e.png", 9, 3, 3);
 
 	// 画面中央の座標を計算
 	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
