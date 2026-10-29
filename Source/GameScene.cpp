@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
+#include "UIBackground.h"
+
 //-- Effect --//
 #include "EffectClear.h"
 #include "EffectSmokeSpriteSheet.h"
@@ -45,7 +47,7 @@ void GameScene::Initialize()
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
 	// 画像のロード
-	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke3.png", 16, 4, 4);
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke.png", 9, 3, 3);
 
 	// 画面中央の座標を計算
 	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
@@ -58,10 +60,10 @@ void GameScene::Initialize()
 			screenCenterX,   // X座標（画面中央）
 			screenCenterY,   // Y座標（画面中央）
 			pSmokeData,      // 画像データ
-			0.05f,           // 1コマの表示秒数
+			0.4f,           // 1コマの表示秒数
 			true,            // ★ bIsLoop: true でループ再生
 			false,           // 加算ブレンド
-			1.0,             // スケール
+			2.0f,             // スケール
 			0.0              // 角度
 		);
 	}
@@ -81,6 +83,22 @@ void GameScene::Initialize()
 		+ ".csv";
 
 	stage->Load(stageFileName);
+
+	// ==========================================
+	// ★ 背景UIの生成とステージ反映
+	// ==========================================
+	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
+	if (mpBackgroundUI != nullptr)
+	{
+		// 背景用として最背面のレイヤーに指定
+		mpBackgroundUI->SetLayer(-100);
+
+		// Stage クラスを渡して背景画像をロード＆適用
+		mpBackgroundUI->SetStage(stage);
+
+		// またはステージ番号を直接渡す場合:
+		// mpBackgroundUI->SetStageByNumber(mnStageNumber);
+	}
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
@@ -300,12 +318,12 @@ void GameScene::Update(float deltaTime)
 
 void GameScene::Draw()
 {
-    DrawBox(
+  /*  DrawBox(
         0, 0,
         1280, 720,
         GetColor(217, 198, 143),
         TRUE
-    );
+    );*/
 	//Stage文字描画
 	mStageTextMotion.Draw();
 
