@@ -9,6 +9,7 @@
 #include "FloatingMotion.h"
 #include "UILabel.h"
 #include "UITypewriterText.h"
+#include "UIBackground.h"
 
 class Player;
 class Goal;
@@ -81,4 +82,5 @@ private:
     bool mbIsMessageActive = false; //メッセージ表示フラグ
 
     PlayerShapeUI* mpShapeUI = nullptr;
+    UIBackground* mpBackgroundUI = nullptr;
 };

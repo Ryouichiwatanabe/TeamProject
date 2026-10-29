@@ -37,6 +37,9 @@ EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
 
 void EffectSmokeSpriteSheet::OnUpdate([[maybe_unused]] float fDeltaTime)
 {
+    // 基底クラス等の更新処理があれば呼ぶ
+    EffectBase::OnUpdate(fDeltaTime);
+
 }
 
 void EffectSmokeSpriteSheet::Draw() const

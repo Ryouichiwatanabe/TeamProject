@@ -12,6 +12,7 @@ public:
 
 	std::string GetCollectibleFilename(int _itemIndex) const;
 
+	int GetStageNumber() const { return mStageNumber; }
 private:
 	void CreateObjects();
 
