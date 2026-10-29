@@ -25,7 +25,7 @@
     <ClCompile Include="Source\CollectibleData.cpp" />
     <ClCompile Include="Source\CollectibleIconUI.cpp" />
     <ClCompile Include="Source\CollectibleUI.cpp" />
-    <ClCompile Include="Source\ClickEffect.cpp" />
+    <ClCompile Include="Source\EffectClick.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
     <ClCompile Include="Source\CsvLoader.cpp" />
@@ -33,7 +33,6 @@
     <ClCompile Include="Source\Debug.cpp" />
     <ClCompile Include="Source\DisappearingBlock.cpp" />
     <ClCompile Include="Source\EffectClear.cpp" />
-    <ClCompile Include="Source\EffectClick.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />
@@ -80,7 +79,6 @@
     <ClCompile Include="Source\UIManager.cpp" />
     <ClCompile Include="Source\UIText.cpp" />
     <ClCompile Include="Source\UITransform.cpp" />
-    <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
@@ -90,7 +88,7 @@
     <ClInclude Include="Source\CollectibleData.h" />
     <ClInclude Include="Source\CollectibleIconUI.h" />
     <ClInclude Include="Source\CollectibleUI.h" />
-    <ClInclude Include="Source\ClickEffect.h" />
+    <ClInclude Include="Source\EffectClick.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
     <ClInclude Include="Source\CsvLoader.h" />
@@ -98,7 +96,6 @@
     <ClInclude Include="Source\Debug.h" />
     <ClInclude Include="Source\EffectBase.h" />
     <ClInclude Include="Source\EffectClear.h" />
-    <ClInclude Include="Source\EffectClick.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\FadeEffect.h" />
@@ -142,7 +139,6 @@
     <ClInclude Include="Source\TextRenderer.h" />
     <ClInclude Include="Source\TitleScene.h" />
     <ClInclude Include="Source\UIBackground.h" />
-    <ClInclude Include="Source\UITypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />
@@ -150,8 +146,6 @@
     <ClInclude Include="Source\UILabel.h" />
     <ClInclude Include="Source\UIManager.h" />
     <ClInclude Include="Source\UIText.h" />
-    <ClInclude Include="Source\UITransform.h" />
-    <ClInclude Include="Source\UITypewriterText.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
