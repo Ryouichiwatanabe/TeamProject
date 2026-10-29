@@ -5,11 +5,8 @@
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
-<<<<<<< HEAD
 #include "UIBackground.h"
-=======
 #include "SoundManager.h"
->>>>>>> Hana
 
 //-- Effect --//
 #include "EffectClear.h"
