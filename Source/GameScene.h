@@ -56,7 +56,7 @@ private:
     bool mbPreviousP = false;
     bool mbPreviousMouseLeft = false;
 
-    void UpdatePause();
+    void UpdatePauseInput();    // 入力に伴い、PauseUIを有効にする
     void UpdateClear();
 
     Player* mpPlayer = nullptr;

@@ -1,36 +1,36 @@
-#pragma once
+ï»¿#pragma once
 #include "DxLib.h"
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <Windows.h> //<--ƒtƒHƒ“ƒg’Ç‰Á‚ÌAPIiAddFontResourceEX‚È‚Çj 
+#include <Windows.h> //<--ãƒ•ã‚©ãƒ³ãƒˆè¿½åŠ ã®APIï¼ˆAddFontResourceEXãªã©ï¼‰ 
 class FontManager {
 public:
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^‚ğ public ‚É”z’u‚·‚é
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’ public ã«é…ç½®ã™ã‚‹
     FontManager() = default;
     ~FontManager() { Clear(); }
 
-    // ƒRƒs[‹Ö~iˆÓ}‚µ‚È‚¢ƒRƒs[–h~j
+    // ã‚³ãƒ”ãƒ¼ç¦æ­¢ï¼ˆæ„å›³ã—ãªã„ã‚³ãƒ”ãƒ¼é˜²æ­¢ï¼‰
     FontManager(const FontManager&) = delete;
     FontManager& operator=(const FontManager&) = delete;
 
-	//-- ƒtƒHƒ“ƒg‚Ìæ“¾‚Æ‰ğ•ú--//  ->thick‚ÌƒfƒtƒHƒ‹ƒg’l‚ğ-1‚Éİ’è‚·‚é‚±‚Æ‚ÅA‘¾‚³‚ğw’è‚µ‚È‚¢ê‡‚ÍƒfƒtƒHƒ‹ƒg‚Ì‘¾‚³‚ªg—p‚³‚ê‚é‚æ‚¤‚É‚·‚é
+	//-- ãƒ•ã‚©ãƒ³ãƒˆã®å–å¾—ã¨è§£æ”¾--//  ->thickã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’-1ã«è¨­å®šã™ã‚‹ã“ã¨ã§ã€å¤ªã•ã‚’æŒ‡å®šã—ãªã„å ´åˆã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å¤ªã•ãŒä½¿ç”¨ã•ã‚Œã‚‹ã‚ˆã†ã«ã™ã‚‹
     int GetFont(const std::string& fontName, int size, int thick = -1, int fontType = DX_FONTTYPE_ANTIALIASING);
-	//-- ƒtƒHƒ“ƒg‚Ì”jŠü --//
+	//-- ãƒ•ã‚©ãƒ³ãƒˆã®ç ´æ£„ --//
     void ReleaseFont(const std::string& fontName, int size, int thick = -1, int fontType = DX_FONTTYPE_ANTIALIASING);
-	//-- ƒtƒHƒ“ƒg‚Ì‰ğ•ú --//
+	//-- ãƒ•ã‚©ãƒ³ãƒˆã®è§£æ”¾ --//
     void Clear();
-	//-- ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ --//
+	//-- ãƒ•ã‚©ãƒ³ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ --//
     bool LoadFontFile(const std::string& filePath);
 
 private:
-    // ƒtƒHƒ“ƒg‚Ìƒpƒ‰ƒ[ƒ^i–¼‘OEƒTƒCƒYE‘¾‚³E•`‰æƒ^ƒCƒvj‚©‚çˆêˆÓ‚ÌŒŸõƒL[•¶š—ñ‚ğ¶¬
+    // ãƒ•ã‚©ãƒ³ãƒˆã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼ˆåå‰ãƒ»ã‚µã‚¤ã‚ºãƒ»å¤ªã•ãƒ»æç”»ã‚¿ã‚¤ãƒ—ï¼‰ã‹ã‚‰ä¸€æ„ã®æ¤œç´¢ã‚­ãƒ¼æ–‡å­—åˆ—ã‚’ç”Ÿæˆ
     std::string GenerateKey(const std::string& fontName, int size, int thick, int fontType) const {
         return fontName + "_" + std::to_string(size) + "_" + std::to_string(thick) + "_" + std::to_string(fontType);
     }
-    // ¶¬Ï‚İƒtƒHƒ“ƒg‚ÌƒLƒƒƒbƒVƒ…ƒe[ƒuƒ‹iKey: ƒpƒ‰ƒ[ƒ^•¶š—ñ, Value: DXƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹j
+    // ç”Ÿæˆæ¸ˆã¿ãƒ•ã‚©ãƒ³ãƒˆã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãƒ†ãƒ¼ãƒ–ãƒ«ï¼ˆKey: ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ–‡å­—åˆ—, Value: DXãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«ï¼‰
     std::unordered_map<std::string, int> fontMap_;
-    // Windows API“™‚Å“Ç‚İ‚ñ‚¾ƒtƒHƒ“ƒgƒtƒ@ƒCƒ‹‚ÌƒŠƒ\[ƒXƒnƒ“ƒhƒ‹•ÛƒŠƒXƒgiI—¹‚ÌˆêŠ‡‰ğ•ú—pj
+    // Windows APIç­‰ã§èª­ã¿è¾¼ã‚“ã ãƒ•ã‚©ãƒ³ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªã‚½ãƒ¼ã‚¹ãƒãƒ³ãƒ‰ãƒ«ä¿æŒãƒªã‚¹ãƒˆï¼ˆçµ‚äº†æ™‚ã®ä¸€æ‹¬è§£æ”¾ç”¨ï¼‰
     std::vector<HANDLE> loadedFontFiles_;
 
 };

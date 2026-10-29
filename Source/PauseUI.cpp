@@ -8,26 +8,22 @@
 
 void PauseUI::Init()
 {
+    // -- 自分の初期処理 -- //
     SetEnabled(false);
+    this->GetText().SetText("Pause");
+    this->GetText().SetOffset(VGet(0.0f, -300.0f, 0.0f));
 
     auto* uiManager =
         Master::mpSceneManager
         ->GetCurrentScene()
         ->GetUIManager();
 
-    // 再開ボタン
+   // -- 再開ボタン -- //
     mpResumeUI = uiManager->CreateUI<UI>();
-
-    mpResumeUI->LoadUIGraph(
-        "Resource/UI/PauseBoard.png"
-    );
+    mpResumeUI->LoadUIGraph("Resource/UI/PauseBoard.png");
+    mpResumeUI->GetText().SetText("再開");
 
     mpResumeUI->SetLayer(2);
-
-    mpResumeUI->GetTransform().SetAnchor(
-        VGet(0.5f, 0.5f, 0.0f)
-    );
-
     mpResumeUI->GetTransform().SetPosition(
         VGet(
             0.0f,
@@ -35,7 +31,6 @@ void PauseUI::Init()
             0.0f
         )
     );
-
     mpResumeUI->GetTransform().SetSize(
         VGet(
             280.0f,
@@ -44,27 +39,15 @@ void PauseUI::Init()
         )
     );
 
-    mpResumeUI->GetText().SetText("再開");
-    mpResumeUI->GetText().SetColor(GetColor(0, 0, 0));
-    mpResumeUI->GetText().SetOffset(VGet(0.0f, 5.0f, 0.0f));
-
     AddChild(mpResumeUI);
     mpResumeUI->SetParent(this);
-    mpResumeUI->SetEnabled(true);
 
-    // ステージ選択
+    // -- ステージ選択画面へ戻るボタン -- //
     mpStageSelectUI = uiManager->CreateUI<UI>();
-
-    mpStageSelectUI->LoadUIGraph(
-        "Resource/UI/PauseBoard.png"
-    );
+    mpStageSelectUI->LoadUIGraph("Resource/UI/PauseBoard.png");
+    mpStageSelectUI->GetText().SetText("ステージ選択に戻る");
 
     mpStageSelectUI->SetLayer(2);
-
-    mpStageSelectUI->GetTransform().SetAnchor(
-        VGet(0.5f, 0.5f, 0.0f)
-    );
-
     mpStageSelectUI->GetTransform().SetPosition(
         VGet(
             0.0f,
@@ -72,7 +55,6 @@ void PauseUI::Init()
             0.0f
         )
     );
-
     mpStageSelectUI->GetTransform().SetSize(
         VGet(
             280.0f,
@@ -81,35 +63,15 @@ void PauseUI::Init()
         )
     );
 
-    mpStageSelectUI->GetText().SetText(
-        "ステージ選択に戻る"
-    );
-
-    mpStageSelectUI->GetText().SetColor(
-        GetColor(0, 0, 0)
-    );
-
-    mpStageSelectUI->GetText().SetOffset(
-        VGet(-35.0f, 5.0f, 0.0f)
-    );
-
     AddChild(mpStageSelectUI);
     mpStageSelectUI->SetParent(this);
-    mpStageSelectUI->SetEnabled(true);
 
-    // タイトルへ戻る
+    // -- タイトルへ戻るのボタン -- //
     mpTitleUI = uiManager->CreateUI<UI>();
-
-    mpTitleUI->LoadUIGraph(
-        "Resource/UI/PauseBoard.png"
-    );
+    mpTitleUI->LoadUIGraph( "Resource/UI/PauseBoard.png");
+    mpTitleUI->GetText().SetText("タイトルへ戻る");
 
     mpTitleUI->SetLayer(2);
-
-    mpTitleUI->GetTransform().SetAnchor(
-        VGet(0.5f, 0.5f, 0.0f)
-    );
-
     mpTitleUI->GetTransform().SetPosition(
         VGet(
             0.0f,
@@ -117,7 +79,6 @@ void PauseUI::Init()
             0.0f
         )
     );
-
     mpTitleUI->GetTransform().SetSize(
         VGet(
             280.0f,
@@ -126,111 +87,61 @@ void PauseUI::Init()
         )
     );
 
-    mpTitleUI->GetText().SetText(
-        "タイトルへ戻る"
-    );
-
-    mpTitleUI->GetText().SetColor(
-        GetColor(0, 0, 0)
-    );
-
-    mpTitleUI->GetText().SetOffset(
-        VGet(-20.0f, 5.0f, 0.0f)
-    );
-
     AddChild(mpTitleUI);
     mpTitleUI->SetParent(this);
-    mpTitleUI->SetEnabled(true);
+
+    // -- オーバーレイ -- //
+    mpPauseOverlay = uiManager->CreateUI<UI>();
+    mpPauseOverlay->LoadUIGraph("Resource/UI/Pause/OverLay_Black.png");
+
+    AddChild(mpPauseOverlay);
+    mpPauseOverlay->SetParent(this);
 }
 
 void PauseUI::Update()
 {
     UI::Update();
 
+    // -- 「再開」ボタンを選択した場合 -- //
     if (mpResumeUI != nullptr &&
         mpResumeUI->GetButton().IsClicked())
     {
-        mbIsResumeRequested = true;
         SetEnabled(false);
     }
 
+    // -- 「ステージ選択シーンへ」を選択した場合
     if (mpStageSelectUI != nullptr &&
         mpStageSelectUI->GetButton().IsClicked())
     {
-        // BGMを止める
         SoundManager::GetInstance()->StopBGM();
         SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
-        Master::mpSceneManager->RequestScene(
-            SCENE_TYPE::STAGE_SELECT_SCENE
-        );
+        Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);   
     }
 
+    // -- 「タイトルへ」ボタンを選択した場合 -- //
     if (mpTitleUI != nullptr &&
         mpTitleUI->GetButton().IsClicked())
     {
-        // BGMを止める
         SoundManager::GetInstance()->StopBGM();
-        Master::mpSceneManager->RequestScene(
-            SCENE_TYPE::TITLE_SCENE
-        );
+        Master::mpSceneManager->RequestScene(SCENE_TYPE::TITLE_SCENE);
+    }
+
+    if (IsEnabled()) {
+        mpResumeUI->SetEnabled(true);
+        mpStageSelectUI->SetEnabled(true);
+        mpTitleUI->SetEnabled(true);
+        mpPauseOverlay->SetEnabled(true);
+    }
+
+    else {
+        mpResumeUI->SetEnabled(false);
+        mpStageSelectUI->SetEnabled(false);
+        mpTitleUI->SetEnabled(false);
+        mpPauseOverlay->SetEnabled(false);
     }
 }
 
 void PauseUI::Draw()
 {
-    // 暗転
-    SetDrawBlendMode(
-        DX_BLENDMODE_ALPHA,
-        150
-    );
-
-    DrawBox(
-        0,
-        0,
-        1280,
-        720,
-        GetColor(0, 0, 0),
-        TRUE
-    );
-
-    SetDrawBlendMode(
-        DX_BLENDMODE_NOBLEND,
-        0
-    );
-
-    // Pauseタイトル
-    DrawStringToHandle(
-        570,
-        100,
-        "Pause",
-        GetColor(255, 255, 255),
-        mTitleFontHandle
-    );
-
     UI::Draw();
-}
-
-void PauseUI::SetTitleFontHandle(int _fontHandle)
-{
-    mTitleFontHandle = _fontHandle;
-}
-
-void PauseUI::SetMessageFontHandle(int _fontHandle)
-{
-    mMessageFontHandle = _fontHandle;
-
-    if (mpResumeUI != nullptr)
-    {
-        mpResumeUI->GetText().SetFontHandle(_fontHandle);
-    }
-
-    if (mpStageSelectUI != nullptr)
-    {
-        mpStageSelectUI->GetText().SetFontHandle(_fontHandle);
-    }
-
-    if (mpTitleUI != nullptr)
-    {
-        mpTitleUI->GetText().SetFontHandle(_fontHandle);
-    }
 }

@@ -29,6 +29,9 @@ Game::Game()
     m_initSuccess = true;
     m_isRunning = true;
     m_lastFrameTime = std::chrono::steady_clock::now();
+
+    // -- フォントの読み込み -- //
+    // Master::mpFontManager->LoadFontFile("")
 }
 
 Game::~Game()

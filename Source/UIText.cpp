@@ -11,11 +11,6 @@ void UIText::Draw()
 {
 	std::string drawText = mText;	// 描画する文字列の宣言
 
-	// -- 全体の文字列から描画分の文字列を取得 -- //
-	/*drawText = mpUI
-		->GetTypewriterText()
-		.GetVisibleText();*/
-
 	VECTOR position = CalculateTextDrawPosition(drawText);
 
 	if (mnFontHandle != -1)

@@ -1,4 +1,4 @@
-#include "UIBackground.h"
+ï»¿#include "UIBackground.h"
 #include "Stage.h"
 #include "ScreenConfig.h"
 #include <format>
@@ -7,7 +7,7 @@
 
 UIBackground::~UIBackground()
 {
-	// ƒV[ƒ“”jŠü‚È‚Ç‚É‰æ‘œ‚ğƒƒ‚ƒŠ‚©‚ç‰ğ•ú
+	// ã‚·ãƒ¼ãƒ³ç ´æ£„æ™‚ãªã©ã«ç”»åƒã‚’ãƒ¡ãƒ¢ãƒªã‹ã‚‰è§£æ”¾
 	if (mGraphHandle != -1)
 	{
 		DeleteGraph(mGraphHandle);
@@ -35,11 +35,11 @@ void UIBackground::Draw()
 
 	if (mGraphHandle != -1)
 	{
-		// 1. •`‰æ‹P“x‚ğ‰º‚°‚éi0: Š®‘S‚È^‚Á• ? 255: ’Êí‚Ì–¾‚é‚³j
-		// —á: 160?180 ’ö“x‚É‚·‚é‚ÆAè‘O‚ÌƒuƒƒbƒN‚âƒLƒƒƒ‰‚ªˆø‚«—§‚Â“K“x‚È”–ˆÃ‚³‚É‚È‚è‚Ü‚·
+		// 1. æç”»è¼åº¦ã‚’ä¸‹ã’ã‚‹ï¼ˆ0: å®Œå…¨ãªçœŸã£é»’ ? 255: é€šå¸¸ã®æ˜ã‚‹ã•ï¼‰
+		// ä¾‹: 160?180 ç¨‹åº¦ã«ã™ã‚‹ã¨ã€æ‰‹å‰ã®ãƒ–ãƒ­ãƒƒã‚¯ã‚„ã‚­ãƒ£ãƒ©ãŒå¼•ãç«‹ã¤é©åº¦ãªè–„æš—ã•ã«ãªã‚Šã¾ã™
 		SetDrawBright(160, 160, 160);
 
-		// 2. ”wŒi‚Ì•`‰æ
+		// 2. èƒŒæ™¯ã®æç”»
 		DrawExtendGraph(
 			0,
 			0,
@@ -49,7 +49,7 @@ void UIBackground::Draw()
 			TRUE
 		);
 
-		// 3. šd—v: ‘¼‚ÌƒIƒuƒWƒFƒNƒg•`‰æ‚É‰e‹¿‚ªo‚È‚¢‚æ‚¤A•K‚¸•W€‚Ì–¾‚é‚³i255j‚É–ß‚·
+		// 3. â˜…é‡è¦: ä»–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»ã«å½±éŸ¿ãŒå‡ºãªã„ã‚ˆã†ã€å¿…ãšæ¨™æº–ã®æ˜ã‚‹ã•ï¼ˆ255ï¼‰ã«æˆ»ã™
 		SetDrawBright(255, 255, 255);
 	}
 }
@@ -61,12 +61,12 @@ void UIBackground::SetStage(const Stage* _stage)
 		return;
 	}
 
-	SetStageByNumber(_stage->GetStageNumber());
+	//SetStageByNumber(_stage->GetStageNumber());
 }
 
 void UIBackground::SetStage(const Stage& _stage)
 {
-	SetStageByNumber(_stage.GetStageNumber());
+	//SetStageByNumber(_stage.GetStageNumber());
 }
 
 void UIBackground::SetStageByNumber(int _stageNumber)
@@ -80,7 +80,7 @@ void UIBackground::SetStageByNumber(int _stageNumber)
 
 	const std::string bgFilePath = BuildBackgroundPath(mnCurrentStageNumber);
 
-	// ŠY“–ƒXƒe[ƒW‰æ‘œ‚ª‚ ‚ê‚Îƒ[ƒhA‚È‚¯‚ê‚ÎƒtƒH[ƒ‹ƒoƒbƒN
+	// è©²å½“ã‚¹ãƒ†ãƒ¼ã‚¸ç”»åƒãŒã‚ã‚Œã°ãƒ­ãƒ¼ãƒ‰ã€ãªã‘ã‚Œã°ãƒ•ã‚©ãƒ¼ãƒ«ãƒãƒƒã‚¯
 	if (std::filesystem::exists(bgFilePath))
 	{
 		LoadBackgroundGraph(bgFilePath);
@@ -97,14 +97,14 @@ void UIBackground::SetStageByNumber(int _stageNumber)
 
 void UIBackground::LoadBackgroundGraph(const std::string& _path)
 {
-	// Šù‚É•Ê‚Ì‰æ‘œ‚ª“Ç‚İ‚Ü‚ê‚Ä‚¢‚½ê‡‚Íæ‚É‰ğ•ú‚·‚é
+	// æ—¢ã«åˆ¥ã®ç”»åƒãŒèª­ã¿è¾¼ã¾ã‚Œã¦ã„ãŸå ´åˆã¯å…ˆã«è§£æ”¾ã™ã‚‹
 	if (mGraphHandle != -1)
 	{
 		DeleteGraph(mGraphHandle);
 		mGraphHandle = -1;
 	}
 
-	// V‚µ‚¢”wŒi‰æ‘œ‚ğƒ[ƒh
+	// æ–°ã—ã„èƒŒæ™¯ç”»åƒã‚’ãƒ­ãƒ¼ãƒ‰
 	mGraphHandle = LoadGraph(_path.c_str());
 }
 

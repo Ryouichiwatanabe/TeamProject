@@ -192,15 +192,6 @@ void GameScene::Initialize()
 	mpPauseUI =
 		this->GetUIManager()
 		->CreateUI<PauseUI>();
-
-	mpPauseUI->SetTitleFontHandle(
-		StageNumberFontHandle
-	);
-
-	mpPauseUI->SetMessageFontHandle(
-		mMessageFontHandle
-	);
-
 	mpPauseUI->SetEnabled(false);
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
@@ -238,12 +229,11 @@ void GameScene::Update(float deltaTime)
 		return;
 	}
 
-	UpdatePause();
-
-	if (mbIsPaused)
-	{
+	// -- Pauseの処理 -- //
+	UpdatePauseInput();
+	if (mpPauseUI->IsEnabled())
 		deltaTime = 0.0f;
-	}
+	
 
 	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
 	UpdateShapeUIToggle();
@@ -360,22 +350,10 @@ void GameScene::UpdateClear()
 	}
 }
 
-void GameScene::UpdatePause()
+void GameScene::UpdatePauseInput()
 {
-	if (InputManager::GetInstance()
-		.GetButtonDown(Button::Pause))
-	{
-		mbIsPaused = !mbIsPaused;
-	}
-
-	if (mbIsPaused &&
-		mpPauseUI->IsResumeRequested())
-	{
-		mbIsPaused = false;
-		mpPauseUI->ResetResumeRequest();
-	}
-
-	mpPauseUI->SetEnabled(mbIsPaused);
+	if (InputManager::GetInstance().GetButtonDown(Button::Pause))
+		mpPauseUI->ToggleEnabled();
 }
 
 void GameScene::SetStageNumber(int _stageNumber)
