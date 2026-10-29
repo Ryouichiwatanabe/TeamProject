@@ -18,7 +18,7 @@ public:
         const std::string& _filename2
     );
 
-    ~ClearUI() = default;
+    ~ClearUI();
 
     void Init() override;
     void Update() override;
@@ -31,10 +31,10 @@ public:
 
 private:
     ClearCollectibleUI* mpCollectibleUI[3] = {};
-
     std::string mCollectibleFilename[3];
-
     bool mbIsCollected[3] = {};
+
+    int mMessageFontHandle = -1;
 
     float mfItemTimer = 0.0f;
 

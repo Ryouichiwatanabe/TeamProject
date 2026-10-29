@@ -17,10 +17,17 @@ ClearUI::ClearUI(
     mCollectibleFilename[2] = _filename2;
 }
 
-
 void ClearUI::Init()
 {
     SetEnabled(false);
+
+    mMessageFontHandle =
+        CreateFontToHandle(
+            "PixelMplus10",
+            20,
+            -1,
+            DX_FONTTYPE_NORMAL
+        );
 
     mClearTextMotion = FloatingMotion(120, 5.0f);
 
@@ -75,11 +82,15 @@ void ClearUI::Init()
     }
 
     // ステージ選択へ戻るボタン
-
     mpStageSelectUI =
         uiManager->CreateUI<UI>();
 
     mpStageSelectUI->SetLayer(2);
+
+    mpStageSelectUI
+        ->LoadUIGraph(
+            "Resource/UI/PauseBoard.png"
+        );
 
     mpStageSelectUI
         ->GetTransform()
@@ -91,7 +102,7 @@ void ClearUI::Init()
         ->GetTransform()
         .SetPosition(
             VGet(
-                640.0f,
+                650.0f,
                 485.0f,
                 0.0f
             )
@@ -99,11 +110,11 @@ void ClearUI::Init()
 
     mpStageSelectUI
         ->GetTransform()
-        .SetSize(
+        .SetScale(
             VGet(
-                280.0f,
-                70.0f,
-                0.0f
+                0.8f,
+                0.8f,
+                1.0f
             )
         );
 
@@ -115,11 +126,27 @@ void ClearUI::Init()
 
     mpStageSelectUI
         ->GetText()
+        .SetFontHandle(
+            mMessageFontHandle
+        );
+
+    mpStageSelectUI
+        ->GetText()
         .SetColor(
             GetColor(
-                255,
-                255,
-                255
+                0,
+                0,
+                0
+            )
+        );
+
+    mpStageSelectUI
+        ->GetText()
+        .SetOffset(
+            VGet(
+                -10.0f,
+                0.0f,
+                0.0f
             )
         );
 
@@ -298,24 +325,6 @@ void ClearUI::Draw()
     )
    );
 
-
-    // ステージ選択ボタンの背景
-
-    DrawBox(500,450,
-            780,520,
-   GetColor(80,80,80
-   ),
-        TRUE
-    );
-
-    DrawBox(500,450,
-            780,520,
-   GetColor(255,255,255
-   ),
-        FALSE
-    );
-
-
     // ボタン文字はmpStageSelectUIのUITextで描画する
     // DrawStringは重複するため使用しない
 
@@ -413,5 +422,14 @@ void ClearUI::Draw()
                 0
             );
         }
+    }
+}
+
+ClearUI::~ClearUI()
+{
+    if (mMessageFontHandle != -1)
+    {
+        DeleteFontToHandle(mMessageFontHandle);
+        mMessageFontHandle = -1;
     }
 }
