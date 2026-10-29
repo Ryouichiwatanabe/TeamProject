@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
+#include "SoundManager.h"
+
 //-- Effect --//
 #include "EffectClear.h"
 #include "EffectSmokeSpriteSheet.h"
@@ -185,6 +187,9 @@ void GameScene::Initialize()
 	);
 
 	mpPauseUI->SetEnabled(false);
+
+	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
+
 }
 void GameScene::Update(float deltaTime)
 {
@@ -192,6 +197,20 @@ void GameScene::Update(float deltaTime)
 	if (mpEffectManager != nullptr)
 	{
 		mpEffectManager->Update(deltaTime);
+	}
+
+	// SEチェック
+	if (IsPlayingSE)
+	{
+		// SE_GOAL がまだ再生中かどうかをチェック
+		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOAL))
+		{
+			// 再生が終わったら、別のBGMを再生する
+			SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title); // 例としてゲームBGMなど
+
+			// 2回目以降に発火しないようフラグを下ろす
+			IsPlayingSE = false;
+		}
 	}
 
 	// 2. クリア状態の処理
@@ -255,12 +274,20 @@ void GameScene::Update(float deltaTime)
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
 
+		// タイトルBGMを停止
+		SoundManager::GetInstance()->StopBGM();
+
 		// クリアエフェクトの再生
 		if (mpEffectManager != nullptr)
 		{
 			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
 			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
 			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
+
+			// SE
+			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOAL);
+
+			IsPlayingSE = true;
 
 			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
 		}
@@ -374,6 +401,7 @@ void GameScene::SetStageNumber(int _stageNumber)
 
 void GameScene::Finalize()
 {
+
 	//===リソースの開放===//
 	if (StageNumberFontHandle != -1)
 	{
