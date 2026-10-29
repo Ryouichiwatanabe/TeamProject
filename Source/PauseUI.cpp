@@ -2,6 +2,7 @@
 
 #include "Master.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 #include "Scene.h"
 #include "UIManager.h"
 
@@ -24,13 +25,13 @@ void PauseUI::Init()
     mpResumeUI->SetLayer(2);
 
     mpResumeUI->GetTransform().SetAnchor(
-        VGet(0.0f, 0.0f, 0.0f)
+        VGet(0.5f, 0.5f, 0.0f)
     );
 
     mpResumeUI->GetTransform().SetPosition(
         VGet(
-            640.0f,
-            335.0f,
+            0.0f,
+            120.0f,
             0.0f
         )
     );
@@ -61,11 +62,15 @@ void PauseUI::Init()
     mpStageSelectUI->SetLayer(2);
 
     mpStageSelectUI->GetTransform().SetAnchor(
-        VGet(0.0f, 0.0f, 0.0f)
+        VGet(0.5f, 0.5f, 0.0f)
     );
 
     mpStageSelectUI->GetTransform().SetPosition(
-        VGet(640.0f, 435.0f, 0.0f)
+        VGet(
+            0.0f,
+            0.0f,
+            0.0f
+        )
     );
 
     mpStageSelectUI->GetTransform().SetSize(
@@ -102,11 +107,15 @@ void PauseUI::Init()
     mpTitleUI->SetLayer(2);
 
     mpTitleUI->GetTransform().SetAnchor(
-        VGet(0.0f, 0.0f, 0.0f)
+        VGet(0.5f, 0.5f, 0.0f)
     );
 
     mpTitleUI->GetTransform().SetPosition(
-        VGet(640.0f, 535.0f, 0.0f)
+        VGet(
+            0.0f,
+            -120.0f,
+            0.0f
+        )
     );
 
     mpTitleUI->GetTransform().SetSize(
@@ -148,6 +157,9 @@ void PauseUI::Update()
     if (mpStageSelectUI != nullptr &&
         mpStageSelectUI->GetButton().IsClicked())
     {
+        // BGMを止める
+        SoundManager::GetInstance()->StopBGM();
+        SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
         Master::mpSceneManager->RequestScene(
             SCENE_TYPE::STAGE_SELECT_SCENE
         );
@@ -156,6 +168,8 @@ void PauseUI::Update()
     if (mpTitleUI != nullptr &&
         mpTitleUI->GetButton().IsClicked())
     {
+        // BGMを止める
+        SoundManager::GetInstance()->StopBGM();
         Master::mpSceneManager->RequestScene(
             SCENE_TYPE::TITLE_SCENE
         );
@@ -187,7 +201,7 @@ void PauseUI::Draw()
     // Pauseタイトル
     DrawStringToHandle(
         570,
-        200,
+        100,
         "Pause",
         GetColor(255, 255, 255),
         mTitleFontHandle

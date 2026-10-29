@@ -286,6 +286,7 @@
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\CollectibleIconUI.cpp">
+    <ClCompile Include="Source\UIBackground.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -478,6 +479,9 @@
     </ClInclude>
     <ClInclude Include="Source\Box2D.h">
       <Filter>ヘッダー ファイル\Module\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UIBackground.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

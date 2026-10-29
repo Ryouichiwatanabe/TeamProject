@@ -9,6 +9,7 @@
 //---コンポジション系統
 #include "FloatingMotion.h"
 #include "UITypewriterText.h"
+#include "UIBackground.h"
 
 class Player;
 class Goal;
@@ -71,6 +72,9 @@ private:
 
 
     void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
+
+    bool IsPlayingSE = false;
+
 private:
 
     FloatingMotion mClearTextMotion;   // Clear用
@@ -80,4 +84,5 @@ private:
     bool mbIsMessageActive = false; //メッセージ表示フラグ
 
     PlayerShapeUI* mpShapeUI = nullptr;
+    UIBackground* mpBackgroundUI = nullptr;
 };
