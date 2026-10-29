@@ -1,5 +1,10 @@
 ﻿#pragma once
 
+struct ItemDef {
+	int stage, slot;
+	const char* itemFilename;
+};
+
 class ItemTable {
 public:
 	// -- Todo : csvを読み込む処理 -- //
@@ -10,6 +15,7 @@ public:
 	const ItemDef* GetItemDef(int _stage, int _slot) const;
 
 	// -- IDをステージ番号,スロット番号から取得する -- //
-	const int ToItemId(int _stage, int _slot) const;
+		// Todo : 不要であるなら消す
+	// const int ToItemId(int _stage, int _slot) const;
 private:
 };

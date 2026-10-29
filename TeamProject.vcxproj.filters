@@ -286,6 +286,8 @@
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\CollectibleIconUI.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Source\UIBackground.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>

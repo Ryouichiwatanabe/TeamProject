@@ -3,11 +3,6 @@
 #include "GameConfig.h"	// MAX_ITEMS_PER_STAGE
 
 namespace {
-	struct ItemDef {
-		int stage, slot;
-		const char* itemFilename;
-	};
-
 	// -- アイテムのIDとファイルネームを登録 -- //
 	constexpr ItemDef ItemDefs[] = {
 			{1,0,"Negi.png"},
@@ -25,13 +20,11 @@ void ItemTable::Release() {
 }
 
 const ItemDef* ItemTable::GetItemDef(int _stage, int _slot) const {
-	return &ItemDefs[ToItemId(_stage, _slot)];
+	for (const auto& def : ItemDefs) {
+		if (def.stage == _stage && def.slot == _slot) {
+			return &def;
+		}
+	}
 }
-
-const int ItemTable::ToItemId(int _stage, int _slot) const {
-	return (_stage - 1) * GameConfig::MAX_ITEMS_PER_STAGE
-		+ _slot;
-}
-
 
 
