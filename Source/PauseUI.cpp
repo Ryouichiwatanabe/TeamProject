@@ -2,6 +2,7 @@
 
 #include "Master.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 #include "Scene.h"
 #include "UIManager.h"
 
@@ -148,6 +149,9 @@ void PauseUI::Update()
     if (mpStageSelectUI != nullptr &&
         mpStageSelectUI->GetButton().IsClicked())
     {
+        // BGMを止める
+        SoundManager::GetInstance()->StopBGM();
+        SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
         Master::mpSceneManager->RequestScene(
             SCENE_TYPE::STAGE_SELECT_SCENE
         );
@@ -156,6 +160,8 @@ void PauseUI::Update()
     if (mpTitleUI != nullptr &&
         mpTitleUI->GetButton().IsClicked())
     {
+        // BGMを止める
+        SoundManager::GetInstance()->StopBGM();
         Master::mpSceneManager->RequestScene(
             SCENE_TYPE::TITLE_SCENE
         );

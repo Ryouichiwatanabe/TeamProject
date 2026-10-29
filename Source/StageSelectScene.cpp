@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "DxLib.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 #include "CsvLoader.h"
 #include <string>
 
@@ -456,4 +457,7 @@ void StageSelectScene::DrawStagePreview()
 void StageSelectScene::Finalize()
 {
 	// 終了処理
+
+	// タイトルBGMを停止
+	SoundManager::GetInstance()->StopBGM();
 }

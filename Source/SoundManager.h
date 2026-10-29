@@ -13,6 +13,7 @@ public:     // enum, struct などの定義
 	{
 
 		BGM_Title = 0,          // タイトルBGM	
+		BGM_Game = 1,           // ゲームBGM
 
 	};
 
@@ -22,6 +23,10 @@ public:     // enum, struct などの定義
 		SE_DECIDE = 0,          // 決定音
 		SE_MOVE = 1,
 		SE_SELECTUI = 2,
+		SE_FALL = 3,
+		SE_GOAL = 4,
+		SE_FAILED = 5,
+
 	};
 
 	static SoundManager* GetInstance();
@@ -61,6 +66,9 @@ public:     // サウンド再生系
 
 	// BGMの停止
 	void StopBGM();
+
+	// SEが再生中かの判定
+	bool IsPlayingSE(SOUND_SE se);
 
 private:     // メンバ変数
 	SOUND_BGM mnNowPlayingBgm;   // 現在再生されているBGMの種類
