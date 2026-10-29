@@ -32,7 +32,7 @@ void Gravity::Update(float _deltaTime)
 	// y = 0 を地面として、それより下に行かないようにする
 	if (position.y >= ScreenConfig::SCREEN_HEIGHT)
 	{
-		position.y = ScreenConfig::SCREEN_HEIGHT;
+		// position.y = ScreenConfig::SCREEN_HEIGHT;
 		mfVelocityY = 0.0f;
 	}
 
