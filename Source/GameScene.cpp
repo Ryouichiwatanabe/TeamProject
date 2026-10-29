@@ -5,6 +5,9 @@
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
+//-- Effect --//
+#include "EffectClear.h"
+#include "EffectSmokeSpriteSheet.h"
 
 // -- GameObject -- //
 #include "Stage.h"
@@ -29,20 +32,46 @@
 
 #include "FontManager.h"
 
+#include "EffectManager.h"
+
 
 #include "InputManager.h"
+#include "ScreenConfig.h"
 
 void GameScene::Initialize()
 {
 	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
 
+	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
+	mpEffectManager = std::make_unique<EffectManager>();
+	// 画像のロード
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke3.png", 16, 4, 4);
+
+	// 画面中央の座標を計算
+	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
+	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
+
+	// 画面中央で常にループ再生
+	if (pSmokeData != nullptr)
+	{
+		mpEffectManager->Play<EffectSmokeSpriteSheet>(
+			screenCenterX,   // X座標（画面中央）
+			screenCenterY,   // Y座標（画面中央）
+			pSmokeData,      // 画像データ
+			0.05f,           // 1コマの表示秒数
+			true,            // ★ bIsLoop: true でループ再生
+			false,           // 加算ブレンド
+			1.0,             // スケール
+			0.0              // 角度
+		);
+	}
 	// 初期化処理
-	mpPlayer =
-		this
-		->GetObjectManager()
-		->CreateObject<Player>();
-	mpPlayer
-		->InitPiece();
+	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
+	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
+	if (mpPlayer != nullptr)
+	{
+		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
+	}
 
 	auto* stage = new Stage();
 
@@ -157,9 +186,15 @@ void GameScene::Initialize()
 
 	mpPauseUI->SetEnabled(false);
 }
-
 void GameScene::Update(float deltaTime)
 {
+	// 1. エフェクトマネージャーの更新（クリア中も動かすため最優先）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Update(deltaTime);
+	}
+
+	// 2. クリア状態の処理
 	if (mbIsClear)
 	{
 		UpdateClear();
@@ -176,50 +211,43 @@ void GameScene::Update(float deltaTime)
 		deltaTime = 0.0f;
 	}
 
-
-/*	//====メッセージ表示中の制御====//
-	if (mbIsMessageActive)
-	{
-		mMessageMotion.Update();
-		// 左クリック または Zキー/SPACEキーが押されたか判定
-		bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-		bool isClickTriggered = currentMouseLeft && !mbPreviousMouseLeft;
-		mbPreviousMouseLeft = currentMouseLeft;
-
-		// キーボード入力判定（必要に応じて）
-		static bool prevActionKey = false;
-		bool curActionKey = (CheckHitKey(KEY_INPUT_Z) != 0 || CheckHitKey(KEY_INPUT_SPACE) != 0);
-		bool isKeyTriggered = curActionKey && !prevActionKey;
-		prevActionKey = curActionKey;
-
-		if (isClickTriggered || isKeyTriggered)
-		{
-			if (!mTypewriter.IsFinished())
-			{
-				// ① まだ流れている最中なら全文スキップ
-				mTypewriter.Skip();
-			}
-			else
-			{
-				// ② 既に全部出ているならメッセージを閉じてゲーム開始
-				mbIsMessageActive = false;
-			}
-		}
-
-		// メッセージ表示中はゲーム本編の進行（移動など）を止める場合
-		return;
-	}*/
-
-
 	//==通常時：ステージ番号の文字を更新==//
 	mStageTextMotion.Update();
 
+	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
+	UpdateShapeUIToggle();
 
 	// 更新処理
 	Scene::Update(deltaTime);
 
-	auto player = GetObjectManager()
-		->FindObject<Player>();
+	auto player = GetObjectManager()->FindObject<Player>();
+
+	// Collectibleの取得状態を確認
+	auto collectibles =
+		GetObjectManager()->FindObjects<Collectible>();
+
+	for (auto collectible : collectibles)
+	{
+		int itemIndex = collectible->GetItemIndex();
+
+		if (itemIndex < 0 || itemIndex >= 3)
+		{
+			continue;
+		}
+
+		if (collectible->IsPickedUp())
+		{
+			mbIsCollectibleCollected[itemIndex] = true;
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (mbIsCollectibleCollected[i])
+		{
+			mpCollectibleIconUI[i]->SetCollected(true);
+		}
+	}
 
 	// Collectibleの取得状態を確認
 	auto collectibles =
@@ -252,10 +280,22 @@ void GameScene::Update(float deltaTime)
 		mpGoal->IsPlayerTouching())
 	{
 		mbIsClear = true;
+		mClearTimer = 0.0f; // タイマー初期化
+
+		// クリアエフェクトの再生
+		if (mpEffectManager != nullptr)
+		{
+			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
+			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
+			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
+
+			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
+		}
 		mpPauseUI->SetEnabled(false);
 		mpClearUI->SetEnabled(true);
 	}
 }
+
 
 
 void GameScene::Draw()
@@ -302,6 +342,27 @@ void GameScene::Draw()
 			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
 		}
 	}*/
+
+	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->Draw();
+	}
+}
+
+void GameScene::UpdateShapeUIToggle()
+{
+	if (mpShapeUI == nullptr)
+		return;
+
+	if (!InputManager::GetInstance().GetButtonDown(Button::Shape))
+		return;
+
+	// ※企画書の「接地中のみ変形可」の条件は今回は加味しない
+	if (mpShapeUI->IsEnabled())
+		mpShapeUI->Close();
+	else
+		mpShapeUI->Open();
 }
 
 void GameScene::UpdateClear()

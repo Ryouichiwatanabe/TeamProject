@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include <cstddef>
+#include "EffectClear.h"
 
 
 //---コンポジション系統
@@ -16,6 +17,7 @@ class CollectibleIconUI;
 class PauseUI;
 class ClearUI;
 
+class PlayerShapeUI;
 
 //class Player_test;
 
@@ -27,6 +29,7 @@ public:
     void Draw();
     void Finalize();
     void SetStageNumber(int _stageNumber);
+    std::unique_ptr<EffectManager> mpEffectManager;
 
 private:
     int StageNumberFontHandle = -1; // 左上のステージ番号用フォントハンドル
@@ -36,7 +39,9 @@ private:
 
     int mCursorHandle = -1;
 
-    void DrawCursor();
+  //  void DrawCursor();
+
+    float mClearTimer = 0.0f;
 
     MovingBlock* mpMovingBlock = nullptr;
 
@@ -62,7 +67,10 @@ private:
 
     bool mbIsCollectibleCollected[3] = {};
 
-    // FontやTitleLogoなどのアニメーションをするためのコンポジション
+    //FontやTitleLogoなどのアニメーションをするためのコンポジション
+
+
+    void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
 private:
 
     UILabel mStageTextMotion;          // Stage用
@@ -70,5 +78,7 @@ private:
     FloatingMotion mMessageMotion;     // メッセージ用
     float mfClearItemTimer = 0.0f;
 
-    bool mbIsMessageActive = false;   // メッセージ表示フラグ
+    bool mbIsMessageActive = false; //メッセージ表示フラグ
+
+    PlayerShapeUI* mpShapeUI = nullptr;
 };

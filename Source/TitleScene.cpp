@@ -4,19 +4,19 @@
 
 #include "Master.h"
 #include "SceneManager.h"
-#include "EffectManager.h"
+
+#include "SoundManager.h"
 
 TitleScene::TitleScene()
-	:mTitleLogoHandle(-1)
-	,mbPreviousMouseLeft(false)
-	,mbStartSelected(false)
-	,mTitleFloatingMotion(90,10.0f)
+	: mTitleLogoHandle(-1)
+	, mbPreviousMouseLeft(false)
+	, mbStartSelected(false)
+	, mTitleFloatingMotion(90, 10.0f)
 {
 }
 
 void TitleScene::Initialize()
 {
-
 	// 初期値: 通常1.0倍, ホバー時1.08倍, クリック時0.94倍
 	mStartScaler.Initialize(1.0f, 1.08f, 0.94f, 20.0f);
 
@@ -24,26 +24,21 @@ void TitleScene::Initialize()
 	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
 
 	mTitleLogoHandle = LoadGraph("Resource/Logo/TitleLogo.png");
-
 	mStartTofuHandle = Master::mpResource->LoadGraphics("Resource/UI/Tofu.png");
-
-	// --- エフェクトの事前読み込み ---
-	if (Master::mpEffectManager != nullptr)
-	{
-		// 名前（キー）とファイルパスを指定
-		Master::mpEffectManager->Load("hit", L"Resource/Effekseer/hit_hanmado_0409.efkefc");
-	}
 
 	// 読み込み失敗の安全対策 (ロード失敗時は -1 が返る)
 	if (mBgGroundHandle == -1)
 	{
 		// ログ出力やエラーハンドリング
 	}
+	// タイトルBGMをループ再生 (第2引数の isTop = true で最初から再生)
+	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
+
 }
 
 void TitleScene::Update(float _deltaTime)
 {
-	//==ふわふわアニメーションの更新==//
+	// ふわふわアニメーションの更新
 	mTitleFloatingMotion.Update();
 
 	int mouseX;
@@ -73,14 +68,12 @@ void TitleScene::Update(float _deltaTime)
 
 	if (mbStartSelected && mouseLeftDown)
 	{
-		if (Master::mpEffectManager != nullptr)
-		{
 
-			Master::mpEffectManager->PlayEffect("hit", static_cast<float>(mouseX), static_cast<float>(mouseY));
+		//  Confirm を消費し、共通のクリックSE判定をスキップ
+		InputManager::GetInstance().ConsumeButton(Button::Confirm);
 
+		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
-
-		}
 		Master::mpSceneManager->RequestScene(
 			SCENE_TYPE::STAGE_SELECT_SCENE
 		);
@@ -88,6 +81,8 @@ void TitleScene::Update(float _deltaTime)
 
 	// 前フレームの状態を保存
 	mbPreviousMouseLeft = currentMouseLeft;
+
+	Scene::Update(_deltaTime);
 }
 
 void TitleScene::Draw()
@@ -129,13 +124,7 @@ void TitleScene::Draw()
 	{
 		if (mbStartSelected)
 		{
-			//SetDrawBlendMode(DX_BLENDMODE_ADD, 80);
-			//DrawExtendGraph(drawLeft, drawTop, drawRight, drawBottom, mStartTofuHandle, TRUE);
-			//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0); 
-		
-
 			// --- ホバー時: 少し暗めの黄色 ---
-			// 赤・緑を高めに残し、青(B)を極端に落とすことで黄色がはっきり出ます
 			SetDrawBright(180, 180, 180);
 
 			DrawExtendGraph(
@@ -147,7 +136,7 @@ void TitleScene::Draw()
 				TRUE
 			);
 
-			SetDrawBright(255, 255, 255); // 必ず元の明るさに戻す
+			SetDrawBright(255, 255, 255); // 元の明るさに復帰
 		}
 		else
 		{
@@ -174,18 +163,20 @@ void TitleScene::Draw()
 		"START",
 		textColor
 	);
-}
 
+	Scene::Draw();
+
+}
 
 void TitleScene::Finalize()
 {
-	//==画像メモリ解放==//
+	// タイトルBGMを停止
+	SoundManager::GetInstance()->StopBGM();
+
+	// 画像メモリ解放
 	if (mTitleLogoHandle != -1)
 	{
 		DeleteGraph(mTitleLogoHandle);
 		mTitleLogoHandle = -1;
-
 	}
-
-	// 終了処理
 }

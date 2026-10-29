@@ -107,6 +107,8 @@ public:
 	bool GetButtonDown(Button _button) const;
 	bool GetButtonUp(Button _button) const;
  
+	void ConsumeButton(Button _button);//SEの2重詠唱をなくすため
+
 	float GetAxis(Axis _axis) const;
 
 	Mouse& GetMouse() { return mMouse; }
@@ -120,6 +122,8 @@ private:
 	bool IsButtonPressed(const ButtonBinding& _binding) const;
 	bool IsButtonDown(const ButtonBinding& _binding) const;
 	bool IsButtonUp(const ButtonBinding& _binding) const;
+
+	
 
 	float GetAxisValue(const AxisBinding& _binding) const;
 

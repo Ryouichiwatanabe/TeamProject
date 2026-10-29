@@ -34,11 +34,14 @@ void SoundManager::Initialize()
 	
 
 	// SE の読み込み
-//	LoadSE(SOUND_SE::SE_DECIDE, "Resource/SE/Decision.mp3");
+	LoadSE(SOUND_SE::SE_DECIDE, "Resource/SE/DecisionSE/ClickSE.mp3");//EffectManagerのPlayClickRippleで呼び出し
 
+	LoadSE(SOUND_SE::SE_MOVE, "Resource/SE/MoveSE/ove.mp3");
+
+	LoadSE(SOUND_SE::SE_SELECTUI, "Resource/SE/DecisionSE/UISelectSE.mp3");
 	
 	//3DBGM
-	LoadBGM(SOUND_BGM::BGM_Title, "?????");
+	LoadBGM(SOUND_BGM::BGM_Title, "Resource/BGM/TitleBGM.mp3");
 	
 }
 

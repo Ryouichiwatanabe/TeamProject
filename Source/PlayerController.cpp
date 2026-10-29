@@ -12,46 +12,68 @@ void PlayerController::Initialize(Player* _player)
 
 void PlayerController::Update()
 {
-	// Todo : 各操作を関数化した処理を並べる
-	UpdateMove();
-	UpdateOperationChange();
 	UpdateRotation();
-}
-
-void PlayerController::UpdateMove()
-{
-	//// -- 入力値を取得 -- //
-	//VECTOR inputDirection = VGet(0.0f, 0.0f, 0.0f);
-
-	//inputDirection.x += InputManager::GetInstance().GetAxis(Axis::MoveX);
-	//inputDirection.y += InputManager::GetInstance().GetAxis(Axis::MoveY);
-
-	//if (VSize(inputDirection) == 0.0f)
-	//	return;
-
-	//// -- 入力(移動方向)をFakePlayerに渡す -- //
-	//mpPlayer->Move(inputDirection);
-
-	float rotateDirection = InputManager::GetInstance().GetAxis(Axis::Rotation);
-
-	VECTOR inputDirection = VGet(
-		rotateDirection,
-		std::abs(rotateDirection / 2.0f),
-		0.0f
-	);
-
-	mpPlayer->Move(inputDirection);
-}
-
-void PlayerController::UpdateOperationChange()
-{
-	if (InputManager::GetInstance().GetButtonDown(Button::OperationChange_toFakePlayer))
-		InputManager::GetInstance().SetInputMode(InputMode::Fake);
 }
 
 void PlayerController::UpdateRotation()
 {
-	float rotateDirection = InputManager::GetInstance().GetAxis(Axis::Rotation);
+	if (!mpPlayer)
+		return;
 
-	mpPlayer->Rotation(rotateDirection);
+	// InputManagerからの入力値を取得
+	float rotateInput = InputManager::GetInstance().GetAxis(Axis::Rotation);
+
+	// フォールバック: 直接キー入力も安全に合算
+	if (CheckHitKey(KEY_INPUT_L) != 0)
+	{
+		rotateInput += 1.0f;
+	}
+	if (CheckHitKey(KEY_INPUT_J) != 0)
+	{
+		rotateInput -= 1.0f;
+	}
+
+	float rotateDir = 0.0f;
+	if (rotateInput > 0.3f)
+	{
+		rotateDir = 1.0f;	// 右回転
+	}
+	else if (rotateInput < -0.3f)
+	{
+		rotateDir = -1.0f;	// 左回転
+	}
+
+	/*
+	// 入力インターバル・リピート処理（一時コメントアウト）
+	bool shouldRotate = false;
+
+	// 立ち上がり検出（キー入力開始時に即時1回実行）
+	if (rotateDir != 0.0f && mfPrevRotation == 0.0f)
+	{
+		shouldRotate = true;
+		mfRepeatTimer = 0.0f;
+	}
+	// 長押し時のリピート処理（押しっぱなしでも滑らかに入力可能）
+	else if (rotateDir != 0.0f && rotateDir == mfPrevRotation)
+	{
+		mfRepeatTimer += 1.0f / 60.0f;
+		if (mfRepeatTimer >= 0.30f)
+		{
+			shouldRotate = true;
+			mfRepeatTimer -= 0.20f;
+		}
+	}
+	else
+	{
+		mfRepeatTimer = 0.0f;
+	}
+
+	mfPrevRotation = rotateDir;
+	*/
+
+	// インターバルなしで直接回転を呼び出し
+	if (rotateDir != 0.0f)
+	{
+		mpPlayer->TryRotateWithShift(rotateDir);
+	}
 }

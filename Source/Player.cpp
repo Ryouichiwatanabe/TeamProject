@@ -1,12 +1,16 @@
 ﻿#include "Player.h"
 
-// Module関係
+/* memo :
+* Player の「基本」部分。
+*   生成(Init) → 毎フレームの更新(Update) → Pieceの座標同期 → リスポーン
+* 回転・接地・形状変更は別ファイル(Player.h の memo 参照)。
+*/
+
+// -- Module -- //
 #include "Transform.h"
-#include "Graphic.h"
-#include "Collider.h"
 #include "Gravity.h"
 
-// Piece生成用
+// -- Piece生成用 -- //
 #include "Master.h"
 #include "SceneManager.h"
 #include "Scene.h"
@@ -15,325 +19,207 @@
 
 #include "ScreenConfig.h"
 #include "GameConfig.h"
-
-// 変形状態取得用
-#include "PlayerShapeUI.h"
-
-// 入力関係
-#include "InputManager.h"
-
+#include "PlayerMath.h"
 #include "Debug.h"
 
-// ライブラリ
 #include <DxLib.h>
-#include <cmath>  //回転処理用
+#include <cmath>
 
+// ============================================================ //
+//  生成
+// ============================================================ //
 void Player::Init()
 {
-	// -- タグ設定 -- //
 	SetTag(Tag::PLAYER);
+
 	mController.Initialize(this);
 
-	if (auto transform = GetModule<Transform>())
-		transform->SetPosition(
-			VGet(
-				200.0f,
-				200.0f,
-				0.0f
-			)
-		);
+	SetupPieces();
+	SetShape(0);	// 初期形状 : T字
+
+	UpdatePieceTransforms();
 }
 
 void Player::InitComponent()
 {
-	// -- Module追加 -- //
 	AddModule<Transform>();
 	AddModule<Gravity>();
 }
 
-void Player::InitPiece()
+void Player::SetupPieces()
 {
-	// Todo : 複数Pieceに対応させる
-	
-	// -- piece生成 & 初期処理 -- //
-	for (int row = 0;
-		row < GameConfig::PLAYER_PIECE_SIZE;
-		++row)
+	for (int row = 0; row < GameConfig::PLAYER_PIECE_SIZE; ++row)
 	{
-		for (int column = 0;
-			column < GameConfig::PLAYER_PIECE_SIZE;
-			++column)
+		for (int column = 0; column < GameConfig::PLAYER_PIECE_SIZE; ++column)
 		{
 			CreatePiece(column, row);
 		}
 	}
-
-	mPieces[0][1]->SetEnabled(false);
-	mPieces[0][2]->SetEnabled(false);
-	mPieces[1][1]->SetEnabled(false);
-	mPieces[1][2]->SetEnabled(false);
 }
 
 void Player::CreatePiece(int _column, int _row)
 {
-	auto playerPiece =
-		Master::mpSceneManager
-		->GetCurrentScene()
-		->GetObjectManager()
-		->CreateObject<PlayerPiece>(this);
-
-	if (playerPiece == nullptr)
+	auto scene = Master::mpSceneManager ? Master::mpSceneManager->GetCurrentScene() : nullptr;
+	auto objectManager = scene ? scene->GetObjectManager() : nullptr;
+	if (!objectManager)
 		return;
 
-	mPieces[_row][_column] = playerPiece;
+	auto playerPiece = objectManager->CreateObject<PlayerPiece>(this);
+	if (!playerPiece)
+		return;
 
-	VECTOR localPosition = VGet(
-		(_column - 1) * GameConfig::CELL_SIZE,
-		(_row - 1) * GameConfig::CELL_SIZE,
+	mPieces[_column][_row] = playerPiece;
+
+	// 仮の相対座標 : 中央マス(1,1)を原点とする
+	// (SetShape → RecalculateRotationPivot で回転軸Piece基準に置き直される)
+	playerPiece->SetLocalPosition(VGet(
+		static_cast<float>(_column - 1) * GameConfig::CELL_SIZE,
+		static_cast<float>(_row - 1) * GameConfig::CELL_SIZE,
 		0.0f
-	);
-
-	playerPiece->SetLocalPosition(localPosition);
+	));
 }
 
+// ============================================================ //
+//  毎フレームの更新
+// ============================================================ //
 void Player::Update(float _deltaTime)
 {
-	// ポーズ中のバックグラウンドの停止
 	if (_deltaTime <= 0.0f)
+		return;
+
+	// 変形UIを開いている間は停止(基盤ブロックを動かさないため)
+	if (mbIsShapeEditing)
 	{
+		UpdatePieceTransforms();
+		Debug::Print("Shape Editing...");
 		return;
 	}
-	
-	if (mpShapeUI != nullptr &&
-		InputManager::GetInstance().GetButtonDown(Button::Shape))
-		mpShapeUI->SetEnabled(!mpShapeUI->IsEnabled());
 
-	auto transform = GetModule<Transform>();
-	if (transform->GetPosition().y >= ScreenConfig::SCREEN_HEIGHT)
-		Respawn();
+	if (mfInputCooldown > 0.0f)
+		mfInputCooldown -= _deltaTime;
 
-	mController.Update();
-	GameObject::Update(_deltaTime);
-	OnPieceGrounded();
+	CheckRespawn();
+
+	mController.Update();			// 入力 → 回転
+	GameObject::Update(_deltaTime);	// 重力などのModule
+	UpdatePieceTransforms();
+
+	PrintDebugInfo();
 }
 
 void Player::Draw()
 {
 	GameObject::Draw();
-
-	auto transform = GetModule<Transform>();
-	VECTOR pos = transform->GetPosition();
-	Debug::Print(
-		"Player座標 : (",
-		pos.x,
-		" , ",
-		pos.y,
-		" )"
-	);
 }
 
-void Player::AddCollisionCorrection(VECTOR _correction)
+void Player::PrintDebugInfo()
 {
-	// 補正が不要なら登録しない
-	if (_correction.x == 0.0f && _correction.y == 0.0f)
+	auto transform = GetTransform();
+	if (!transform)
 		return;
 
-	mCollisionCorrections.push_back(_correction); 
+	int deg = static_cast<int>(std::roundf(transform->GetRotation().z * 180.0f / DX_PI_F)) % 360;
+	if (deg < 0)
+		deg += 360;
+
+	Debug::Print("Player Pos: (", static_cast<int>(transform->GetPosition().x), ", ", static_cast<int>(transform->GetPosition().y), ")");
+	Debug::Print("Player Angle: ", deg, " deg");
+	Debug::Print("Grounded: ", mbIsGrounded ? "YES" : "NO", " / Toppling: ", mbIsToppling ? "YES" : "NO");
+	Debug::Print("Input Cooldown: ", mfInputCooldown > 0.0f ? "ACTIVE" : "IDLE");
 }
 
-void Player::ResetCollisionCorrections()
+// ============================================================ //
+//  Pieceの座標同期・重心
+// ============================================================ //
+void Player::UpdatePieceTransforms()
 {
-	mCollisionCorrections.clear();
-}
-
-VECTOR Player::CalculateCollisionCorrection()
-{
-
-	float minX = 0.0f, maxX = 0.0f;
-	for (const VECTOR& candidate : mCollisionCorrections) {
-		if (candidate.x < minX) minX = candidate.x;
-		if (candidate.x > maxX) maxX = candidate.x;
-	}
-	// 左右両方から一定以上押し戻されている ＝ 隙間に挟まれている！
-	mbIsPinched = (minX < -1.0f && maxX > 1.0f);
-
-	// float minX = 0.0f, maxX = 0.0f;
-	float minY = 0.0f, maxY = 0.0f;
-	for (const VECTOR& candidate : mCollisionCorrections)
-	{
-		if (candidate.x > maxX) maxX = candidate.x;
-		if (candidate.x < minX) minX = candidate.x;
-		if (candidate.y > maxY) maxY = candidate.y;
-		if (candidate.y < minY) minY = candidate.y;
-	}
-	VECTOR correction = VGet(0.0f, 0.0f, 0.0f);
-	// 左右両方から押されている場合（minX < 0 かつ maxX > 0）は
-	// 単純に合算して相殺させる、または挟まれとして振動を抑制
-	correction.x = maxX + minX;
-	correction.y = maxY + minY;
-	return correction;
-}
-
-void Player::ApplyCollisionCorrection()
-{
-	auto transform = GetModule<Transform>();
-	if (transform == nullptr)
+	auto transform = GetTransform();
+	if (!transform)
 		return;
 
-	VECTOR correction = CalculateCollisionCorrection();
+	const VECTOR playerPos = transform->GetPosition();
+	const float rotZ = transform->GetRotation().z;
 
-	Debug::Print(
-		"Player Correction: X = ",
-		correction.x,
-		" Y = ",
-		correction.y
-	);
-
-	VECTOR position = transform->GetPosition();
-	position = VAdd(position, correction);
-
-	transform->SetPosition(position);
-}
-
-void Player::BeginCollisionResolution()
-{
-	GameObject::BeginCollisionResolution();	// memo : 意味ないけど一応
-
-	ResetCollisionCorrections();
-}
-
-void Player::EndCollisionResolution()
-{
-	GameObject::EndCollisionResolution();	// memo : 意味ないけど一応
-
-	ApplyCollisionCorrection();
-
-	UpdatePiecePosition();
-	UpdatePieceRotation();
-}
-
-void Player::UpdatePiecePosition()
-{
-	for (auto& row : mPieces)
+	for (int r = 0; r < GameConfig::PLAYER_PIECE_SIZE; ++r)
 	{
-		for (auto* piece : row)
+		for (int c = 0; c < GameConfig::PLAYER_PIECE_SIZE; ++c)
 		{
-			if (piece == nullptr)
+			auto piece = mPieces[c][r];
+			if (!piece || !piece->IsActive())
 				continue;
 
-			piece->UpdateWorldPosition();
+			auto pieceTransform = piece->GetModule<Transform>();
+			if (!pieceTransform)
+				continue;
+
+			pieceTransform->SetPosition(
+				PlayerMath::LocalToWorld(playerPos, rotZ, piece->GetLocalPosition()));
+			pieceTransform->SetRotation(VGet(0.0f, 0.0f, rotZ));
 		}
 	}
 }
 
-void Player::UpdatePieceRotation()
+VECTOR Player::CalculateCenterOfMass() const
 {
-	for (auto& row : mPieces)
+	VECTOR sum = VGet(0.0f, 0.0f, 0.0f);
+	int activeCount = 0;
+
+	for (int r = 0; r < GameConfig::PLAYER_PIECE_SIZE; ++r)
 	{
-		for (auto* piece : row)
+		for (int c = 0; c < GameConfig::PLAYER_PIECE_SIZE; ++c)
 		{
-			if (piece == nullptr)
+			auto piece = mPieces[c][r];
+			if (!piece || !piece->IsActive())
 				continue;
 
-			piece->UpdateRotation();
-		}
-	}
-}
-
-void Player::OnPieceGrounded()
-{
-	bool isGrounded = false;
-
-	for (auto& row : mPieces)
-	{
-		for (auto* piece : row)
-		{
-			if (piece == nullptr)
-				continue;
-
-			auto pieceGravity = piece->GetModule<Gravity>();
-			bool pieceIsGrounded = pieceGravity->IsGrounded();
-
-			if (pieceIsGrounded) isGrounded = true;
+			if (auto pieceTransform = piece->GetModule<Transform>())
+			{
+				sum = VAdd(sum, pieceTransform->GetPosition());
+				++activeCount;
+			}
 		}
 	}
 
-	auto gravity = GetModule<Gravity>();
-	gravity->SetGrounded(isGrounded);
+	if (activeCount > 0)
+		return VScale(sum, 1.0f / static_cast<float>(activeCount));
+
+	// 有効Pieceが無いときは Player の座標
+	if (auto transform = GetTransform())
+		return transform->GetPosition();
+
+	return sum;
 }
 
-void Player::Move(VECTOR _direction)
+Transform* Player::GetTransform() const
 {
-	if (VSize(_direction) == 0.0f)
+	// GetModule が非constのため、const関数からも呼べるようにここだけでキャストする
+	return const_cast<Player*>(this)->GetModule<Transform>();
+}
+
+// ============================================================ //
+//  リスポーン
+// ============================================================ //
+void Player::CheckRespawn()
+{
+	auto transform = GetTransform();
+	if (!transform)
 		return;
 
-	// -- 移動量を取得 & 座標反映 -- //
-	VECTOR moveAmount = VScale(_direction, mfSpeed);
-
-	auto transform = GetModule<Transform>();
-	VECTOR nextPos = VAdd(
-		transform->GetPosition(),
-		moveAmount
-	);
-
-	transform->SetPosition(nextPos);
-
-	UpdatePiecePosition();
-}
-
-void Player::Rotation(float _rotateDirection)
-{
-	//// -- 回転値を取得 -- //
-	//float rotationAmount = _rotateDirection * mfRotationPower;	// 回転の値(度数)
-	//float rotationRadian = rotationAmount * DX_PI_F / 180.0f;	// 回転の値(ラジアン)
-
-	//// -- 回転値を適用 -- //
-	//if (auto transform = GetModule<Transform>())
-	//	transform->SetRotation(
-	//		VAdd(
-	//			transform->GetRotation(),
-	//			VGet(0.0f, 0.0f, rotationRadian)
-	//		)
-	//	);
-
-	//UpdatePieceRotation();
-
-	// 挟まれている間は回転入力を無視する！
-	if (mbIsPinched) return;
-
-	auto transform = GetModule<Transform>();
-	if (!transform) return;
-	VECTOR prevRot = transform->GetRotation();
-	float rotationAmount = _rotateDirection * mfRotationPower;
-	float rotationRadian = rotationAmount * DX_PI_F / 180.0f;
-	// 一旦回転させる
-	transform->SetRotation(VAdd(prevRot, VGet(0.0f, 0.0f, rotationRadian)));
-	UpdatePieceRotation();
-
-}
-
-void Player::ApplyShapeFromUI()
-{
-	for (int row = 0;
-		row < GameConfig::PLAYER_PIECE_SIZE;
-		++row)
-	{
-		for (int column = 0;
-			column < GameConfig::PLAYER_PIECE_SIZE;
-			++column)
-		{
-			bool selected = mpShapeUI->IsPieceSelected(column, row);
-			mPieces[column][row]->SetEnabled(selected);
-		}
-	}
+	if (transform->GetPosition().y > ScreenConfig::SCREEN_HEIGHT)
+		Respawn();
 }
 
 void Player::Respawn()
 {
-	GetModule<Transform>()->SetPosition(mvRespawnPos);
-}
+	auto transform = GetTransform();
+	if (!transform)
+		return;
 
-bool Player::IsPieceEnabled(int _column, int _row)
-{
-	return mPieces[_column][_row]->GetEnabled();
+	transform->SetPosition(mvRespawnPos);
+	transform->SetRotation(VGet(0.0f, 0.0f, 0.0f));
+	mbIsToppling = false;
+	mfInputCooldown = 0.0f;
+	SetGroundedState(false);
+
+	UpdatePieceTransforms();
 }

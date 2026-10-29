@@ -135,6 +135,8 @@ void StageSelectScene::Update(float _deltaTime)
 
 	// 前フレームのマウス状態を保存
 	mbPreviousMouseLeft = currentMouseLeft;
+
+	Scene::Update(_deltaTime);
 }
 
 void StageSelectScene::Draw()
@@ -269,6 +271,7 @@ void StageSelectScene::Draw()
 		"マウスでステージを選択",
 		GetColor(80, 70, 50)
 	);
+	Scene::Draw();
 
 }
 

@@ -34,9 +34,6 @@
     <Filter Include="ソース ファイル\Core">
       <UniqueIdentifier>{b063da5b-ab06-4713-88a5-74ee191e1fa2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Obj">
-      <UniqueIdentifier>{8bbd6430-3cde-40a6-9897-643898bbd049}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\System">
       <UniqueIdentifier>{823fa932-ed31-4c93-b3f5-1f0f81ef54c1}</UniqueIdentifier>
     </Filter>
@@ -61,12 +58,6 @@
     <Filter Include="ソース ファイル\UI\UIModule">
       <UniqueIdentifier>{bfdb932d-0e79-4aec-b49c-896d5828432d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Obj\StageElement">
-      <UniqueIdentifier>{e5180c39-9b99-42de-8da7-45de065f518e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\Obj\Character">
-      <UniqueIdentifier>{78e40793-aef6-4f02-a3b4-be271bd5826f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\UI">
       <UniqueIdentifier>{f44ce886-f6cd-4a5e-af89-cd5afd3d676d}</UniqueIdentifier>
     </Filter>
@@ -81,6 +72,30 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\Obj\StageElement">
       <UniqueIdentifier>{c327de8e-fcca-4e4e-9f5d-a61a2f5e6fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects">
+      <UniqueIdentifier>{418fa353-9374-4892-aebc-04cbc8b3914c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect">
+      <UniqueIdentifier>{2046ad7d-2139-43c4-961b-24e980b2c2d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Config">
+      <UniqueIdentifier>{34eeeff6-2d95-4e3f-945d-5054f3616ef7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject">
+      <UniqueIdentifier>{8bbd6430-3cde-40a6-9897-643898bbd049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject\StageElement">
+      <UniqueIdentifier>{e5180c39-9b99-42de-8da7-45de065f518e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject\Character">
+      <UniqueIdentifier>{78e40793-aef6-4f02-a3b4-be271bd5826f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameObject\Character\Player">
+      <UniqueIdentifier>{75dc12f5-caf1-4a33-b2a9-c45ea052b05a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Factry">
+      <UniqueIdentifier>{a3659da1-91d3-4e55-9e98-535a342ee9f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -124,7 +139,7 @@
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObject.cpp">
-      <Filter>ソース ファイル\Obj</Filter>
+      <Filter>ソース ファイル\GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Source\CsvLoader.cpp">
       <Filter>ソース ファイル\System</Filter>
@@ -140,9 +155,6 @@
     </ClCompile>
     <ClCompile Include="Source\StageSelectScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FakePlayerController.cpp">
-      <Filter>ソース ファイル\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Source\Gravity.cpp">
       <Filter>ソース ファイル\Module</Filter>
@@ -181,37 +193,25 @@
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Source\DisappearingBlock.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\Goal.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\MovingBlock.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\Spike.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Stage.cpp">
-      <Filter>ソース ファイル\Obj</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\StageBlock.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\Switch.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\SwitchBlock.cpp">
-      <Filter>ソース ファイル\Obj\StageElement</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Player.cpp">
-      <Filter>ソース ファイル\Obj\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\FakePlayer.cpp">
-      <Filter>ソース ファイル\Obj\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PlayerPiece.cpp">
-      <Filter>ソース ファイル\Obj\Character</Filter>
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collectible.cpp">
       <Filter>ソース ファイル</Filter>
@@ -245,6 +245,48 @@
     </ClCompile>
     <ClCompile Include="Source\GoalEffect.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GoalEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectClick.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectClear.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ClearCollectibleUI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollectibleData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollectibleIconUI.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>ソース ファイル\GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerGround.cpp">
+      <Filter>ソース ファイル\GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerPiece.cpp">
+      <Filter>ソース ファイル\GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerRotation.cpp">
+      <Filter>ソース ファイル\GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PlayerShape.cpp">
+      <Filter>ソース ファイル\GameObject\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Stage.cpp">
+      <Filter>ソース ファイル\Factry</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UIHoverScaler.cpp">
+      <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,9 +446,6 @@
     <ClInclude Include="Source\Collectible.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ClickEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -416,13 +455,34 @@
     <ClInclude Include="Source\EffectManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GoalEffect.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectBase.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectClick.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectClear.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClearCollectibleUI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Source\CollectibleData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UITypewriterText.h">
+    <ClInclude Include="Source\CollectibleIconUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GoalEffect.h">
+    <ClInclude Include="Source\EffectSmokeSpriteSheet.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PlayerMath.h">
+      <Filter>ヘッダー ファイル\Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Box2D.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

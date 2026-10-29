@@ -1,108 +1,58 @@
-#include "EffectManager.h"
-#include "EffekseerForDXLib.h"
+ï»¿#include "EffectManager.h"
+#include "InputManager.h"
+#include "SoundManager.h"
 
-EffectManager::~EffectManager()
+void EffectManager::Update(float deltaTime)
 {
-    Terminate();
-}
-
-bool EffectManager::Initialize(int screenWidth, int screenHeight)
-{
-    if (isInitialize_) return true;
-
-    screenWidth_ = screenWidth;
-    screenHeight_ = screenHeight;
-
-    // ‰Šú‰»iƒp[ƒeƒBƒNƒ‹Å‘å”: 8000j
-    if (Effekseer_Init(8000) == -1) {
-        return false;
+    // æ›´æ–°ä¸­ã« Play() ã§ effects_ ãŒå¢—ãˆã¦ã‚‚å®‰å…¨ãªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹èµ°æŸ»
+    for (size_t i = 0; i < effects_.size(); ++i)
+    {
+        effects_[i]->Update(deltaTime);
     }
 
-    // ˜c‚İ•\Œ»‚Ì‰Šú‰»
-    Effekseer_InitDistortion();
+    // IsDead() ãŒ true ã‚’è¿”ã—ãŸã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ä¸€æ‹¬å‰Šé™¤
+    std::erase_if(effects_, [](const std::unique_ptr<EffectBase>& effect) {
+        return effect->IsDead();
+        });
 
-    // 2D•\¦—p‚Ì‰æ–Ê‰ğ‘œ“x‚ğİ’è
-    Effekseer_Set2DSetting(screenWidth_, screenHeight_);
-
-    isInitialize_ = true;
-    return true;
+ 
+   
 }
 
-void EffectManager::Update()
+//unique_ptr   Deleteæ¼ã‚Œã‚’é˜²ã
+
+void EffectManager::Draw() const
 {
-    if (!isInitialize_) return;
-
-    // 2DƒGƒtƒFƒNƒg‚ÌƒRƒ}‘—‚èXV
-    UpdateEffekseer2D();
-}
-
-void EffectManager::Draw()
-{
-    if (!isInitialize_) return;
-
-    // 2DƒGƒtƒFƒNƒg‚Ì‘S•`‰æ
-    DrawEffekseer2D();
-}
-
-void EffectManager::Terminate()
-{
-    if (!isInitialize_) return;
-
-    for (auto& [name, handle] : effectMap_) {
-        DeleteEffekseerEffect(handle);
+    for (const auto& effect : effects_)
+    {
+        effect->Draw();
     }
-    effectMap_.clear();
+   
+   
 
-    Effkseer_End();
-    isInitialize_ = false;
 }
 
-bool EffectManager::Load(const std::string& name, const wchar_t* filePath)
+
+void EffectManager::Clear()
 {
-    if (!isInitialize_) return false;
+    effects_.clear();
 
-    if (effectMap_.contains(name)) {
-        return true;
-    }
-
-    int handle = LoadEffekseerEffect(filePath);
-    if (handle == -1) {
-        return false;
-    }
-
-    effectMap_[name] = handle;
-    return true;
 }
 
-int EffectManager::PlayEffect(const std::string& name, float x, float y)
+// ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã‚’å–å¾—ã—ã¦ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹å‡¦ç†
+// ã©ã®ã‚·ãƒ¼ãƒ³ã§ã‚‚ä½¿ç”¨ã™ã‚‹ã‹ã‚‰ã“ã“ã§å‘¼ã³å‡ºã—
+void EffectManager::PlayClickRipple()
 {
-    if (!isInitialize_) return -1;
+    auto& inputManager = InputManager::GetInstance();
+    if (inputManager.GetButtonDown(Button::Confirm))
+    {
+        const auto& mouse = inputManager.GetMouse();
+        const float posX = static_cast<float>(mouse.GetX());
+        const float posY = static_cast<float>(mouse.GetY());
 
-    auto it = effectMap_.find(name);
-    if (it == effectMap_.end()) {
-        return -1;
-    }
-
-    // 2DƒGƒtƒFƒNƒgÄ¶
-    int playHandle = PlayEffekseer2DEffect(it->second);
-    if (playHandle != -1) {
-        // ƒsƒNƒZƒ‹À•W‚ÅƒZƒbƒgiZ’l‚Í0.0fj
-        SetPosPlayingEffekseer2DEffect(playHandle, x, y, 0.0f);
-    }
-
-    return playHandle;
-}
-
-void EffectManager::StopEffect(int playHandle)
-{
-    if (playHandle != -1) {
-        StopEffekseer2DEffect(playHandle);
-    }
-}
-
-void EffectManager::SetPosition(int playHandle, float x, float y)
-{
-    if (playHandle != -1) {
-        SetPosPlayingEffekseer2DEffect(playHandle, x, y, 0.0f);
+        // ClickEffect ã‚’ç”Ÿæˆã—ã¦ effects_ ã«è¿½åŠ 
+        effects_.emplace_back(std::make_unique<EffectClick>(posX, posY));
+        // SE
+        SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_DECIDE);
     }
 }

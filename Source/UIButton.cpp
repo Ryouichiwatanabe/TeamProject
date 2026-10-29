@@ -17,6 +17,11 @@ bool UIButton::IsMouseInside()
 
     VECTOR center = transform.GetCenterPosition();
     VECTOR size = transform.GetSize();
+    VECTOR scale = transform.GetScale();
+
+    // 描画(DrawRotaGraph3)と同じく拡縮後の大きさで判定する
+    size.x *= scale.x;
+    size.y *= scale.y;
 
     int mouseX = 0;
     int mouseY = 0;

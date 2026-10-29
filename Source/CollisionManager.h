@@ -1,8 +1,10 @@
 ﻿#pragma once
-#include <DxLib.h>	// VECTOR用
-#include <vector>
+#include <DxLib.h>	// VECTOR
+#include <vector>	// std::vector
+#include "Box2D.h"
 
 class Collider;
+class GameObject;	// Tag用
 
 struct CollisionInfo
 {
@@ -23,28 +25,22 @@ struct CollisionInfo
 class CollisionManager
 {
 public:
+	
+public:
 	CollisionManager() = default;
 	~CollisionManager() = default;
-
-	// void Initialize();
+	
 	void Finalize();
+	void Update();
 
 	void Register(Collider* _collider);			// 呼び出し先のColliderをManagerに登録
 	void Unregister(Collider* _collider);		// 呼び出し先のColliderをManagerから除外
 
-	void Update();	// 全Collider同士の判定
+	bool CheckBoxBox(Collider* _colliderA, Collider* _colliderB);	// 同フレームで衝突したColliderを登録する
+	bool GetBoxBoxCollision(Collider* _colliderA, Collider* _colliderB, CollisionInfo& _info);
 
-	// void DrawDebag() const;	
-
-	// Box対Boxのめり込み具合と方向を取得する(infoに)
-	bool GetBoxBoxCollision(
-		Collider* _a,
-		Collider* _b,
-		CollisionInfo& _info
-	) const;
-
-private:
-	bool CheckBoxBox(Collider* _boxA, Collider* _boxB) const;	// Box対Boxが衝突を取得する
+	// Box2D同士のSAT衝突判定（めり込み量・押し戻し法線を算出）
+	static bool TestBoxBox(const Box2D& _boxA, const Box2D& _boxB, CollisionInfo& _info);
 
 private:
 	std::vector<Collider*> mColliders;	// 使用されている当たり判定データのコンテナ

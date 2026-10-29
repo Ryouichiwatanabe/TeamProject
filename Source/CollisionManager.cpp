@@ -6,47 +6,59 @@
 #include <DxLib.h>	// デバッグ表示のカラー指定のため使用
 #include <cmath>
 #include <algorithm>
+#include <cfloat>	// FLT_MAX
 
 #include "Debug.h"
 
 void CollisionManager::Finalize() 
 {
 	// -- 当たり判定データのコンテナを解放 -- //
-	for (auto* collider : mColliders)
-	{
+	for (auto* collider : mColliders){
 		collider->ClearCollisions();
 	}
 
 	mColliders.clear();
 }
 
-void CollisionManager::Update() 
+namespace
 {
-	// 前フレームの衝突結果をリセット
-	for (auto* collider : mColliders) 
+	// _collider の判定対象タグに _other のタグが含まれているか
+	bool IsCollisionTarget(Collider* _collider, GameObject* _other)
 	{
+		for (auto tag : _collider->GetCollisionTag()) {
+			if (_other->GetTag() == tag)
+				return true;
+		}
+		return false;
+	}
+}
+
+void CollisionManager::Update() {
+	// 前フレームの衝突結果をリセット
+	for (auto* collider : mColliders) {
 		collider->ClearCollisions();
 	}
 
 	// 判定を行うColliderを選び、衝突結果を各自処理するコンテナに登録
-	for (size_t i = 0;
-		i < mColliders.size();
-		++i)
-	{
+	for (size_t i = 0; i < mColliders.size(); ++i) {
 		Collider* a = mColliders[i];
-		
-		if (!a->IsEnabled()) continue;
+		if (!a || !a->IsEnabled())
+			continue;
 
-		for (size_t j = i + 1;
-			j < mColliders.size();
-			++j) 
-		{
+		for (size_t j = i + 1; j < mColliders.size(); ++j) {
 			Collider* b = mColliders[j];
+			if (!b || !b->IsEnabled())
+				continue;
 
-			if (!b->IsEnabled()) continue;
+			auto aObj = a->GetGameObject();
+			auto bObj = b->GetGameObject();
+			if (!aObj || !bObj)
+				continue;
 
-			if (CheckBoxBox(a, b)) 
-			{
+			// どちらか一方でも相手を判定対象にしていれば判定する
+			const bool checkNeeded = IsCollisionTarget(a, bObj) || IsCollisionTarget(b, aObj);
+
+			if (checkNeeded && CheckBoxBox(a, b)) {
 				a->AddCollision(b);
 				b->AddCollision(a);
 			}
@@ -54,6 +66,7 @@ void CollisionManager::Update()
 	}
 }
 
+// -- 呼び出し先のColliderをManagerに登録 -- //
 void CollisionManager::Register(Collider* _collider) 
 {
 	if (_collider == nullptr) return;
@@ -66,6 +79,7 @@ void CollisionManager::Register(Collider* _collider)
 	mColliders.push_back(_collider);
 }
 
+// -- 呼び出し先のColliderをManagerから除外 -- //
 void CollisionManager::Unregister(Collider* _collider)
 {
 	for (auto collider = mColliders.begin();
@@ -81,245 +95,74 @@ void CollisionManager::Unregister(Collider* _collider)
 }
 
 bool CollisionManager::CheckBoxBox(
-	Collider* _boxA,
-	Collider* _boxB
-) const
-{
-	if (_boxA == nullptr || _boxB == nullptr)
-		return false;
-
-	// -- Transform取得 -- //
-	auto transformA =
-		_boxA->GetGameObject()->GetModule<Transform>();
-
-	auto transformB =
-		_boxB->GetGameObject()->GetModule<Transform>();
-
-	if (transformA == nullptr || transformB == nullptr)
-		return false;
-
-	// -- 各衝突範囲を取得 -- //
-	const VECTOR posA =
-		_boxA->GetWorldPosition();
-
-	const VECTOR posB =
-		_boxB->GetWorldPosition();
-
-	const VECTOR halfA =
-		_boxA->GetHalfSize();
-
-	const VECTOR halfB =
-		_boxB->GetHalfSize();
-
-	// -- 回転値取得 -- //
-	const float rotA =
-		transformA->GetRotation().z;
-
-	const float rotB =
-		transformB->GetRotation().z;
-
-	const VECTOR axisAX = VGet(
-		cosf(rotA),
-		sinf(rotA),
-		0.0f
-	);
-
-	const VECTOR axisAY = VGet(
-		-sinf(rotA),
-		cosf(rotA),
-		0.0f
-	);
-
-	const VECTOR axisBX = VGet(
-		cosf(rotB),
-		sinf(rotB),
-		0.0f
-	);
-
-	const VECTOR axisBY = VGet(
-		-sinf(rotB),
-		cosf(rotB),
-		0.0f
-	);
-
-	const VECTOR centerDiff =
-		VSub(posB, posA);
-
-	const VECTOR axes[] =
-	{
-		axisAX,
-		axisAY,
-		axisBX,
-		axisBY
-	};
-
-	for (const VECTOR& axis : axes)
-	{
-		// 中心間距離を軸へ投影
-		const float distance =
-			fabsf(VDot(centerDiff, axis));
-
-		// Aの投影半径
-		const float radiusA =
-			halfA.x * fabsf(VDot(axisAX, axis)) +
-			halfA.y * fabsf(VDot(axisAY, axis));
-
-		// Bの投影半径
-		const float radiusB =
-			halfB.x * fabsf(VDot(axisBX, axis)) +
-			halfB.y * fabsf(VDot(axisBY, axis));
-
-		// 分離している
-		if (radiusA + radiusB <= distance)
-		{
-			return false;
-		}
-	}
-
-	const float minAZ =
-		posA.z - halfA.z;
-
-	const float maxAZ =
-		posA.z + halfA.z;
-
-	const float minBZ =
-		posB.z - halfB.z;
-
-	const float maxBZ =
-		posB.z + halfB.z;
-
-	if (maxAZ < minBZ ||
-		minAZ > maxBZ)
-	{
-		return false;
-	}
-
-	return true;
+	Collider* _colliderA, 
+	Collider* _colliderB
+) {
+	CollisionInfo info;
+	return GetBoxBoxCollision(_colliderA, _colliderB, info);
 }
 
 bool CollisionManager::GetBoxBoxCollision(
-	Collider* _a,
-	Collider* _b,
+	Collider* _colliderA,
+	Collider* _colliderB,
 	CollisionInfo& _info
-) const
-{
-	if (_a == nullptr || _b == nullptr) 
+) {
+	if (!_colliderA || !_colliderB || !_colliderA->IsEnabled() || !_colliderB->IsEnabled())
 		return false;
 
-	// -- 角度取得のためのnullCheck -- //
-	auto transformA = _a->GetGameObject()->GetModule<Transform>();
-	auto transformB = _b->GetGameObject()->GetModule<Transform>();
-	if (transformA == nullptr || transformB == nullptr)
-		return false;
+	return TestBoxBox(_colliderA->GetBox2D(), _colliderB->GetBox2D(), _info);
+}
 
-	// -- Box対Boxの各衝突受付範囲を取得 -- //
-	const VECTOR posA = _a->GetWorldPosition();
-	const VECTOR posB = _b->GetWorldPosition();
-
-	const VECTOR halfA = _a->GetHalfSize();
-	const VECTOR halfB = _b->GetHalfSize();
-
-	const float rotA = transformA->GetRotation().z;
-	const float rotB = transformB->GetRotation().z;
-
-	// Aのローカル軸
-	const VECTOR axisAX = VGet(
-		cosf(rotA),
-		sinf(rotA),
-		0.0f
-	);
-
-	const VECTOR axisAY = VGet(
-		-sinf(rotA),
-		cosf(rotA),
-		0.0f
-	);
-
-	// Bのローカル軸
-	const VECTOR axisBX = VGet(
-		cosf(rotB),
-		sinf(rotB),
-		0.0f
-	);
-
-	const VECTOR axisBY = VGet(
-		-sinf(rotB),
-		cosf(rotB),
-		0.0f
-	);
-
-	// Z方向の判定
-	/*if (fabsf(posA.z - posB.z) > halfA.z + halfB.z)
-	{
-		return false;
-	}*/
-
-	// 中心間ベクトル
-	const VECTOR centerDiff = VSub(posB, posA);
-
-	// 判定する軸
-	const VECTOR axes[] =
-	{
-		axisAX,
-		axisAY,
-		axisBX,
-		axisBY
+bool CollisionManager::TestBoxBox(
+	const Box2D& _boxA,
+	const Box2D& _boxB,
+	CollisionInfo& _info
+) {
+	const VECTOR axes[4] = {
+		_boxA.axisX,
+		_boxA.axisY,
+		_boxB.axisX,
+		_boxB.axisY
 	};
 
-	float minPenetration = FLT_MAX;
-	VECTOR collisionNormal = VGet(0.0f, 0.0f, 0.0f);
+	const VECTOR delta = VSub(_boxB.position, _boxA.position);
 
-	for (const VECTOR& axis : axes)
-	{
-		// 中心間距離をこの軸へ投影
-		const float distance =
-			fabsf(
-				VDot(centerDiff, axis)
-			);
+	float minOverlap = FLT_MAX;
+	VECTOR bestAxis = VGet(0.0f, 0.0f, 0.0f);
 
-		// Aをこの軸へ投影した半径
-		const float radiusA =
-			halfA.x * fabsf(VDot(axisAX, axis)) +
-			halfA.y * fabsf(VDot(axisAY, axis));
+	for (int i = 0; i < 4; ++i) {
+		VECTOR axis = axes[i];
+		const float lenSq = axis.x * axis.x + axis.y * axis.y;
+		if (lenSq < 0.00001f) continue;
+		const float invLen = 1.0f / std::sqrtf(lenSq);
+		axis.x *= invLen;
+		axis.y *= invLen;
 
-		// Bをこの軸へ投影した半径
-		const float radiusB =
-			halfB.x * fabsf(VDot(axisBX, axis)) +
-			halfB.y * fabsf(VDot(axisBY, axis));
+		const float rA = _boxA.ProjectToAxis(axis);
+		const float rB = _boxB.ProjectToAxis(axis);
 
-		// 分離している
-		const float overlap =
-			radiusA + radiusB - distance;
+		const float dist = std::fabsf(delta.x * axis.x + delta.y * axis.y);
+		const float overlap = (rA + rB) - dist;
 
-		if (overlap <= 0.0f)
-		{
+		if (overlap <= 0.0f) {
+			// 分離軸が存在するため重なっていない
 			return false;
 		}
 
-		// 最も浅いめり込みを記録
-		if (overlap < minPenetration)
-		{
-			minPenetration = overlap;
-
-			collisionNormal = axis;
-
-			// B -> A の方向に法線を向ける
-			if (VDot(centerDiff, collisionNormal) > 0.0f)
-			{
-				collisionNormal =
-					VScale(collisionNormal, -1.0f);
-			}
+		if (overlap < minOverlap) {
+			minOverlap = overlap;
+			bestAxis = axis;
 		}
 	}
 
-	/*Debug::Print(
-		"A:(", posA.x, ",", posA.y, ")", "B:(", posB.x, ",", posB.y, ")", "Pen :", minPenetration);
+	// 法線の向きを調整: Aから見てBから押し離す方向（delta = B - A なので、deltaと同方向なら反転）
+	const float dot = delta.x * bestAxis.x + delta.y * bestAxis.y;
+	if (dot > 0.0f) {
+		bestAxis.x = -bestAxis.x;
+		bestAxis.y = -bestAxis.y;
+	}
 
-	Debug::Print(
-		"HalfA:(", halfA.x, ",", halfA.y, ")", "HalfB:(", halfB.x, ",", halfB.y, ")");*/
-
-	_info.penetration = minPenetration;
-	_info.normal = collisionNormal;
-
+	_info.penetration = minOverlap;
+	_info.normal = bestAxis;
 	return true;
 }
