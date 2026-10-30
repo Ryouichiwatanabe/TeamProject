@@ -8,6 +8,7 @@ enum class FontId
 {
     Default,    // フォールバック用(必ず登録する)
     Title,
+    SubTitle,
     Button,
 };
 

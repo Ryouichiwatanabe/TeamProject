@@ -10,8 +10,11 @@ void PauseUI::Init()
 {
     // -- 自分の初期処理 -- //
     SetEnabled(false);
-    this->GetText().SetText("Pause");
-    this->GetText().SetOffset(VGet(0.0f, -300.0f, 0.0f));
+    auto& text = this->GetText();
+    text.SetFontId(FontId::Title);
+    text.SetText("Pause");
+    text.SetOffset(VGet(0.0f, -225.0f, 0.0f));
+    this->SetLayer(1);
 
     auto* uiManager =
         Master::mpSceneManager
@@ -21,6 +24,7 @@ void PauseUI::Init()
    // -- 再開ボタン -- //
     mpResumeUI = uiManager->CreateUI<UI>();
     mpResumeUI->LoadUIGraph("Resource/UI/PauseBoard.png");
+    mpResumeUI->GetText().SetFontId(FontId::SubTitle);
     mpResumeUI->GetText().SetText("再開");
 
     mpResumeUI->SetLayer(2);
@@ -45,6 +49,10 @@ void PauseUI::Init()
     // -- ステージ選択画面へ戻るボタン -- //
     mpStageSelectUI = uiManager->CreateUI<UI>();
     mpStageSelectUI->LoadUIGraph("Resource/UI/PauseBoard.png");
+    mpStageSelectUI->GetText().SetFontId(FontId::SubTitle);
+    /*mpStageSelectUI->GetText().SetOffset(
+    VGet(
+    ))*/
     mpStageSelectUI->GetText().SetText("ステージ選択に戻る");
 
     mpStageSelectUI->SetLayer(2);
@@ -68,6 +76,7 @@ void PauseUI::Init()
 
     // -- タイトルへ戻るのボタン -- //
     mpTitleUI = uiManager->CreateUI<UI>();
+    mpTitleUI->GetText().SetFontId(FontId::SubTitle);
     mpTitleUI->LoadUIGraph( "Resource/UI/PauseBoard.png");
     mpTitleUI->GetText().SetText("タイトルへ戻る");
 

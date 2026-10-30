@@ -34,15 +34,25 @@ Game::Game()
         // -- フォントのロード -- //
         Master::mpFontManager->LoadFontFile("Resource/Font/PixelMplus10-Bold.ttf");
 
+        // -- デフォルトフォント -- //
         FontDesc defaultDesc;                     // 全部デフォルト値 = DxLib標準フォント
         Master::mpFontManager->Register(FontId::Default, defaultDesc);
 
+        // -- タイトル,見出し -- //
         FontDesc titleDesc;
         titleDesc.name = "PixelMplus10";                // .ttf内部のフォント名
-        titleDesc.size = 64;
+        titleDesc.size = 96;
         titleDesc.fontType = DX_FONTTYPE_EDGE;
-        titleDesc.edgeSize = 1;
+        titleDesc.edgeSize = 0;
         Master::mpFontManager->Register(FontId::Title, titleDesc);
+
+        // -- タイトル,見出し -- //
+        FontDesc subTitleDesc;
+        subTitleDesc.name = "PixelMplus10";                // .ttf内部のフォント名
+        subTitleDesc.size = 32;
+        subTitleDesc.fontType = DX_FONTTYPE_EDGE;
+        subTitleDesc.edgeSize = 0;
+        Master::mpFontManager->Register(FontId::SubTitle, subTitleDesc);
     }
 }
 

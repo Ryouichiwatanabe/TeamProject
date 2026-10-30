@@ -2,6 +2,9 @@
 
 #include "UI.h"
 
+#include "Master.h"
+#include "FontManager.h"
+
 void UIText::Initialize(UI* _pUI)
 {
 	mpUI = _pUI;
@@ -9,53 +12,46 @@ void UIText::Initialize(UI* _pUI)
 
 void UIText::Draw()
 {
-	std::string drawText = mText;	// 描画する文字列の宣言
+	if (mpUI == nullptr || mText.empty())
+		return;
 
-	VECTOR position = CalculateTextDrawPosition(drawText);
+	// -- フォントハンドルを取得(未登録でもDefaultが返るので-1チェック不要) -- //
+	int fontHandle = Master::mpFontManager->GetHandle(mFontId);
 
-	if (mnFontHandle != -1)
-	{
-		DrawStringToHandle(
-			static_cast<int>(position.x),
-			static_cast<int>(position.y),
-			drawText.c_str(),
-			mColor,
-			mnFontHandle
-		);
-	}
-	else
-	{
-		DrawString(
-			static_cast<int>(position.x),
-			static_cast<int>(position.y),
-			drawText.c_str(),
-			mColor
-		);
-	}
+	VECTOR position = CalculateTextDrawPosition(fontHandle);
+
+	DrawStringToHandle(
+		static_cast<int>(position.x),
+		static_cast<int>(position.y),
+		mText.c_str(),
+		mColor,
+		fontHandle,
+		mEdgeColor
+	);
 }
 
-VECTOR UIText::CalculateTextDrawPosition(std::string _text)
+VECTOR UIText::CalculateTextDrawPosition(int _fontHandle) const
 {
-	auto transform =
-		mpUI->GetTransform();
-
+	auto& transform = mpUI->GetTransform();
 	VECTOR basePosition = transform.GetCenterPosition();
 
-	int textWidth = GetDrawStringWidth(
-		_text.c_str(),
-		static_cast<int>(_text.size()),
-		mnFontSize
+	// -- 描画サイズを「実際に使うフォント」から取得 -- //
+	int textWidth = GetDrawStringWidthToHandle(
+		mText.c_str(),
+		static_cast<int>(mText.size()),
+		_fontHandle
 	);
+	int textHeight = GetFontSizeToHandle(_fontHandle);
 
-	int drawX = static_cast<int>(basePosition.x);
-
+	// -- 横の配置 -- //
+	float drawX = basePosition.x;
 	switch (mAlign)
 	{
 	case UITextAlign::LEFT:
 		break;
 
 	case UITextAlign::CENTER:
-		drawX -= textWidth / 2;
+		drawX -= textWidth / 2.0f;
 		break;
 
 	case UITextAlign::RIGHT:
@@ -63,15 +59,21 @@ VECTOR UIText::CalculateTextDrawPosition(std::string _text)
 		break;
 	}
 
-	int drawY = 
-		static_cast<int>(basePosition.y - mnFontSize / 2.0f);
+	// -- 縦の配置 -- //
+	float drawY = basePosition.y;
+	switch (mVerticalAlign)
+	{
+	case UITextVerticalAlign::TOP:
+		break;
 
-	return VAdd(
-		VGet(
-			static_cast<int>(drawX),
-			static_cast<int>(drawY),
-			0.0f
-		),
-		mvOffset
-	);
+	case UITextVerticalAlign::CENTER:
+		drawY -= textHeight / 2.0f;
+		break;
+
+	case UITextVerticalAlign::BOTTOM:
+		drawY -= textHeight;
+		break;
+	}
+
+	return VAdd(VGet(drawX, drawY, 0.0f), mvOffset);
 }
