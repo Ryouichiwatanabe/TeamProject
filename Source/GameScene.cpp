@@ -302,12 +302,11 @@ void GameScene::Update(float deltaTime)
 
 void GameScene::Draw()
 {
-  /*  DrawBox(
-        0, 0,
-        1280, 720,
-        GetColor(217, 198, 143),
-        TRUE
-    );*/
+	// -- 描画時 -- //
+	DrawStringToHandle(100, 100, "おちんこ祭り！！！",
+		GetColor(255, 255, 255),              // 文字色
+		Master::mpFontManager->GetHandle(FontId::Title),
+		GetColor(0, 0, 0));                   // 縁の色
 
     Debug::Print(
         "InputMode : ",

@@ -1,36 +1,50 @@
 ﻿#pragma once
-#include "DxLib.h"
+#include <DxLib.h>
 #include <string>
-#include <unordered_map>
 #include <vector>
-#include <Windows.h> //<--フォント追加のAPI（AddFontResourceEXなど） 
+#include <unordered_map>
+
+enum class FontId
+{
+    Default,    // フォールバック用(必ず登録する)
+    Title,
+    Button,
+};
+
+struct FontDesc
+{
+    std::string name;                           // フォント名(ファイル名ではない)
+    int size = 24;                              // 大きさ
+    int thick = -1;                             // 太さ(-1でデフォルト)
+    int fontType = DX_FONTTYPE_ANTIALIASING;    // 縁付きなら _EDGE 系
+    int edgeSize = -1;                          // 縁のサイズ
+};
+
+/* memo :
+* フォントハンドルをFontIdで管理するクラス。
+*
+* // -- 使い方 -- //
+*	1. (自前の.ttfを使う場合) LoadFontFile()でフォントファイルを読み込む
+*	2. Register()でFontIdとフォント設定を登録する(起動時にまとめて行う)
+*	   ※ FontId::Defaultは必ず登録する
+*	3. GetHandle()でハンドルを取得して描画に使う
+*	4. 終了時、DxLib_End()より前にClear()を呼ぶ
+*
+* // -- 注意 -- //
+*	ハンドルは共有されるので、使う側でDeleteFontToHandle()を呼ばないこと。
+*/
+
 class FontManager {
 public:
-    // コンストラクタとデストラクタを public に配置する
-    FontManager() = default;
-    ~FontManager() { Clear(); }
+	FontManager() = default;
+	~FontManager();
 
-    // コピー禁止（意図しないコピー防止）
-    FontManager(const FontManager&) = delete;
-    FontManager& operator=(const FontManager&) = delete;
-
-	//-- フォントの取得と解放--//  ->thickのデフォルト値を-1に設定することで、太さを指定しない場合はデフォルトの太さが使用されるようにする
-    int GetFont(const std::string& fontName, int size, int thick = -1, int fontType = DX_FONTTYPE_ANTIALIASING);
-	//-- フォントの破棄 --//
-    void ReleaseFont(const std::string& fontName, int size, int thick = -1, int fontType = DX_FONTTYPE_ANTIALIASING);
-	//-- フォントの解放 --//
-    void Clear();
-	//-- フォントファイルの読み込み --//
-    bool LoadFontFile(const std::string& filePath);
+    bool LoadFontFile(const std::string& _filePath);     // ① .ttf の読み込み
+    bool Register(FontId _id, const FontDesc& _desc);    // ハンドル生成 + ID登録
+    int  GetHandle(FontId _id) const;                     // 取得(なければDefault)
+    void Clear();                                         // 全解放
 
 private:
-    // フォントのパラメータ（名前・サイズ・太さ・描画タイプ）から一意の検索キー文字列を生成
-    std::string GenerateKey(const std::string& fontName, int size, int thick, int fontType) const {
-        return fontName + "_" + std::to_string(size) + "_" + std::to_string(thick) + "_" + std::to_string(fontType);
-    }
-    // 生成済みフォントのキャッシュテーブル（Key: パラメータ文字列, Value: DXライブラリのフォントハンドル）
-    std::unordered_map<std::string, int> fontMap_;
-    // Windows API等で読み込んだフォントファイルのリソースハンドル保持リスト（終了時の一括解放用）
-    std::vector<HANDLE> loadedFontFiles_;
-
+    std::unordered_map<FontId, int> mHandles;				// FontId → フォントハンドル
+    std::unordered_map<std::string, HANDLE> mFontFiles;		// ファイルパス → フォントファイルのハンドル
 };

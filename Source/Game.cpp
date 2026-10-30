@@ -30,8 +30,20 @@ Game::Game()
     m_isRunning = true;
     m_lastFrameTime = std::chrono::steady_clock::now();
 
-    // -- フォントの読み込み -- //
-    // Master::mpFontManager->LoadFontFile("")
+    {
+        // -- フォントのロード -- //
+        Master::mpFontManager->LoadFontFile("Resource/Font/PixelMplus10-Bold.ttf");
+
+        FontDesc defaultDesc;                     // 全部デフォルト値 = DxLib標準フォント
+        Master::mpFontManager->Register(FontId::Default, defaultDesc);
+
+        FontDesc titleDesc;
+        titleDesc.name = "PixelMplus10";                // .ttf内部のフォント名
+        titleDesc.size = 64;
+        titleDesc.fontType = DX_FONTTYPE_EDGE;
+        titleDesc.edgeSize = 1;
+        Master::mpFontManager->Register(FontId::Title, titleDesc);
+    }
 }
 
 Game::~Game()
