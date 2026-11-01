@@ -31,14 +31,7 @@ void PauseUI::Init()
     mpResumeUI->GetTransform().SetPosition(
         VGet(
             0.0f,
-            120.0f,
-            0.0f
-        )
-    );
-    mpResumeUI->GetTransform().SetSize(
-        VGet(
-            280.0f,
-            70.0f,
+            -120.0f,
             0.0f
         )
     );
@@ -50,23 +43,13 @@ void PauseUI::Init()
     mpStageSelectUI = uiManager->CreateUI<UI>();
     mpStageSelectUI->LoadUIGraph("Resource/UI/PauseBoard.png");
     mpStageSelectUI->GetText().SetFontId(FontId::SubTitle);
-    /*mpStageSelectUI->GetText().SetOffset(
-    VGet(
-    ))*/
     mpStageSelectUI->GetText().SetText("ステージ選択に戻る");
 
     mpStageSelectUI->SetLayer(2);
     mpStageSelectUI->GetTransform().SetPosition(
         VGet(
             0.0f,
-            0.0f,
-            0.0f
-        )
-    );
-    mpStageSelectUI->GetTransform().SetSize(
-        VGet(
-            280.0f,
-            70.0f,
+            20.0f,
             0.0f
         )
     );
@@ -84,14 +67,7 @@ void PauseUI::Init()
     mpTitleUI->GetTransform().SetPosition(
         VGet(
             0.0f,
-            -120.0f,
-            0.0f
-        )
-    );
-    mpTitleUI->GetTransform().SetSize(
-        VGet(
-            280.0f,
-            70.0f,
+            160.0f,
             0.0f
         )
     );
