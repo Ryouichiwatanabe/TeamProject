@@ -16,9 +16,9 @@ public:
     // default_duration_frames: デフォルトのフェード所要フレーム数
 public:
     explicit FadeEffect(int default_duration_frames = 60) {
-        duration_frames_ = (default_duration_frames > 0) ? default_duration_frames : 1;
-        current_frames_ = 0;
-        state_ = State::Idle;
+        mnDurationFrames = (default_duration_frames > 0) ? default_duration_frames : 1;
+        mnCurrentFrames = 0;
+        meState = State::Idle;
     }
 
     // フェードインを開始（画面を明るくする）
@@ -35,22 +35,20 @@ public:
 
     // 毎フレームの更新処理
     void Update() {
-        if (state_ == State::Idle) {
+        if (meState == State::Idle) {
             return;
         }
 
-        current_frames_++;
+        mnCurrentFrames++;
 
         // 目標フレームに達したらフェード完了
-        if (current_frames_ >= duration_frames_) {
-            current_frames_ = duration_frames_;
-            state_ = State::Idle;
+        if (mnCurrentFrames >= mnDurationFrames) {
+            mnCurrentFrames = mnDurationFrames;
+            meState = State::Idle;
         }
     }
 
     // フェード用オーバーレイ（黒幕）の描画
-    // screen_width: 描画先の画面幅
-    // screen_height: 描画先の画面高さ
     // color: 塗りつぶす色（デフォルトは黒）
     void Draw(int screen_width = 1280, int screen_height = 720, unsigned int color = 0) const {
         const int alpha = GetAlpha();
@@ -67,7 +65,7 @@ public:
     int GetAlpha() const {
         const float progress = GetProgress();
 
-        switch (state_) {
+        switch (meState) {
         case State::FadeIn:
             // フェードイン中は時間経過とともに黒幕を薄くする (255 -> 0)
             return static_cast<int>((1.0f - progress) * 255.0f);
@@ -84,30 +82,30 @@ public:
 
     // フェードの進行度を取得 (0.0f ? 1.0f)
     float GetProgress() const {
-        return static_cast<float>(current_frames_) / static_cast<float>(duration_frames_);
+        return static_cast<float>(mnCurrentFrames) / static_cast<float>(mnDurationFrames);
     }
 
     // フェード処理が終了しているか判定
     bool IsFinished() const {
-        return state_ == State::Idle;
+        return meState == State::Idle;
     }
 
     // 現在のフェード状態を取得
     State GetState() const {
-        return state_;
+        return meState;
     }
 
 private:
     // 内部フェード開始共通処理
     void StartFade(State next_state, int frames) {
         if (frames > 0) {
-            duration_frames_ = frames;
+            mnDurationFrames = frames;
         }
-        state_ = next_state;
-        current_frames_ = 0;
+        meState = next_state;
+        mnCurrentFrames = 0;
     }
 
-    int duration_frames_;  // フェード完了までの所要フレーム数
-    int current_frames_;   // 現在の経過フレーム数
-    State state_;          // 現在のフェード状態
+    int mnDurationFrames;   // フェード完了までの所要フレーム数
+    int mnCurrentFrames;    // 現在の経過フレーム数
+    State meState;          // 現在のフェード状態
 };

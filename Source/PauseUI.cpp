@@ -23,7 +23,7 @@ void PauseUI::Init()
 
    // -- 再開ボタン -- //
     mpResumeUI = uiManager->CreateUI<UI>();
-    mpResumeUI->LoadUIGraph("Resource/UI/PauseBoard.png");
+    mpResumeUI->LoadUIGraph("Resource/UI/Pause/Pause_button.png");
     mpResumeUI->GetText().SetFontId(FontId::SubTitle);
     mpResumeUI->GetText().SetText("再開");
 
@@ -41,7 +41,7 @@ void PauseUI::Init()
 
     // -- ステージ選択画面へ戻るボタン -- //
     mpStageSelectUI = uiManager->CreateUI<UI>();
-    mpStageSelectUI->LoadUIGraph("Resource/UI/PauseBoard.png");
+    mpStageSelectUI->LoadUIGraph("Resource/UI/Pause/Pause_button.png");
     mpStageSelectUI->GetText().SetFontId(FontId::SubTitle);
     mpStageSelectUI->GetText().SetText("ステージ選択に戻る");
 
@@ -60,7 +60,7 @@ void PauseUI::Init()
     // -- タイトルへ戻るのボタン -- //
     mpTitleUI = uiManager->CreateUI<UI>();
     mpTitleUI->GetText().SetFontId(FontId::SubTitle);
-    mpTitleUI->LoadUIGraph( "Resource/UI/PauseBoard.png");
+    mpTitleUI->LoadUIGraph("Resource/UI/Pause/Pause_button.png");
     mpTitleUI->GetText().SetText("タイトルへ戻る");
 
     mpTitleUI->SetLayer(2);
@@ -77,7 +77,7 @@ void PauseUI::Init()
 
     // -- オーバーレイ -- //
     mpPauseOverlay = uiManager->CreateUI<UI>();
-    mpPauseOverlay->LoadUIGraph("Resource/UI/Pause/OverLay_Black.png");
+    mpPauseOverlay->LoadUIGraph("Resource/UI/Overlay/Overlay_black.png");
 
     AddChild(mpPauseOverlay);
     mpPauseOverlay->SetParent(this);
