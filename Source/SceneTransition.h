@@ -16,7 +16,7 @@ public:
         if (mePhase == Phase::Out) {            // 暗転が終わった
             mePhase = Phase::In;
             mFade.StartFadeIn();
-            return true;                        // ← 今ここで差し替えて！
+            return true;
         }
         mePhase = Phase::None;                  // 明転が終わった → 遷移完了
         return false;

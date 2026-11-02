@@ -110,9 +110,6 @@ void Game::Run()
             m_isRunning = false;
             break;
         }
-
-        m_mouse.Update();
-
         
         const auto currentTime = std::chrono::steady_clock::now();
         std::chrono::duration<double> frameTime = currentTime - m_lastFrameTime;
@@ -138,12 +135,8 @@ void Game::Run()
 
 void Game::UpdateLogic(double deltaTime)
 {
-    m_cursor.Update();
-
     // シーンの更新（この中でシーンが所有するEffectManagerが更新される）
     m_sceneManager.Update(static_cast<float>(deltaTime));
-
-
 }
 
 void Game::Draw()
