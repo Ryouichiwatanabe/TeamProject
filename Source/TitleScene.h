@@ -23,4 +23,5 @@ private:
 	UI* mpBackGround = nullptr;	// 背景画像
 	UI* mpLogo = nullptr;		// ロゴ画像
 	UI* mpStartButton = nullptr;
+	UI* mpQuitButton = nullptr;
 };

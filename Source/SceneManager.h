@@ -33,6 +33,10 @@ public:
 	void SetStageNumber(int _stageNumber);
 	int GetStageNumber() const;
 
+	// -- Quitの要求に用いる -- //
+	void RequestQuit() { mbQuitRequested = true; }
+	[[nodiscard]] bool IsQuitRequested() const { return mbQuitRequested; }
+
 private:
 	void ChangeSceneIfNeeded();
 
@@ -42,6 +46,8 @@ private:
 	Scene* mpCurrentScene = nullptr;						// 現在シーンのポインタ
 
 	SceneTransition mTransition{ 30 };	// 遷移演出
+
+	bool mbQuitRequested = false;		// Quitの要求があった場合、それを示す
 
 	int mnStageNumber = 1;									//Stageの番号
 };

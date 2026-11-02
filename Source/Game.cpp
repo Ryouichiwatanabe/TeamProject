@@ -104,7 +104,9 @@ void Game::Run()
         return;
     }
 
-    while (m_isRunning && ProcessMessage() == 0) {
+    while (m_isRunning 
+        && !m_sceneManager.IsQuitRequested()
+        && ProcessMessage() == 0) {
 
         if (CheckHitKey(KEY_INPUT_ESCAPE) != 0) {
             m_isRunning = false;

@@ -40,7 +40,7 @@ private:
 
     int mCursorHandle = -1;
 
-  //  void DrawCursor();
+    //  void DrawCursor();
 
     float mClearTimer = 0.0f;
 

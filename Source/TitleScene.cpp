@@ -40,13 +40,24 @@ void TitleScene::Initialize()
 	mpStartButton->GetText().SetText("Start!");
 	mpStartButton->GetTransform().SetPosition(VGet(0.0f, 100.0f, 0.0f));
 
+	// -- 「Quit」ボタン -- //
+	mpQuitButton = uiManager->CreateUI<UI>();
+	mpQuitButton->LoadUIGraph("Resource/UI/Scene_Title/StartButton.png");
+	mpQuitButton->SetEnabled(true);
+	mpQuitButton->SetLayer(1);
+	mpQuitButton->GetHoverScaler().SetActive(true);	// ボタンのホバー演出を適用
+	mpQuitButton->GetText().SetFontId(FontId::SubTitle);
+	mpQuitButton->GetText().SetColor(GetColor(100, 100, 100));
+	mpQuitButton->GetText().SetText("Quit");
+	mpQuitButton->GetTransform().SetPosition(VGet(0.0f, 250.0f, 0.0f));
+
 	// -- BGMの再生 -- //
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
 }
 
 void TitleScene::Update(float _deltaTime)
 {
-	// -- 「スタート」ボタンを押した場合 -- //
+	// -- 「Start」ボタンを押した場合 -- //
 	if (mpStartButton != nullptr
 		&& mpStartButton->GetButton().IsClicked()) 
 	{
@@ -55,6 +66,17 @@ void TitleScene::Update(float _deltaTime)
 		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
 		Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
+	}
+
+	// -- 「Quit」ボタンを押した場合 -- //
+	if (mpQuitButton != nullptr
+		&& mpQuitButton->GetButton().IsClicked())
+	{
+		//  Confirm を消費し、共通のクリックSE判定をスキップ
+		InputManager::GetInstance().ConsumeButton(Button::Confirm);
+		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
+
+		Master::mpSceneManager->RequestQuit();
 	}
 
 	Scene::Update(_deltaTime);
