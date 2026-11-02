@@ -1,14 +1,16 @@
 #pragma once
 
 #include "Scene.h"
-#include "FloatingMotion.h"
 #include "UIHoverScaler.h"
+
+class UI;
 
 class TitleScene : public Scene
 {
 public:
-	TitleScene();
-	virtual ~TitleScene() = default;
+	TitleScene() = default;
+	~TitleScene() = default;
+
 	void Initialize() override;
 	void Update(float _deltaTime) override;
 	void Draw() override;
@@ -18,14 +20,7 @@ private:
 	bool mbPreviousMouseLeft = false;
 
 private:
-	int mBgGroundHandle; //”wŒi‰æ‘œƒnƒ“ƒhƒ‹
-	int mTitleLogoHandle;//ƒ^ƒCƒgƒ‹ƒƒS‰æ‘œƒnƒ“ƒhƒ‹
-	int mStartTofuHandle = -1;
-private:
-	FloatingMotion mTitleFloatingMotion;
-
-	UIHoverScaler mStartScaler; // éŒ¾
-
-
-
+	UI* mpBackGround = nullptr;	// èƒŒæ™¯ç”»åƒ
+	UI* mpLogo = nullptr;		// ãƒ­ã‚´ç”»åƒ
+	UI* mpStartButton = nullptr;
 };

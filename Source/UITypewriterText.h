@@ -2,8 +2,6 @@
 #include <string>
 #include <mbstring.h>
 #include "DxLib.h"
-#include "FloatingMotion.h"
-
 class UI;
 
 class UITypewriterText 

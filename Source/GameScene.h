@@ -7,7 +7,7 @@
 
 
 //---コンポジション系統
-#include "FloatingMotion.h"
+#include "UIFloatingMotion.h"
 #include "UITypewriterText.h"
 #include "UIBackground.h"
 
@@ -77,8 +77,8 @@ private:
 
 private:
 
-    FloatingMotion mClearTextMotion;   // Clear用
-    FloatingMotion mMessageMotion;     // メッセージ用
+    //FloatingMotion mClearTextMotion;   // Clear用
+    //FloatingMotion mMessageMotion;     // メッセージ用
     float mfClearItemTimer = 0.0f;
 
     bool mbIsMessageActive = false; //メッセージ表示フラグ

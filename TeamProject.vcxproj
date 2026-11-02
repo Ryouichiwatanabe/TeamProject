@@ -75,6 +75,7 @@
     <ClCompile Include="Source\UI.cpp" />
     <ClCompile Include="Source\UIBackground.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
+    <ClCompile Include="Source\UIFloatingMotion.cpp" />
     <ClCompile Include="Source\UIGraphic.cpp" />
     <ClCompile Include="Source\UIHoverScaler.cpp" />
     <ClCompile Include="Source\UIManager.cpp" />
@@ -101,7 +102,7 @@
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
-    <ClInclude Include="Source\FloatingMotion.h" />
+    <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\GameConfig.h" />

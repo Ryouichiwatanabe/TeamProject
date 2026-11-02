@@ -1,6 +1,7 @@
 ﻿#include "UIGraphic.h"
 
 #include "UI.h"
+#include "UIHoverScaler.h"
 
 #include "Master.h"
 #include "ResourceManager.h"
@@ -37,9 +38,13 @@ void UIGraphic::Draw()
 	if (mnGraphHandle == -1)
 		return;
 	
-	auto transform = mpUI->GetTransform();
+	auto& transform = mpUI->GetTransform();
+	const float hover = mpUI->GetHoverScaler().GetScale();
+	const VECTOR floating = mpUI->GetFloatingMotion().GetOffset();
 
-	const auto centerPosition = transform.GetCenterPosition();
+	auto centerPosition = transform.GetCenterPosition();
+	centerPosition = VAdd(centerPosition, floating);
+
 	const auto rotation = transform.GetRotation();
 	const auto scale = transform.GetScale();
 	const auto size = transform.GetSize();
@@ -49,8 +54,8 @@ void UIGraphic::Draw()
 		static_cast<int>(centerPosition.y),
 		static_cast<int>(size.x / 2.0f),
 		static_cast<int>(size.y / 2.0f),
-		scale.x,
-		scale.y,
+		scale.x * hover,
+		scale.y * hover,
 		rotation.z,
 		mnGraphHandle,
 		TRUE,

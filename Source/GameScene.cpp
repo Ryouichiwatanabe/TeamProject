@@ -121,16 +121,16 @@ void GameScene::Initialize()
 
 
 	//Stage文字ラベルの初期化
-	std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
-	FloatingMotion stageMotion(120, 15.0f);
+	/*std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
+	FloatingMotion stageMotion(120, 15.0f);*/
 
 
 	//Typewriter
-	mMessageMotion = FloatingMotion(90, 4.0f);
+	//mMessageMotion = FloatingMotion(90, 4.0f);
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
 	mbIsMessageActive = true;//メッセージ表示開始
 
-	mClearTextMotion = FloatingMotion(120, 5.0f);
+	// mClearTextMotion = FloatingMotion(120, 5.0f);
 
    /* auto* fakePlayer = 
         this

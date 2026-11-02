@@ -20,6 +20,10 @@ void UIText::Draw()
 
 	VECTOR position = CalculateTextDrawPosition(fontHandle);
 
+	// -- floatingを適用(有効でない場合はデフォルト) -- //
+	const VECTOR floating = mpUI->GetFloatingMotion().GetOffset();
+	position = VAdd(position, floating);
+
 	DrawStringToHandle(
 		static_cast<int>(position.x),
 		static_cast<int>(position.y),
