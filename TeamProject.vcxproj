@@ -130,6 +130,7 @@
     <ClInclude Include="Source\ResourceManager.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\SceneTransition.h" />
     <ClInclude Include="Source\ScreenConfig.h" />
     <ClInclude Include="Source\SoundManager.h" />
     <ClInclude Include="Source\Spike.h" />

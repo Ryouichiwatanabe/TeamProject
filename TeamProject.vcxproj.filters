@@ -109,6 +109,9 @@
     <Filter Include="ヘッダー ファイル\Module\Collider">
       <UniqueIdentifier>{96ac69ba-60c2-4e79-8dc0-51a65ec8f1e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Scene\Fade">
+      <UniqueIdentifier>{ffa64b51-f19f-401c-9764-76cf1fa9f70e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GamePad.cpp">
@@ -291,6 +294,12 @@
     <ClCompile Include="Source\UIBackground.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Item.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemTable.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
@@ -346,9 +355,6 @@
     </ClInclude>
     <ClInclude Include="Source\Cursor.h">
       <Filter>ヘッダー ファイル\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\FadeEffect.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayerController.h">
       <Filter>ヘッダー ファイル\Controller</Filter>
@@ -484,6 +490,18 @@
     </ClInclude>
     <ClInclude Include="Source\UIBackground.h">
       <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Item.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemTable.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FadeEffect.h">
+      <Filter>ヘッダー ファイル\Scene\Fade</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneTransition.h">
+      <Filter>ヘッダー ファイル\Scene\Fade</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

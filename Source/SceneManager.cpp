@@ -6,99 +6,40 @@
 #include "StageSelectScene.h"
 #include "TitleScene.h"
 
-#include "FadeEffect.h"
-
-
-
-SceneManager::SceneManager()
-	:mnSceneType(SCENE_TYPE::SCENE_NONE)
-	, mnNextSceneType(SCENE_TYPE::SCENE_NONE)
-	, mpCurrentScene(nullptr)
-	,mFadeEffect(30)//フェード時間(30フレーム = 0.5秒
-	,mbIsChangingScene(false)
-{
-
-}
-
 void SceneManager::Initialize()
 {
-	// -- 初期シーンの設定 -- //
+	// 最初のシーンを作る（フェードなしで即座に作成）
 	mnNextSceneType = SCENE_TYPE::GAME_SCENE;
 	ChangeSceneIfNeeded();
 
-	mbIsChangingScene = true;
-	//Game起動時にFadeInのEffect再生
-	mFadeEffect.StartFadeIn();
+	// 真っ黒な状態から明転させる
+	mTransition.StartFromBlack();
 }
 
 
 void SceneManager::RequestScene(SCENE_TYPE _nextType)
 {
-	// 既に遷移中、または現在のシーンと同じなら処理しない（連打ガード）
-	if (mbIsChangingScene || mnSceneType == _nextType)
-	{
-		return;
-	}
-		
-
+	if (mTransition.IsActive()) return;
 	mnNextSceneType = _nextType;
-	mbIsChangingScene = true;
-
-	// 暗転（フェードアウト）開始
-	mFadeEffect.StartFadeOut();
+	mTransition.Start();
 }
 
 void SceneManager::Update(float _deltaTime)
 {
-	FadeEffect::State prevState = mFadeEffect.GetState();
-
-
-	mFadeEffect.Update();
-
-	//  シーン遷移シーケンスの制御
-	if (mbIsChangingScene)
-	{
-		// フェードが終了したかチェック
-		if (mFadeEffect.IsFinished())
-		{
-			if (prevState == FadeEffect::State::FadeOut)
-			{
-				//ここで最初のScene切り替え
-				ChangeSceneIfNeeded();
-
-				//FadeIn開始
-				mFadeEffect.StartFadeIn();
-
-			}
-			//Sceneが完全に描画されてる
-			else if (prevState == FadeEffect::State::FadeIn)
-			{
-				//遷移完了
-				mbIsChangingScene = false;
-			}
-			
-		}
+	if (mTransition.Update()) {
+		ChangeSceneIfNeeded();        // 差し替えのタイミングだけ教えてもらう
 	}
-	//CurrentSceneの更新
-			//遷移中はFadeOutやFadeInの処理は停止
-	if (!mbIsChangingScene && mpCurrentScene != nullptr)
-	{
+	if (!mTransition.IsActive() && mpCurrentScene) {
 		mpCurrentScene->Update(_deltaTime);
 	}
-	
 }
 
 void SceneManager::Draw()
 {
-	//CurrentSceneを描画
-	if (mpCurrentScene != nullptr)
-	{
-		
+	if (mpCurrentScene)
 		mpCurrentScene->Draw();
-	}
-	//最前面に黒幕を描画
-	mFadeEffect.Draw(1280, 720);
 
+	mTransition.Draw();	// 必要に応じてフェードを演出
 }
 
 void SceneManager::ChangeSceneIfNeeded()

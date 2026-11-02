@@ -1,111 +1,82 @@
 #pragma once
-#include <algorithm>
 #include "DxLib.h"
+#include "ScreenConfig.h"
 
 // 画面遷移や演出用のフェード処理を管理・描画するクラス
 class FadeEffect {
 public:
-    // フェードの状態
     enum class State {
-        Idle,     // 停止中
-        FadeIn,   // 暗転状態から徐々に画面を表示 (黒幕アルファ: 255 -> 0)
-        FadeOut   // 画面から徐々に暗転 (黒幕アルファ: 0 -> 255)
+        Idle,     // 停止中（IsCovered() で真っ黒か透明かを判別）
+        FadeIn,   // 黒 → 画面（アルファ 255 → 0）
+        FadeOut   // 画面 → 黒（アルファ 0 → 255）
     };
 
-    // コンストラクタ
-    // default_duration_frames: デフォルトのフェード所要フレーム数
-public:
-    explicit FadeEffect(int default_duration_frames = 60) {
-        mnDurationFrames = (default_duration_frames > 0) ? default_duration_frames : 1;
-        mnCurrentFrames = 0;
-        meState = State::Idle;
-    }
+    explicit FadeEffect(int defaultDurationFrames = 60)
+        : mnDefaultDuration(defaultDurationFrames > 0 ? defaultDurationFrames : 1)
+        , mnDurationFrames(mnDefaultDuration)
+    {}
 
-    // フェードインを開始（画面を明るくする）
-    // frames: フェードにかけるフレーム数（0以下の場合は前回の値を維持）
-    void StartFadeIn(int frames = -1) {
-        StartFade(State::FadeIn, frames);
-    }
+    // frames <= 0 ならデフォルト時間を使う（デフォルト値は書き換えない）
+    void StartFadeIn(int frames = -1) { StartFade(State::FadeIn, frames); }
+    void StartFadeOut(int frames = -1) { StartFade(State::FadeOut, frames); }
 
-    // フェードアウトを開始（画面を暗くする）
-    // frames: フェードにかけるフレーム数（0以下の場合は前回の値を維持）
-    void StartFadeOut(int frames = -1) {
-        StartFade(State::FadeOut, frames);
-    }
+    // このフレームでフェードが完了したら true を返す
+    [[nodiscard]] bool Update() {
+        if (meState == State::Idle) return false;
 
-    // 毎フレームの更新処理
-    void Update() {
-        if (meState == State::Idle) {
-            return;
-        }
-
-        mnCurrentFrames++;
-
-        // 目標フレームに達したらフェード完了
-        if (mnCurrentFrames >= mnDurationFrames) {
+        if (++mnCurrentFrames >= mnDurationFrames) {
             mnCurrentFrames = mnDurationFrames;
+            mbCovered = (meState == State::FadeOut);  // 暗転で終わったか覚えておく
             meState = State::Idle;
+            return true;
         }
+        return false;
     }
 
-    // フェード用オーバーレイ（黒幕）の描画
-    // color: 塗りつぶす色（デフォルトは黒）
-    void Draw(int screen_width = 1280, int screen_height = 720, unsigned int color = 0) const {
+    void Draw(unsigned int color = 0) const {
         const int alpha = GetAlpha();
-        if (alpha <= 0) {
-            return; // 完全に透明なら描画負荷をスキップ
-        }
+        if (alpha <= 0) return;
+
+        int prevMode = 0, prevParam = 0;
+        GetDrawBlendMode(&prevMode, &prevParam);   // 呼び出し元の設定を保存
 
         SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-        DrawBox(0, 0, screen_width, screen_height, (color == 0) ? GetColor(0, 0, 0) : color, TRUE);
-        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+        DrawBox(0, 0,
+            static_cast<int>(ScreenConfig::SCREEN_WIDTH),
+            static_cast<int>(ScreenConfig::SCREEN_HEIGHT),
+            color, TRUE);
+
+        SetDrawBlendMode(prevMode, prevParam);      // 元に戻す
     }
 
-    // 現在の黒幕の不透明度を取得 (0: 完全透明 ? 255: 完全不透明)
     int GetAlpha() const {
-        const float progress = GetProgress();
-
+        const float p = GetProgress();
         switch (meState) {
-        case State::FadeIn:
-            // フェードイン中は時間経過とともに黒幕を薄くする (255 -> 0)
-            return static_cast<int>((1.0f - progress) * 255.0f);
-
-        case State::FadeOut:
-            // フェードアウト中は時間経過とともに黒幕を濃くする (0 -> 255)
-            return static_cast<int>(progress * 255.0f);
-
+        case State::FadeIn:  return static_cast<int>((1.0f - p) * 255.0f);
+        case State::FadeOut: return static_cast<int>(p * 255.0f);
         case State::Idle:
-        default:
-            return 0;
+        default:             return mbCovered ? 255 : 0;
         }
     }
 
-    // フェードの進行度を取得 (0.0f ? 1.0f)
     float GetProgress() const {
         return static_cast<float>(mnCurrentFrames) / static_cast<float>(mnDurationFrames);
     }
 
-    // フェード処理が終了しているか判定
-    bool IsFinished() const {
-        return meState == State::Idle;
-    }
-
-    // 現在のフェード状態を取得
-    State GetState() const {
-        return meState;
-    }
+    bool  IsFinished() const { return meState == State::Idle; }
+    bool  IsCovered()  const { return meState == State::Idle && mbCovered; }
+    State GetState()   const { return meState; }
 
 private:
-    // 内部フェード開始共通処理
-    void StartFade(State next_state, int frames) {
-        if (frames > 0) {
-            mnDurationFrames = frames;
-        }
-        meState = next_state;
+    void StartFade(State next, int frames) {
+        mnDurationFrames = (frames > 0) ? frames : mnDefaultDuration;
         mnCurrentFrames = 0;
+        meState = next;
     }
 
-    int mnDurationFrames;   // フェード完了までの所要フレーム数
-    int mnCurrentFrames;    // 現在の経過フレーム数
-    State meState;          // 現在のフェード状態
+    int   mnDefaultDuration;          // 引数省略時のフェード時間
+    int   mnDurationFrames;           // 今回のフェード時間
+    int   mnCurrentFrames = 0;        // 経過フレーム数
+    State meState = State::Idle;
+    bool  mbCovered = false;    // Idle 時に画面が黒で覆われているか
 };
