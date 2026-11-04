@@ -1,17 +1,23 @@
 ﻿#pragma once
 
+#include "ScreenConfig.h"
+
 /* memo : 
 * ゲームの重要な各種値の設定クラス
 */
 class GameConfig
 {
 public:
-	static constexpr float CELL_SIZE = 100.0f;	// マスの大きさ(例 1.0fの場合、1.0f × 1.0fのマス目になる)
+	static constexpr float CELL_SIZE = ScreenConfig::SCREEN_HEIGHT / 9.0f;	// マスの大きさ(例 1.0fの場合、1.0f × 1.0fのマス目になる)
 
 	static constexpr int PLAYER_PIECE_SIZE = 3;	
 
 	static constexpr float GLAVITY = 9.8f;				// 重力加速度
 	static constexpr float MAX_FALLSPEED = 49.0f;		// 落下速度の上限
+
+	// -- ステージ・アイテム -- //
+	static constexpr int STAGE_COUNT = 8;                                   // ステージ総数
+	static constexpr int MAX_ITEMS_PER_STAGE = 3;                                   // 1ステージのアイテム上限
 
 	// -- 物理・回転・倒れ込み用定数 -- //
 	static constexpr float ALLOWED_PENETRATION = CELL_SIZE * 0.1f;	// 回転判定における許容めり込み量

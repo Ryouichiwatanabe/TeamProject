@@ -14,6 +14,7 @@ enum class Tag
 	UNNKO,
 	PLAYER,
 	PLAYER_CELL,
+	ITEM,
 	BLOCK,
 	SPIKE,
 	COLLECTIBLE,

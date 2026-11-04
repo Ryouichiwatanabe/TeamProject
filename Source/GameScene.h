@@ -2,12 +2,12 @@
 
 #include "Scene.h"
 #include <cstddef>
+#include <memory>
 #include "EffectClear.h"
 
 
 //---コンポジション系統
-#include "FloatingMotion.h"
-#include "UILabel.h"
+#include "UIFloatingMotion.h"
 #include "UITypewriterText.h"
 #include "UIBackground.h"
 
@@ -40,7 +40,7 @@ private:
 
     int mCursorHandle = -1;
 
-  //  void DrawCursor();
+    //  void DrawCursor();
 
     float mClearTimer = 0.0f;
 
@@ -56,7 +56,7 @@ private:
     bool mbPreviousP = false;
     bool mbPreviousMouseLeft = false;
 
-    void UpdatePause();
+    void UpdatePauseInput();    // 入力に伴い、PauseUIを有効にする
     void UpdateClear();
 
     Player* mpPlayer = nullptr;
@@ -77,9 +77,8 @@ private:
 
 private:
 
-    UILabel mStageTextMotion;          // Stage用
-    FloatingMotion mClearTextMotion;   // Clear用
-    FloatingMotion mMessageMotion;     // メッセージ用
+    //FloatingMotion mClearTextMotion;   // Clear用
+    //FloatingMotion mMessageMotion;     // メッセージ用
     float mfClearItemTimer = 0.0f;
 
     bool mbIsMessageActive = false; //メッセージ表示フラグ

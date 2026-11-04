@@ -18,14 +18,16 @@ namespace
 	constexpr float BUTTON_OFFSET_Y = 300.0f;	// OK / Back ボタンの縦位置
 	constexpr float MESSAGE_OFFSET_Y = -280.0f;	// メッセージの縦位置
 
-	constexpr int LAYER_FRAME = 0;
-	constexpr int LAYER_PIECE = 1;
-	constexpr int LAYER_BUTTON = 2;
+	constexpr int LAYER_OVERLAY = 0;
+	constexpr int LAYER_FRAME = 1;
+	constexpr int LAYER_PIECE = 2;
+	constexpr int LAYER_BUTTON = 3;
 }
 
 void PlayerShapeUI::Init()
 {
-	LoadUIGraph("Resource/UI/外側.png");
+	// -- 自身の初期設定 -- //
+	LoadUIGraph("Resource/UI/ShapeSelect/Shape_panel.png");
 	SetLayer(LAYER_FRAME);
 	SetEnabled(false);	// 初期状態は非表示
 
@@ -43,6 +45,14 @@ void PlayerShapeUI::Init()
 	mpConfirmUI = CreateButtonUI("OK", -BUTTON_OFFSET_X, BUTTON_OFFSET_Y);
 	mpBackUI = CreateButtonUI("Back", BUTTON_OFFSET_X, BUTTON_OFFSET_Y);
 	mpMessageUI = CreateMessageUI(0.0f, MESSAGE_OFFSET_Y);
+	
+	// -- オーバーレイ生成 -- //
+	mpOverlay = GetUIManager()->CreateUI<UI>();
+	mpOverlay->LoadUIGraph("Resource/UI/Overlay/Overlay_black.png");
+	mpOverlay->SetLayer(LAYER_OVERLAY);
+	mpOverlay->SetEnabled(true);
+	this->AddChild(mpOverlay);
+	mpOverlay->SetParent(this);
 
 	// -- Playerのアドレス取得 -- //
 	mpPlayer =
@@ -58,7 +68,7 @@ void PlayerShapeUI::CreatePieceUI(int _column, int _row)
 	if (pieceUI == nullptr)
 		return;
 
-	pieceUI->LoadUIGraph("Resource/UI/内側.png");
+	pieceUI->LoadUIGraph("Resource/UI/ShapeSelect/Shape_cell.png");
 	pieceUI->SetLayer(LAYER_PIECE);
 	mPieceUI[_column][_row] = pieceUI;
 
@@ -82,9 +92,9 @@ UI* PlayerShapeUI::CreateButtonUI(const std::string& _text, float _x, float _y)
 {
 	UI* button = GetUIManager()->CreateUI<UI>();
 
-	button->LoadUIGraph("Resource/UI/内側.png");
+	button->LoadUIGraph("Resource/UI/ShapeSelect/Shape_cell.png");
 	button->SetLayer(LAYER_BUTTON);
-	button->GetTransform().SetScale(VGet(2.0f, 1.0f, 1.0f));
+	button->GetTransform().SetScale(VGet(1.0f, 0.8f, 1.0f));
 	button->GetTransform().SetPosition(VGet(_x, _y, 0.0f));
 	button->GetText().SetText(_text);
 

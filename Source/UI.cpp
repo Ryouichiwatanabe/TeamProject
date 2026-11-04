@@ -8,6 +8,8 @@ void UI::Initialize(UIManager* _manager)
 	mText.Initialize(this);
 	//mTypeWriterText.Initialize(this);
 	mButton.Initialize(this);
+	mHoverScaler.Initialize(this);
+	mFloatingMotion.Initialize(this);
 
 	Init();
 }
@@ -20,6 +22,11 @@ void UI::LoadUIGraph(std::string filename)
 void UI::Update()
 {
 	//mTypeWriterText.Update();
+	if (mFloatingMotion.IsActive())
+		mFloatingMotion.Update();
+
+	if (mHoverScaler.IsActive())
+		mHoverScaler.Update();
 }
 
 void UI::Draw()

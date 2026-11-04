@@ -1,43 +1,26 @@
-#pragma once
+ï»¿#pragma once
+
+class UI;
 
 class UIHoverScaler
 {
 public:
-    UIHoverScaler();
+    UIHoverScaler() = default;
+    ~UIHoverScaler() = default;
 
-    /// <summary>
-    /// ƒXƒP[ƒ‹ƒpƒ‰ƒ[ƒ^‚Ì‰Šú‰»
-    /// </summary>
-    /// <param name="normalScale">’Êí‚Ì”{—¦iŠî–{: 1.0fj</param>
-    /// <param name="hoverScale">ƒJ[ƒ\ƒ‹‚ªæ‚Á‚½‚Æ‚«‚ÌŠg‘å—¦i—á: 1.08fj</param>
-    /// <param name="pressScale">ƒNƒŠƒbƒN‰Ÿ‚µ‚İ‚Ìk¬—¦i—á: 0.94fj</param>
-    /// <param name="lerpSpeed">’Ç]‘¬“xi15.0f?20.0f’ö“x‚Å©‘R‚ÈèG‚èj</param>
-    void Initialize(float normalScale = 1.0f, float hoverScale = 1.08f, float pressScale = 0.94f, float lerpSpeed = 18.0f);
+    void Initialize(UI* _pUI) { mpUI = _pUI; }   // ä»–ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã¨åŒã˜å½¢
 
-    /// <summary>
-    /// –ˆƒtƒŒ[ƒ€‚ÌŠgk•âŠÔŒvZ
-    /// </summary>
-    /// <param name="isHovered">ƒ}ƒEƒX‚ªUI‚Ìã‚É‚ ‚é‚©</param>
-    /// <param name="isPressed">ƒ}ƒEƒXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©</param>
-    /// <param name="deltaTime">‘OƒtƒŒ[ƒ€‚©‚ç‚ÌŒo‰ßŠÔ</param>
-    void Update(bool isHovered, bool isPressed, float deltaTime);
+    void SetActive(bool _active) { mbActive = _active; }
+    bool IsActive() const { return mbActive; }
 
-    /// <summary>
-    /// Šî€‚Æ‚È‚é‹éŒ`À•W‚ğ’†S‚ğ²‚ÉŠg‘åEk¬‚µ‚½À•W‚ğZo
-    /// </summary>
-    void CalculateRect(int baseLeft, int baseTop, int baseWidth, int baseHeight,
-        int* outLeft, int* outTop, int* outRight, int* outBottom) const;
-
-    /// <summary>
-    /// Œ»İ‚ÌŠg‘å—¦‚ğæ“¾
-    /// </summary>
-    float GetCurrentScale() const { return mCurrentScale; }
+    void Update();                                // å¼•æ•°ãªã—
+    float GetScale() const { return mfCurrentScale; }
 
 private:
-    float mNormalScale = 1.0f;
-    float mHoverScale = 1.08f;
-    float mPressScale = 0.94f;
-    float mLerpSpeed = 18.0f;
+    UI* mpUI = nullptr;
 
-    float mCurrentScale = 1.0f;
+    bool  mbActive = false;   // æ—¢å®šã¯ç„¡åŠ¹(ã‚ªãƒ—ãƒˆã‚¤ãƒ³)
+    float mfHoverScale = 1.08f;   // ãƒ›ãƒãƒ¼ä¸­ã®ç›®æ¨™å€ç‡
+    float mfLerpRate = 0.3f;    // 1ãƒ•ãƒ¬ãƒ¼ãƒ ã§ç›®æ¨™ã¸è¿‘ã¥ãå‰²åˆ(60fpsæƒ³å®š)
+    float mfCurrentScale = 1.0f;
 };

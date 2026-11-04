@@ -22,7 +22,7 @@ void ClearUI::Init()
 {
     SetEnabled(false);
 
-    mClearTextMotion = FloatingMotion(120, 5.0f);
+    //mClearTextMotion = FloatingMotion(120, 5.0f);
 
     auto* uiManager =
         Master::mpSceneManager
@@ -137,7 +137,7 @@ void ClearUI::Update()
     mfItemTimer += 1.0f / 60.0f;
 
     // CLEAR! の上下アニメーション
-    mClearTextMotion.Update();
+    //mClearTextMotion.Update();
 
     // アイテムの獲得状態を反映
 
@@ -285,14 +285,14 @@ void ClearUI::Draw()
 
     // CLEAR!
 
-    int clearOffsetY =
+    /*int clearOffsetY =
         static_cast<int>(
             mClearTextMotion.GetOffsetY()
-            );
+            );*/
 
     DrawString(
         620,
-        220 + clearOffsetY,
+        220, // clearOffsetY,
         "CLEAR!",
         GetColor(255,255,255
     )
