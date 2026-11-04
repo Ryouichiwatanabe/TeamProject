@@ -51,17 +51,17 @@ void Spike::Update(float _deltaTime)
             if (pSmokeData != nullptr)
             {
                 mpSmokeEffect = std::make_unique<EffectSmokeSpriteSheet>(
-                    pos.x,
-                    pos.y,
+                    pos.x,          // 横位置を微調整したい場合は pos.x + 10.0f などに変更
+                    pos.y + 20.0f,  // ★ここを + 20.0f（または + 25.0f）にすると下に下がって床にピッタリ接地します！
                     pSmokeData,
-                    0.05f,          // 1コマの表示秒数
-                    true,           // ループ再生
-                    false,          // アルファブレンド
-                    0.8,            // ★スケール（1マス=100pxに合わせるなら 0.7〜0.8 くらいが見栄え◎）
-                    0.0,            // 角度
+                    0.05f,
+                    true,
+                    false,
+                    0.8,
+                    0.0,
                     255, 255, 255, 255,
-                    -1.0f,          // ★fPivotX: -1.0f にすると自動で1コマの横中心になります
-                    -1.0f           // ★fPivotY: -1.0f にすると自動で1コマの縦中心になります
+                    -1.0f,
+                    -1.0f
                 );
             }
         }
