@@ -136,7 +136,7 @@ void GameScene::Initialize()
 
    /* auto* fakePlayer = 
         this
-        ->GetObjectManager()
+        ->GetObjectManager()ljl
         ->CreateObject<FakePlayer>();*/
 
 	auto* testUI =
