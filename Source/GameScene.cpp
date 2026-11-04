@@ -91,14 +91,8 @@ void GameScene::Initialize()
 	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
 	if (mpBackgroundUI != nullptr)
 	{
-		// 背景用として最背面のレイヤーに指定
-		mpBackgroundUI->SetLayer(-100);
-
-		// Stage クラスを渡して背景画像をロード＆適用
-		mpBackgroundUI->SetStage(stage);
-
-		// またはステージ番号を直接渡す場合:
-		// mpBackgroundUI->SetStageByNumber(mnStageNumber);
+		// ステージ番号に対応した背景画像をロード
+		mpBackgroundUI->SetStageByNumber(mnStageNumber);
 	}
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
@@ -328,6 +322,12 @@ void GameScene::Update(float deltaTime)
 
 void GameScene::Draw()
 {
+	// 背景（最背面なので一番最初に描く）
+	if (mpBackgroundUI != nullptr)
+	{
+		mpBackgroundUI->DrawBackground();
+	}
+
 	// -- 描画時 -- //
 	DrawStringToHandle(100, 100, "おちんこ祭り！！！",
 		GetColor(255, 255, 255),              // 文字色

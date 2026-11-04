@@ -18,6 +18,4 @@ private:
 
 private:
 	std::vector<std::vector<int>> mStageData;
-
-	
 };
