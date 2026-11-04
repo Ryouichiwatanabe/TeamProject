@@ -48,7 +48,7 @@ void GameScene::Initialize()
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
 	// 画像のロード
-	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smok1e.png", 9, 3, 3);
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke2.png", 4, 2, 2);
 
 	// 画面中央の座標を計算
 	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
@@ -61,10 +61,10 @@ void GameScene::Initialize()
 			screenCenterX,   // X座標（画面中央）
 			screenCenterY,   // Y座標（画面中央）
 			pSmokeData,      // 画像データ
-			0.4f,           // 1コマの表示秒数
+			0.1f,           // 1コマの表示秒数
 			true,            // ★ bIsLoop: true でループ再生
 			false,           // 加算ブレンド
-			2.0f,             // スケール
+			0.5f,             // スケール
 			0.0              // 角度
 		);
 	}
