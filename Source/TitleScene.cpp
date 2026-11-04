@@ -1,4 +1,4 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 // #include <DxLib.h>
 
 #include "UI.h"
@@ -11,68 +11,74 @@
 //#include "FontManager.h"	// FontId
 #include "SoundManager.h"
 
+#include "ScreenConfig.h"	// èƒŒæ™¯ç”»åƒã®æ‹¡ç¸®
+
 void TitleScene::Initialize()
 {
 	auto uiManager = GetUIManager();
 
-	// -- ”wŒi‰æ‘œ -- //
+	// -- èƒŒæ™¯ç”»åƒ -- //
 	mpBackGround = uiManager->CreateUI<UI>();
-	mpBackGround->LoadUIGraph("Resource/UI/Scene_Title/test_background.png");
+	mpBackGround->LoadUIGraph("Resource/UI/Scene_Title/background.png");
 	mpBackGround->SetEnabled(true);
 	mpBackGround->SetLayer(0);
+		// -- æ‹¡ç¸®
+	const VECTOR size = mpBackGround->GetTransform().GetSize();
+	const VECTOR scale = VGet(ScreenConfig::SCREEN_WIDTH / size.x, ScreenConfig::SCREEN_HEIGHT / size.y, 0.0f);
+	mpBackGround->GetTransform().SetScale(scale);
 
-	// -- ƒƒS -- //
-	mpLogo = uiManager->CreateUI<UI>();
-	mpLogo->LoadUIGraph("Resource/UI/Scene_Title/TitleLogo.png");
-	mpLogo->SetEnabled(true);
-	mpLogo->SetLayer(1);
-	mpLogo->GetFloatingMotion().SetActive(true);	// •‚—Vƒ‚[ƒVƒ‡ƒ“‚ð“K—p
-	mpLogo->GetTransform().SetPosition(VGet(0.0f, -200.0f, 0.0f));
+	// -- ãƒ­ã‚´ -- //
+	//mpLogo = uiManager->CreateUI<UI>();
+	//mpLogo->LoadUIGraph("Resource/UI/Scene_Title/TitleLogo.png");
+	//mpLogo->SetEnabled(true);
+	//mpLogo->SetLayer(1);
+	//mpLogo->GetFloatingMotion().SetActive(true);	// æµ®éŠãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é©ç”¨
+	//mpLogo->GetTransform().SetPosition(VGet(0.0f, -200.0f, 0.0f));
 
-	// -- uStartvƒ{ƒ^ƒ“ -- //
+	// -- ã€ŒStartã€ãƒœã‚¿ãƒ³ -- //
 	mpStartButton = uiManager->CreateUI<UI>();
-	mpStartButton->LoadUIGraph("Resource/UI/Scene_Title/StartButton.png");
+	mpStartButton->LoadUIGraph("Resource/UI/Scene_Title/Spoon.png");
 	mpStartButton->SetEnabled(true);
 	mpStartButton->SetLayer(1);
-	mpStartButton->GetHoverScaler().SetActive(true);	// ƒ{ƒ^ƒ“‚Ìƒzƒo[‰‰o‚ð“K—p
+	mpStartButton->GetHoverScaler().SetActive(true);	// ãƒœã‚¿ãƒ³ã®ãƒ›ãƒãƒ¼æ¼”å‡ºã‚’é©ç”¨
 	mpStartButton->GetText().SetFontId(FontId::SubTitle);
-	mpStartButton->GetText().SetColor(GetColor(100, 100, 100));
+	mpStartButton->GetText().SetColor(GetColor(255, 255, 255));
 	mpStartButton->GetText().SetText("Start!");
-	mpStartButton->GetTransform().SetPosition(VGet(0.0f, 100.0f, 0.0f));
+	mpStartButton->GetTransform().SetPosition(VGet(50.0f, 250.0f, 0.0f));
 
-	// -- uQuitvƒ{ƒ^ƒ“ -- //
+	// -- ã€ŒQuitã€ãƒœã‚¿ãƒ³ -- //
 	mpQuitButton = uiManager->CreateUI<UI>();
-	mpQuitButton->LoadUIGraph("Resource/UI/Scene_Title/StartButton.png");
+	mpQuitButton->LoadUIGraph("Resource/UI/Scene_Title/Fork.png");
 	mpQuitButton->SetEnabled(true);
 	mpQuitButton->SetLayer(1);
-	mpQuitButton->GetHoverScaler().SetActive(true);	// ƒ{ƒ^ƒ“‚Ìƒzƒo[‰‰o‚ð“K—p
+	mpQuitButton->GetHoverScaler().SetActive(true);	// ãƒœã‚¿ãƒ³ã®ãƒ›ãƒãƒ¼æ¼”å‡ºã‚’é©ç”¨
 	mpQuitButton->GetText().SetFontId(FontId::SubTitle);
-	mpQuitButton->GetText().SetColor(GetColor(100, 100, 100));
+	mpQuitButton->GetText().SetColor(GetColor(255, 255, 255));
 	mpQuitButton->GetText().SetText("Quit");
-	mpQuitButton->GetTransform().SetPosition(VGet(0.0f, 250.0f, 0.0f));
+	mpQuitButton->GetTransform().SetPosition(VGet(50.0f, 350.0f, 0.0f));
 
-	// -- BGM‚ÌÄ¶ -- //
+	// -- BGMã®å†ç”Ÿ -- //
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
 }
 
 void TitleScene::Update(float _deltaTime)
 {
-	// -- uStartvƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½ê‡ -- //
+	// -- ã€ŒStartã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸå ´åˆ -- //
 	if (mpStartButton != nullptr
 		&& mpStartButton->GetButton().IsClicked()) 
 	{
-		//  Confirm ‚ðÁ”ï‚µA‹¤’Ê‚ÌƒNƒŠƒbƒNSE”»’è‚ðƒXƒLƒbƒv
+		//  Confirm ã‚’æ¶ˆè²»ã—ã€å…±é€šã®ã‚¯ãƒªãƒƒã‚¯SEåˆ¤å®šã‚’ã‚¹ã‚­ãƒƒãƒ—
 		InputManager::GetInstance().ConsumeButton(Button::Confirm);
 		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
 		Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
 	}
 
-	// -- uQuitvƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½ê‡ -- //
+	// -- ã€ŒQuitã€ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸå ´åˆ -- //
 	if (mpQuitButton != nullptr
 		&& mpQuitButton->GetButton().IsClicked())
 	{
-		//  Confirm ‚ðÁ”ï‚µA‹¤’Ê‚ÌƒNƒŠƒbƒNSE”»’è‚ðƒXƒLƒbƒv
+		//  Confirm ã‚’æ¶ˆè²»ã—ã€å…±é€šã®ã‚¯ãƒªãƒƒã‚¯SEåˆ¤å®šã‚’ã‚¹ã‚­ãƒƒãƒ—
 		InputManager::GetInstance().ConsumeButton(Button::Confirm);
 		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 

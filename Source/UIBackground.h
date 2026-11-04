@@ -1,36 +1,35 @@
-#pragma once
+ï»¿#pragma once
 #include "UI.h"
 #include <string>
 
-class Stage;
-
+/* memo :
+* ã‚¹ãƒ†ãƒ¼ã‚¸ç•ªå·ã«å¯¾å¿œã—ãŸèƒŒæ™¯ç”»åƒã‚’æç”»ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+* UIManagerã®æç”»é †ã ã¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚ˆã‚Šæ‰‹å‰ã«æã‹ã‚Œã¦ã—ã¾ã†ãŸã‚ã€
+* Draw()ã§ã¯ä½•ã‚‚ã›ãšã€GameScene::Draw()ã®æœ€åˆã§ DrawBackground() ã‚’å‘¼ã¶ã€‚
+*/
 class UIBackground : public UI
 {
 public:
 	UIBackground() = default;
-	~UIBackground() override; // š = default ‚ğŠO‚µ‚Ä cpp ‘¤‚Å”jŠü‚·‚é
+	~UIBackground() override;
 
 	void Init() override;
 	void Update() override;
-	void Draw() override;
+	void Draw() override;			// UIManagerçµŒç”±ã§ã¯æç”»ã—ãªã„
 
-	// Stage ƒNƒ‰ƒX‚ğó‚¯æ‚Á‚Ä”wŒi‚ğİ’è‚·‚é
-	void SetStage(const Stage* _stage);
-	void SetStage(const Stage& _stage);
+	void DrawBackground();			// GameSceneã‹ã‚‰æœ€èƒŒé¢ã¨ã—ã¦å‘¼ã¶
 
-	// ’¼Ú”Ô†‚ğw’è‚µ‚Äİ’è‚·‚éê‡
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ç•ªå·ã‚’æŒ‡å®šã—ã¦èƒŒæ™¯ã‚’è¨­å®š
 	void SetStageByNumber(int _stageNumber);
 
 	int GetCurrentStageNumber() const { return mnCurrentStageNumber; }
-
-	// ŠO•”‚©‚çƒnƒ“ƒhƒ‹‚ğQÆ‚µ‚½‚¢ê‡—p
 	int GetGraphHandle() const { return mGraphHandle; }
 
 private:
 	std::string BuildBackgroundPath(int _stageNumber) const;
-	void LoadBackgroundGraph(const std::string& _path); // š ‰æ‘œ“Ç‚İ‚İ—p
+	void LoadBackgroundGraph(const std::string& _path);
 
 private:
 	int mnCurrentStageNumber = -1;
-	int mGraphHandle = -1; // ”wŒi‰æ‘œƒnƒ“ƒhƒ‹
+	int mGraphHandle = -1;
 };

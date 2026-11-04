@@ -1,13 +1,21 @@
 ﻿#include "UIBackground.h"
-#include "Stage.h"
 #include "ScreenConfig.h"
 #include <format>
 #include <filesystem>
 #include <DxLib.h>
 
+namespace
+{
+	// ステージ用の背景画像がないときに使う画像
+	constexpr const char* DEFAULT_BG_PATH =
+		"Resource/StageSelect/StageSelectMaterial/Foundation.png";
+
+	// 背景の明るさ（0:真っ黒 ～ 255:通常）
+	constexpr int BG_BRIGHTNESS = 160;
+}
+
 UIBackground::~UIBackground()
 {
-	// シーン破棄時などに画像をメモリから解放
 	if (mGraphHandle != -1)
 	{
 		DeleteGraph(mGraphHandle);
@@ -17,7 +25,6 @@ UIBackground::~UIBackground()
 
 void UIBackground::Init()
 {
-	SetLayer(0);
 	SetEnabled(true);
 }
 
@@ -28,45 +35,31 @@ void UIBackground::Update()
 
 void UIBackground::Draw()
 {
-	if (!IsEnabled())
+	// UIManagerからも呼ばれるが、ここで描くとステージより手前に出てしまう
+	// 描画は DrawBackground() で行う
+}
+
+void UIBackground::DrawBackground()
+{
+	if (!IsEnabled() || mGraphHandle == -1)
 	{
 		return;
 	}
 
-	if (mGraphHandle != -1)
-	{
-		// 1. 描画輝度を下げる（0: 完全な真っ黒 ? 255: 通常の明るさ）
-		// 例: 160?180 程度にすると、手前のブロックやキャラが引き立つ適度な薄暗さになります
-		SetDrawBright(160, 160, 160);
+	// 背景を少し暗くして、手前のブロックやキャラを目立たせる
+	SetDrawBright(BG_BRIGHTNESS, BG_BRIGHTNESS, BG_BRIGHTNESS);
 
-		// 2. 背景の描画
-		DrawExtendGraph(
-			0,
-			0,
-			static_cast<int>(ScreenConfig::SCREEN_WIDTH),
-			static_cast<int>(ScreenConfig::SCREEN_HEIGHT),
-			mGraphHandle,
-			TRUE
-		);
+	DrawExtendGraph(
+		0,
+		0,
+		static_cast<int>(ScreenConfig::SCREEN_WIDTH),
+		static_cast<int>(ScreenConfig::SCREEN_HEIGHT),
+		mGraphHandle,
+		TRUE
+	);
 
-		// 3. ★重要: 他のオブジェクト描画に影響が出ないよう、必ず標準の明るさ（255）に戻す
-		SetDrawBright(255, 255, 255);
-	}
-}
-
-void UIBackground::SetStage(const Stage* _stage)
-{
-	if (!_stage)
-	{
-		return;
-	}
-
-	//SetStageByNumber(_stage->GetStageNumber());
-}
-
-void UIBackground::SetStage(const Stage& _stage)
-{
-	//SetStageByNumber(_stage.GetStageNumber());
+	// 他の描画に影響しないよう必ず戻す
+	SetDrawBright(255, 255, 255);
 }
 
 void UIBackground::SetStageByNumber(int _stageNumber)
@@ -80,32 +73,41 @@ void UIBackground::SetStageByNumber(int _stageNumber)
 
 	const std::string bgFilePath = BuildBackgroundPath(mnCurrentStageNumber);
 
-	// 該当ステージ画像があればロード、なければフォールバック
+	// 該当ステージの画像があればロード、なければデフォルト画像
 	if (std::filesystem::exists(bgFilePath))
 	{
 		LoadBackgroundGraph(bgFilePath);
 	}
 	else
 	{
-		const std::string defaultPath = "Resource/Stage/Foundatin.png";
-		if (std::filesystem::exists(defaultPath))
+		OutputDebugStringA(
+			("背景画像が見つかりません: " + bgFilePath + "\n").c_str()
+		);
+
+		if (std::filesystem::exists(DEFAULT_BG_PATH))
 		{
-			LoadBackgroundGraph(defaultPath);
+			LoadBackgroundGraph(DEFAULT_BG_PATH);
 		}
 	}
 }
 
 void UIBackground::LoadBackgroundGraph(const std::string& _path)
 {
-	// 既に別の画像が読み込まれていた場合は先に解放する
+	// 既に別の画像があれば先に解放
 	if (mGraphHandle != -1)
 	{
 		DeleteGraph(mGraphHandle);
 		mGraphHandle = -1;
 	}
 
-	// 新しい背景画像をロード
 	mGraphHandle = LoadGraph(_path.c_str());
+
+	if (mGraphHandle == -1)
+	{
+		OutputDebugStringA(
+			("背景画像のロードに失敗: " + _path + "\n").c_str()
+		);
+	}
 }
 
 std::string UIBackground::BuildBackgroundPath(int _stageNumber) const
