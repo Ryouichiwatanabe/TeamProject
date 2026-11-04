@@ -3,6 +3,7 @@
 #include "SceneManager.h"
 #include "DxLib.h"
 #include "InputManager.h"
+#include "SoundManager.h"
 #include "StageClearData.h"
 #include "StageSelectData.h"
 #include "CsvLoader.h"
@@ -367,6 +368,10 @@ bool StageSelectScene::IsMouseInsideStageButton(
 
 void StageSelectScene::Finalize()
 {
+	// 終了処理
+
+	// タイトルBGMを停止
+	SoundManager::GetInstance()->StopBGM();
 	if (mBackgroundHandle != -1)
 	{
 		DeleteGraph(mBackgroundHandle);

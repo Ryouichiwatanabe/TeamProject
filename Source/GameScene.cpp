@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "UIManager.h"
 #include "UIBackground.h"
+#include "SoundManager.h"
 #include "StageClearData.h"
 
 //-- Effect --//
@@ -48,7 +49,7 @@ void GameScene::Initialize()
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
 	// 画像のロード
-	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke.png", 9, 3, 3);
+	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke2.png", 4, 2, 2);
 
 	// 画面中央の座標を計算
 	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
@@ -61,10 +62,10 @@ void GameScene::Initialize()
 			screenCenterX,   // X座標（画面中央）
 			screenCenterY,   // Y座標（画面中央）
 			pSmokeData,      // 画像データ
-			0.4f,           // 1コマの表示秒数
+			0.1f,           // 1コマの表示秒数
 			true,            // ★ bIsLoop: true でループ再生
 			false,           // 加算ブレンド
-			2.0f,             // スケール
+			0.5f,             // スケール
 			0.0              // 角度
 		);
 	}
@@ -204,6 +205,9 @@ void GameScene::Initialize()
 	);
 
 	mpPauseUI->SetEnabled(false);
+
+	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
+
 }
 void GameScene::Update(float deltaTime)
 {
@@ -211,6 +215,20 @@ void GameScene::Update(float deltaTime)
 	if (mpEffectManager != nullptr)
 	{
 		mpEffectManager->Update(deltaTime);
+	}
+
+	// SEチェック
+	if (IsPlayingSE)
+	{
+		// SE_GOAL がまだ再生中かどうかをチェック
+		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOAL))
+		{
+			// 再生が終わったら、別のBGMを再生する
+			SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title); // 例としてゲームBGMなど
+
+			// 2回目以降に発火しないようフラグを下ろす
+			IsPlayingSE = false;
+		}
 	}
 
 	// 2. クリア状態の処理
@@ -299,12 +317,20 @@ void GameScene::Update(float deltaTime)
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
 
+		// タイトルBGMを停止
+		SoundManager::GetInstance()->StopBGM();
+
 		// クリアエフェクトの再生
 		if (mpEffectManager != nullptr)
 		{
 			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
 			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
 			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
+
+			// SE
+			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOAL);
+
+			IsPlayingSE = true;
 
 			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
 		}
@@ -418,6 +444,7 @@ void GameScene::SetStageNumber(int _stageNumber)
 
 void GameScene::Finalize()
 {
+
 	//===リソースの開放===//
 	if (StageNumberFontHandle != -1)
 	{

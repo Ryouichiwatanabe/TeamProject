@@ -71,6 +71,9 @@ private:
 
 
     void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
+
+    bool IsPlayingSE = false;
+
 private:
 
     UILabel mStageTextMotion;          // Stage用

@@ -22,6 +22,8 @@
 #include "PlayerMath.h"
 #include "Debug.h"
 
+#include "SoundManager.h"
+
 #include <DxLib.h>
 #include <cmath>
 

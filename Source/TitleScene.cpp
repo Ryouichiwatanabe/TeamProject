@@ -31,6 +31,7 @@ void TitleScene::Initialize()
 	{
 		// ログ出力やエラーハンドリング
 	}
+
 	// タイトルBGMをループ再生 (第2引数の isTop = true で最初から再生)
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
 
@@ -170,8 +171,7 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
-	// タイトルBGMを停止
-	SoundManager::GetInstance()->StopBGM();
+	
 
 	// 画像メモリ解放
 	if (mTitleLogoHandle != -1)

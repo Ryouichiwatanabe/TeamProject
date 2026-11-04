@@ -21,6 +21,8 @@
 #include "GameConfig.h"
 #include "PlayerMath.h"
 
+#include "SoundManager.h"
+
 #include <DxLib.h>
 #include <cmath>
 #include <cfloat>
@@ -165,6 +167,7 @@ void Player::ProcessGroundAndTopple()
 	{
 		SetGroundedState(false);
 		mbIsToppling = false;
+
 		return;
 	}
 

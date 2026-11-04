@@ -6,6 +6,6 @@
 class ScreenConfig
 {
 public:
-	static constexpr float SCREEN_WIDTH = 1920.0f;
-	static constexpr float SCREEN_HEIGHT = 1080.0f;
+	static constexpr float SCREEN_WIDTH = 1980;
+	static constexpr float SCREEN_HEIGHT = 1080;
 };

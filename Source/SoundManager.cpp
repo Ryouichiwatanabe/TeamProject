@@ -40,8 +40,15 @@ void SoundManager::Initialize()
 
 	LoadSE(SOUND_SE::SE_SELECTUI, "Resource/SE/DecisionSE/UISelectSE.mp3");
 	
+	LoadSE(SOUND_SE::SE_FALL, "Resource/SE/MoveSE/FallingSE.mp3");
+
+	LoadSE(SOUND_SE::SE_GOAL, "Resource/SE/JingleSE/FailedSE.mp3");
+
+	LoadSE(SOUND_SE::SE_FAILED, "Resource/SE/JingleSE/FailedSE.mp3");
+
 	//3DBGM
-	LoadBGM(SOUND_BGM::BGM_Title, "Resource/BGM/TitleBGM.mp3");
+	LoadBGM(SOUND_BGM::BGM_Title, "Resource/BGM/Title and Select/TitleBGM.mp3");
+	LoadBGM(SOUND_BGM::BGM_Game, "Resource/BGM/Game/The real thing.mp3");
 	
 }
 
@@ -180,5 +187,17 @@ void SoundManager::StopBGM()
 			}
 		}
 	}
+}
+
+bool SoundManager::IsPlayingSE(SOUND_SE se)
+{
+	for (const auto& pair : mnSeHandleList)
+	{
+		if (pair.first == se)
+		{
+			return CheckSoundMem(pair.second) == 1;
+		}
+	}
+	return false;
 }
 
