@@ -15,7 +15,9 @@ EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
     int nAlpha,
     int nRed,
     int nGreen,
-    int nBlue
+    int nBlue,
+    float fPivotX,
+    float fPivotY
 )
     : EffectBase(fX, fY, (bIsLoop || pData == nullptr) ? 0.0f : (static_cast<float>(pData->allNum) * fFrameDuration))
     , m_pDivData(pData)
@@ -28,6 +30,8 @@ EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
     , m_nRed(std::clamp(nRed, 0, 255))
     , m_nGreen(std::clamp(nGreen, 0, 255))
     , m_nBlue(std::clamp(nBlue, 0, 255))
+    , m_fPivotX(fPivotX)
+    , m_fPivotY(fPivotY)
 {
     if (!m_pDivData || m_pDivData->allNum <= 0)
     {
@@ -37,9 +41,7 @@ EffectSmokeSpriteSheet::EffectSmokeSpriteSheet(
 
 void EffectSmokeSpriteSheet::OnUpdate([[maybe_unused]] float fDeltaTime)
 {
-    // 基底クラス等の更新処理があれば呼ぶ
     EffectBase::OnUpdate(fDeltaTime);
-
 }
 
 void EffectSmokeSpriteSheet::Draw() const
@@ -73,14 +75,30 @@ void EffectSmokeSpriteSheet::Draw() const
         SetDrawBright(m_nRed, m_nGreen, m_nBlue);
     }
 
-    // 2. ブレンドモードの設定（加算または半透明）
+    // 2. ブレンドモードの設定
     const int blendMode = m_bIsAddBlend ? DX_BLENDMODE_ADD : DX_BLENDMODE_ALPHA;
     SetDrawBlendMode(blendMode, m_nAlpha);
 
-    // 3. 描画
-    DrawRotaGraphF(m_fX, m_fY, m_dScale, m_dAngle, currentHandle, TRUE);
+    // 3. 描画（ピボットの有無で分岐）
+    if (m_fPivotX >= 0.0f && m_fPivotY >= 0.0f)
+    {
+        // コマ内の特定ピクセルを m_fX, m_fY に合わせて描画
+        DrawRotaGraph2F(
+            m_fX, m_fY,
+            m_fPivotX, m_fPivotY,
+            m_dScale,
+            m_dAngle,
+            currentHandle,
+            TRUE
+        );
+    }
+    else
+    {
+        // 従来通りの画像幾何学中心基準
+        DrawRotaGraphF(m_fX, m_fY, m_dScale, m_dAngle, currentHandle, TRUE);
+    }
 
-    // 4. 描画ステートのリセット（描画ステート汚染の防止）
+    // 4. 描画ステートのリセット
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     if (bHasCustomColor)
     {

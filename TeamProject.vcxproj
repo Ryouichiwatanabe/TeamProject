@@ -32,6 +32,7 @@
     <ClCompile Include="Source\DisappearingBlock.cpp" />
     <ClCompile Include="Source\EffectClear.cpp" />
     <ClCompile Include="Source\EffectClick.cpp" />
+    <ClCompile Include="Source\EffectFall.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="Source\EffectBase.h" />
     <ClInclude Include="Source\EffectClear.h" />
     <ClInclude Include="Source\EffectClick.h" />
+    <ClInclude Include="Source\EffectFall.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\FadeEffect.h" />
