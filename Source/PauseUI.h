@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "UI.h"
 
@@ -12,26 +12,9 @@ public:
     void Update() override;
     void Draw() override;
 
-    void SetTitleFontHandle(int _fontHandle);
-    void SetMessageFontHandle(int _fontHandle);
-
-    bool IsResumeRequested() const
-    {
-        return mbIsResumeRequested;
-    }
-
-    void ResetResumeRequest()
-    {
-        mbIsResumeRequested = false;
-    }
-
 private:
-    int mTitleFontHandle = -1;
-    int mMessageFontHandle = -1;
-
-    UI* mpResumeUI = nullptr;
-    UI* mpStageSelectUI = nullptr;
-    UI* mpTitleUI = nullptr;
-
-    bool mbIsResumeRequested = false;
+    UI* mpResumeUI = nullptr;       // 「再開」UI
+    UI* mpStageSelectUI = nullptr;  // 「ステージ選択へ」UI
+    UI* mpTitleUI = nullptr;        // 「タイトルへ」UI
+    UI* mpPauseOverlay = nullptr;   // オーバレイ
 };

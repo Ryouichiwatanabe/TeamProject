@@ -1,182 +1,93 @@
 #include "TitleScene.h"
-#include "InputManager.h"
-#include "DxLib.h"
+// #include <DxLib.h>
+
+#include "UI.h"
+#include "UIManager.h"
 
 #include "Master.h"
 #include "SceneManager.h"
 
+#include "InputManager.h"
+//#include "FontManager.h"	// FontId
 #include "SoundManager.h"
-
-TitleScene::TitleScene()
-	: mTitleLogoHandle(-1)
-	, mbPreviousMouseLeft(false)
-	, mbStartSelected(false)
-	, mTitleFloatingMotion(90, 10.0f)
-{
-}
 
 void TitleScene::Initialize()
 {
-	// 初期値: 通常1.0倍, ホバー時1.08倍, クリック時0.94倍
-	mStartScaler.Initialize(1.0f, 1.08f, 0.94f, 20.0f);
+	auto uiManager = GetUIManager();
 
-	// シーンに入った瞬間のマウス状態を記録
-	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
+	// -- 背景画像 -- //
+	mpBackGround = uiManager->CreateUI<UI>();
+	mpBackGround->LoadUIGraph("Resource/UI/Scene_Title/test_background.png");
+	mpBackGround->SetEnabled(true);
+	mpBackGround->SetLayer(0);
 
-	mTitleLogoHandle = LoadGraph("Resource/Logo/TitleLogo.png");
-	mStartTofuHandle = Master::mpResource->LoadGraphics("Resource/UI/Tofu.png");
+	// -- ロゴ -- //
+	mpLogo = uiManager->CreateUI<UI>();
+	mpLogo->LoadUIGraph("Resource/UI/Scene_Title/TitleLogo.png");
+	mpLogo->SetEnabled(true);
+	mpLogo->SetLayer(1);
+	mpLogo->GetFloatingMotion().SetActive(true);	// 浮遊モーションを適用
+	mpLogo->GetTransform().SetPosition(VGet(0.0f, -200.0f, 0.0f));
 
-	// 読み込み失敗の安全対策 (ロード失敗時は -1 が返る)
-	if (mBgGroundHandle == -1)
-	{
-		// ログ出力やエラーハンドリング
-	}
+	// -- 「Start」ボタン -- //
+	mpStartButton = uiManager->CreateUI<UI>();
+	mpStartButton->LoadUIGraph("Resource/UI/Scene_Title/StartButton.png");
+	mpStartButton->SetEnabled(true);
+	mpStartButton->SetLayer(1);
+	mpStartButton->GetHoverScaler().SetActive(true);	// ボタンのホバー演出を適用
+	mpStartButton->GetText().SetFontId(FontId::SubTitle);
+	mpStartButton->GetText().SetColor(GetColor(100, 100, 100));
+	mpStartButton->GetText().SetText("Start!");
+	mpStartButton->GetTransform().SetPosition(VGet(0.0f, 100.0f, 0.0f));
 
-	// タイトルBGMをループ再生 (第2引数の isTop = true で最初から再生)
+	// -- 「Quit」ボタン -- //
+	mpQuitButton = uiManager->CreateUI<UI>();
+	mpQuitButton->LoadUIGraph("Resource/UI/Scene_Title/StartButton.png");
+	mpQuitButton->SetEnabled(true);
+	mpQuitButton->SetLayer(1);
+	mpQuitButton->GetHoverScaler().SetActive(true);	// ボタンのホバー演出を適用
+	mpQuitButton->GetText().SetFontId(FontId::SubTitle);
+	mpQuitButton->GetText().SetColor(GetColor(100, 100, 100));
+	mpQuitButton->GetText().SetText("Quit");
+	mpQuitButton->GetTransform().SetPosition(VGet(0.0f, 250.0f, 0.0f));
+
+	// -- BGMの再生 -- //
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
-
 }
 
 void TitleScene::Update(float _deltaTime)
 {
-	// ふわふわアニメーションの更新
-	mTitleFloatingMotion.Update();
-
-	int mouseX;
-	int mouseY;
-	GetMousePoint(&mouseX, &mouseY);
-
-	const int startX = 500;
-	const int startY = 380;
-	const int startWidth = 280;
-	const int startHeight = 70;
-
-	// STARTボタンの上にマウスがあるか
-	mbStartSelected =
-		mouseX >= startX &&
-		mouseX <= startX + startWidth &&
-		mouseY >= startY &&
-		mouseY <= startY + startHeight;
-
-	// 現在マウス左クリックが押されているか
-	bool currentMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-
-	// スケーラーの更新（ホバー中か、クリック押し込み中かを渡す）
-	mStartScaler.Update(mbStartSelected, currentMouseLeft, _deltaTime);
-
-	// 「押した瞬間」だけ判定
-	bool mouseLeftDown = currentMouseLeft && !mbPreviousMouseLeft;
-
-	if (mbStartSelected && mouseLeftDown)
+	// -- 「Start」ボタンを押した場合 -- //
+	if (mpStartButton != nullptr
+		&& mpStartButton->GetButton().IsClicked()) 
 	{
-
 		//  Confirm を消費し、共通のクリックSE判定をスキップ
 		InputManager::GetInstance().ConsumeButton(Button::Confirm);
-
 		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
-		Master::mpSceneManager->RequestScene(
-			SCENE_TYPE::STAGE_SELECT_SCENE
-		);
+		Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
 	}
 
-	// 前フレームの状態を保存
-	mbPreviousMouseLeft = currentMouseLeft;
+	// -- 「Quit」ボタンを押した場合 -- //
+	if (mpQuitButton != nullptr
+		&& mpQuitButton->GetButton().IsClicked())
+	{
+		//  Confirm を消費し、共通のクリックSE判定をスキップ
+		InputManager::GetInstance().ConsumeButton(Button::Confirm);
+		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
+
+		Master::mpSceneManager->RequestQuit();
+	}
 
 	Scene::Update(_deltaTime);
 }
 
 void TitleScene::Draw()
 {
-	// 背景
-	DrawBox(
-		0, 0,
-		1280, 720,
-		GetColor(217, 198, 143),
-		TRUE
-	);
-
-	// タイトルロゴ描画
-	const int baseLogoX = 270;
-	const int baseLogoY = 100;
-	int drawLogoY = baseLogoY + static_cast<int>(mTitleFloatingMotion.GetOffsetY());
-
-	if (mTitleLogoHandle != -1)
-	{
-		DrawGraph(baseLogoX, drawLogoY, mTitleLogoHandle, TRUE);
-	}
-	else
-	{
-		DrawString(500, drawLogoY, "TITLE", GetColor(255, 255, 255));
-	}
-
-	// --- STARTボタン描画 ---
-	const int startX = 500;
-	const int startY = 380;
-	const int startWidth = 280;
-	const int startHeight = 70;
-
-	// スケーラーから拡縮後の描画矩形を取得
-	int drawLeft, drawTop, drawRight, drawBottom;
-	mStartScaler.CalculateRect(startX, startY, startWidth, startHeight,
-		&drawLeft, &drawTop, &drawRight, &drawBottom);
-
-	if (mStartTofuHandle != -1)
-	{
-		if (mbStartSelected)
-		{
-			// --- ホバー時: 少し暗めの黄色 ---
-			SetDrawBright(180, 180, 180);
-
-			DrawExtendGraph(
-				drawLeft,
-				drawTop,
-				drawRight,
-				drawBottom,
-				mStartTofuHandle,
-				TRUE
-			);
-
-			SetDrawBright(255, 255, 255); // 元の明るさに復帰
-		}
-		else
-		{
-			// --- 通常時: 元の色そのまま ---
-			DrawExtendGraph(
-				drawLeft,
-				drawTop,
-				drawRight,
-				drawBottom,
-				mStartTofuHandle,
-				TRUE
-			);
-		}
-	}
-
-	// ボタンのテキスト（ボタンの中心に合わせて追従）
-	unsigned int textColor = mbStartSelected ? GetColor(180, 140, 0) : GetColor(0, 0, 0);
-	int textX = (drawLeft + drawRight) / 2 - 25;
-	int textY = (drawTop + drawBottom) / 2 - 10;
-
-	DrawString(
-		textX,
-		textY,
-		"START",
-		textColor
-	);
-
 	Scene::Draw();
-
 }
 
 void TitleScene::Finalize()
 {
-	
-
-	// 画像メモリ解放
-	if (mTitleLogoHandle != -1)
-	{
-		DeleteGraph(mTitleLogoHandle);
-		mTitleLogoHandle = -1;
-	}
+	Scene::Finalize();
 }

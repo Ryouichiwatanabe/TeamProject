@@ -60,6 +60,9 @@ public:
 	void Update(float _deltaTime) override;
 	void Draw() override;
 
+	//privateから移動
+	void Respawn();
+	//---------------
 	void UpdatePieceTransforms();			// 全Pieceのワールド座標を Player の姿勢に合わせる
 	VECTOR CalculateCenterOfMass() const;	// 有効Pieceの重心(ワールド座標)
 
@@ -101,7 +104,6 @@ private:
 	void SetupPieces();
 	void CreatePiece(int _column, int _row);
 	void CheckRespawn();
-	void Respawn();
 	void PrintDebugInfo();
 	Transform* GetTransform() const;	// const関数からも使えるTransform取得
 

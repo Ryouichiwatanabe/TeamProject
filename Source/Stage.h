@@ -11,8 +11,6 @@ public:
 	void Load(const std::string& _filename);
 
 	std::string GetCollectibleFilename(int _itemIndex) const;
-
-	int GetStageNumber() const { return mStageNumber; }
 private:
 	void CreateObjects();
 

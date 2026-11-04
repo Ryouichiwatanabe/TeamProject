@@ -1,32 +1,23 @@
 ﻿#include "Cursor.h"
-#include "DxLib.h"
+
+#include "Master.h"
+#include "ResourceManager.h"    // LoadGraph()
+
+#include "InputManager.h"
+#include "Mouse.h"  // GetX(),GetY()
 
 namespace
 {
-    constexpr int offsetX = -10; // �E�B���h�E�g�̑������A���֊񂹂�
-    constexpr int offsetY = -1;  // �e�L�X�g�x�[�X���C���̔�����
-}
-
-Cursor::Cursor()
-{
-}
-
-Cursor::~Cursor()
-{
+    // -- ホットスポットの調整に用いる定数 -- //
+    constexpr int offsetX = -10;
+    constexpr int offsetY = -1;  
 }
 
 void Cursor::Initialize()
 {
-    // Windowsのマウスカーソルを非表示
-    SetMouseDispFlag(FALSE);
-
-    // �J�[�\���摜���ǂݍ���
-    mHandle = LoadGraph("Resource/Cursor4.png");
-}
-
-void Cursor::Update()
-{
-    // 今は特に処理なし
+    mHandle = Master::mpResource->LoadGraphics("Resource/UI/Cursor/Cursor.png");
+    if(mHandle != -1)
+        SetMouseDispFlag(FALSE);    // Windowsのマウスカーソルを非表示
 }
 
 void Cursor::Draw()
@@ -34,14 +25,13 @@ void Cursor::Draw()
     if (mHandle == -1)
         return;
 
-    int mouseX;
-    int mouseY;
-
-    GetMousePoint(&mouseX, &mouseY);
+    const auto& mouse = InputManager::GetInstance().GetMouse();
+    int x = mouse.GetX();
+    int y = mouse.GetY();
 
     DrawGraph(
-        mouseX + offsetX,
-        mouseY + offsetY,
+        x + offsetX,
+        y + offsetY,
         mHandle,
         TRUE
     );
@@ -49,12 +39,5 @@ void Cursor::Draw()
 
 void Cursor::Finalize()
 {
-    if (mHandle != -1)
-    {
-        DeleteGraph(mHandle);
-        mHandle = -1;
-    }
-
-    // Windowsのマウスカーソルを再表示
-    SetMouseDispFlag(TRUE);
+    SetMouseDispFlag(TRUE); // Windowsのマウスカーソルを再表示
 }

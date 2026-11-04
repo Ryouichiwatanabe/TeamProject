@@ -32,6 +32,7 @@
     <ClCompile Include="Source\DisappearingBlock.cpp" />
     <ClCompile Include="Source\EffectClear.cpp" />
     <ClCompile Include="Source\EffectClick.cpp" />
+    <ClCompile Include="Source\EffectFall.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />
@@ -66,6 +67,8 @@
     <ClCompile Include="Source\Spike.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
+    <ClCompile Include="Source\StageClearData.cpp" />
+    <ClCompile Include="Source\StageSelectData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
@@ -73,6 +76,7 @@
     <ClCompile Include="Source\UI.cpp" />
     <ClCompile Include="Source\UIBackground.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
+    <ClCompile Include="Source\UIFloatingMotion.cpp" />
     <ClCompile Include="Source\UIGraphic.cpp" />
     <ClCompile Include="Source\UIHoverScaler.cpp" />
     <ClCompile Include="Source\UIManager.cpp" />
@@ -95,13 +99,12 @@
     <ClInclude Include="Source\EffectBase.h" />
     <ClInclude Include="Source\EffectClear.h" />
     <ClInclude Include="Source\EffectClick.h" />
+    <ClInclude Include="Source\EffectFall.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
-    <ClInclude Include="Source\FakePlayer.h" />
-    <ClInclude Include="Source\FakePlayerController.h" />
-    <ClInclude Include="Source\FloatingMotion.h" />
+    <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />
     <ClInclude Include="Source\GameConfig.h" />
@@ -128,15 +131,17 @@
     <ClInclude Include="Source\ResourceManager.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />
+    <ClInclude Include="Source\SceneTransition.h" />
     <ClInclude Include="Source\ScreenConfig.h" />
     <ClInclude Include="Source\SoundManager.h" />
     <ClInclude Include="Source\Spike.h" />
     <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StageBlock.h" />
+    <ClInclude Include="Source\StageClearData.h" />
+    <ClInclude Include="Source\StageSelectData.h" />
     <ClInclude Include="Source\StageSelectScene.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
-    <ClInclude Include="Source\TextRenderer.h" />
     <ClInclude Include="Source\TitleScene.h" />
     <ClInclude Include="Source\UIBackground.h" />
     <ClInclude Include="Source\UITypewriterText.h" />
@@ -144,7 +149,6 @@
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />
     <ClInclude Include="Source\UIHoverScaler.h" />
-    <ClInclude Include="Source\UILabel.h" />
     <ClInclude Include="Source\UIManager.h" />
     <ClInclude Include="Source\UIText.h" />
     <ClInclude Include="Source\UITransform.h" />

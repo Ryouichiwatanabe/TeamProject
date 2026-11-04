@@ -1,50 +1,13 @@
-#include "UIHoverScaler.h"
+ï»¿#include "UIHoverScaler.h"
+#include "UI.h"
 
-UIHoverScaler::UIHoverScaler()
-    : mNormalScale(1.0f)
-    , mHoverScale(1.08f)
-    , mPressScale(0.94f)
-    , mLerpSpeed(18.0f)
-    , mCurrentScale(1.0f)
+void UIHoverScaler::Update()
 {
-}
+    if (!mbActive || mpUI == nullptr) return;
 
-void UIHoverScaler::Initialize(float normalScale, float hoverScale, float pressScale, float lerpSpeed)
-{
-    mNormalScale = normalScale;
-    mHoverScale = hoverScale;
-    mPressScale = pressScale;
-    mLerpSpeed = lerpSpeed;
-    mCurrentScale = normalScale;
-}
+    const bool  isHovered = mpUI->GetButton().IsMouseInside();
+    const float target = isHovered ? mfHoverScale : 1.0f;
 
-void UIHoverScaler::Update(bool isHovered, bool isPressed, float deltaTime)
-{
-    // ó‘Ô‚É‰‚¶‚½–Ú•WƒXƒP[ƒ‹‚ğŒˆ’è
-    float targetScale = mNormalScale;
-
-    if (isHovered)
-    {
-        // ƒzƒo[’†‚ÅƒNƒŠƒbƒN’†‚È‚çuk¬i‚Ö‚±‚ŞjvAƒzƒo[‚Ì‚İ‚È‚çuŠg‘åv
-        targetScale = isPressed ? mPressScale : mHoverScale;
-    }
-
-    // üŒ`•âŠÔiLerpj‚Å–Ú•WƒXƒP[ƒ‹‚ÖŠŠ‚ç‚©‚É‘JˆÚ
-    mCurrentScale += (targetScale - mCurrentScale) * (mLerpSpeed * deltaTime);
-}
-
-void UIHoverScaler::CalculateRect(int baseLeft, int baseTop, int baseWidth, int baseHeight,
-    int* outLeft, int* outTop, int* outRight, int* outBottom) const
-{
-    // ’†S‚ğŠî€‚É‚µ‚ÄŠO‘¤E“à‘¤‚ÖLk
-    float halfWidth = (baseWidth * mCurrentScale) * 0.5f;
-    float halfHeight = (baseHeight * mCurrentScale) * 0.5f;
-
-    float centerX = baseLeft + (baseWidth * 0.5f);
-    float centerY = baseTop + (baseHeight * 0.5f);
-
-    if (outLeft)   *outLeft = static_cast<int>(centerX - halfWidth);
-    if (outTop)    *outTop = static_cast<int>(centerY - halfHeight);
-    if (outRight)  *outRight = static_cast<int>(centerX + halfWidth);
-    if (outBottom) *outBottom = static_cast<int>(centerY + halfHeight);
+    // Todo : deltaTimeå¯¾å¿œ(ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¬ãƒ¼ãƒˆã«ä¾å­˜ã—ãªã„è£œé–“ã«ã™ã‚‹)
+    mfCurrentScale += (target - mfCurrentScale) * mfLerpRate;
 }

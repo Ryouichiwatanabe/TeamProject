@@ -7,6 +7,7 @@
 #include "UIManager.h"
 #include "UIBackground.h"
 #include "SoundManager.h"
+#include "StageClearData.h"
 
 //-- Effect --//
 #include "EffectClear.h"
@@ -15,7 +16,6 @@
 // -- GameObject -- //
 #include "Stage.h"
 #include "Player.h"
-#include "FakePlayer.h" // デバック用
 #include "StageBlock.h"
 #include "MovingBlock.h"
 
@@ -47,27 +47,13 @@ void GameScene::Initialize()
 
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
-	// 画像のロード
-	auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke2.png", 4, 2, 2);
+	
 
 	// 画面中央の座標を計算
 	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
 	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
 
-	// 画面中央で常にループ再生
-	if (pSmokeData != nullptr)
-	{
-		mpEffectManager->Play<EffectSmokeSpriteSheet>(
-			screenCenterX,   // X座標（画面中央）
-			screenCenterY,   // Y座標（画面中央）
-			pSmokeData,      // 画像データ
-			0.1f,           // 1コマの表示秒数
-			true,            // ★ bIsLoop: true でループ再生
-			false,           // 加算ブレンド
-			0.5f,             // スケール
-			0.0              // 角度
-		);
-	}
+	
 	// 初期化処理
 	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
 	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
@@ -122,17 +108,16 @@ void GameScene::Initialize()
 
 
 	//Stage文字ラベルの初期化
-	std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
-	FloatingMotion stageMotion(120, 15.0f);
-	mStageTextMotion = UILabel(10, 10, stageText, GetColor(0, 0, 0), StageNumberFontHandle,stageMotion);
+	/*std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
+	FloatingMotion stageMotion(120, 15.0f);*/
 
 
 	//Typewriter
-	mMessageMotion = FloatingMotion(90, 4.0f);
+	//mMessageMotion = FloatingMotion(90, 4.0f);
 	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
 	mbIsMessageActive = true;//メッセージ表示開始
 
-	mClearTextMotion = FloatingMotion(120, 5.0f);
+	// mClearTextMotion = FloatingMotion(120, 5.0f);
 
    /* auto* fakePlayer = 
         this
@@ -194,15 +179,6 @@ void GameScene::Initialize()
 	mpPauseUI =
 		this->GetUIManager()
 		->CreateUI<PauseUI>();
-
-	mpPauseUI->SetTitleFontHandle(
-		StageNumberFontHandle
-	);
-
-	mpPauseUI->SetMessageFontHandle(
-		mMessageFontHandle
-	);
-
 	mpPauseUI->SetEnabled(false);
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
@@ -240,15 +216,11 @@ void GameScene::Update(float deltaTime)
 		return;
 	}
 
-	UpdatePause();
-
-	if (mbIsPaused)
-	{
+	// -- Pauseの処理 -- //
+	UpdatePauseInput();
+	if (mpPauseUI->IsEnabled())
 		deltaTime = 0.0f;
-	}
-
-	//==通常時：ステージ番号の文字を更新==//
-	mStageTextMotion.Update();
+	
 
 	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
 	UpdateShapeUIToggle();
@@ -285,9 +257,34 @@ void GameScene::Update(float deltaTime)
 		}
 	}
 
-	if (mpGoal != nullptr &&
-		mpGoal->IsPlayerTouching())
+	bool isAllCollected =
+		mbIsCollectibleCollected[0] &&
+		mbIsCollectibleCollected[1] &&
+		mbIsCollectibleCollected[2];
+
+	if (isAllCollected)
 	{
+		StageClearData::SetStageCleared(
+			mnStageNumber,
+			true
+		);
+	}
+
+	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
+	{
+		bool isAllCollected =
+			mbIsCollectibleCollected[0] &&
+			mbIsCollectibleCollected[1] &&
+			mbIsCollectibleCollected[2];
+
+		if (isAllCollected)
+		{
+			StageClearData::SetStageCleared(
+				mnStageNumber,
+				true
+			);
+		}
+
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
 
@@ -317,15 +314,11 @@ void GameScene::Update(float deltaTime)
 
 void GameScene::Draw()
 {
-  /*  DrawBox(
-        0, 0,
-        1280, 720,
-        GetColor(217, 198, 143),
-        TRUE
-    );*/
-	//Stage文字描画
-	mStageTextMotion.Draw();
-
+	// -- 描画時 -- //
+	DrawStringToHandle(100, 100, "おちんこ祭り！！！",
+		GetColor(255, 255, 255),              // 文字色
+		Master::mpFontManager->GetHandle(FontId::Title),
+		GetColor(0, 0, 0));                   // 縁の色
 
     Debug::Print(
         "InputMode : ",
@@ -334,31 +327,6 @@ void GameScene::Draw()
 
     Debug::Draw();
     Scene::Draw();
-
-
-	// ★ メッセージウィンドウ描画
-/*	if (mbIsMessageActive)
-	{
-		// 背景の半透明黒帯ウィンドウ
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
-		DrawBox(140, 520, 1140, 680, GetColor(0, 0, 0), TRUE);
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-		// ウィンドウの外枠
-		DrawBox(140, 520, 1140, 680, GetColor(255, 255, 255), FALSE);
-
-		//TypeWriter用
-		int offsetY = static_cast<int>(mMessageMotion.GetOffsetY());
-
-		// 文字の描画（PixelMplus10 フォントを適用）
-		mTypewriter.Draw(170, 550 + offsetY, GetColor(255, 255, 255), mMessageFontHandle);
-
-		// 読み終えて次に進める合図（点滅アイコンなど）
-		if (mTypewriter.IsFinished())
-		{
-			DrawString(1100, 640, "▼", GetColor(255, 255, 255));
-		}
-	}*/
 
 	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
 	if (mpEffectManager != nullptr)
@@ -393,22 +361,10 @@ void GameScene::UpdateClear()
 	}
 }
 
-void GameScene::UpdatePause()
+void GameScene::UpdatePauseInput()
 {
-	if (InputManager::GetInstance()
-		.GetButtonDown(Button::Pause))
-	{
-		mbIsPaused = !mbIsPaused;
-	}
-
-	if (mbIsPaused &&
-		mpPauseUI->IsResumeRequested())
-	{
-		mbIsPaused = false;
-		mpPauseUI->ResetResumeRequest();
-	}
-
-	mpPauseUI->SetEnabled(mbIsPaused);
+	if (InputManager::GetInstance().GetButtonDown(Button::Pause))
+		mpPauseUI->ToggleEnabled();
 }
 
 void GameScene::SetStageNumber(int _stageNumber)

@@ -27,6 +27,13 @@
 #include <cmath>
 #include <cfloat>
 
+#include "EffectManager.h"
+#include "EffectFall.h"
+
+#include "Master.h"
+#include "Scene.h"
+
+
 namespace
 {
 	constexpr float RIGHT_ANGLE = DX_PI_F / 2.0f;		// 90度
@@ -280,6 +287,24 @@ void Player::Topple(const std::vector<PieceContact>& _groundContacts)
 
 void Player::SetGroundedState(bool _grounded)
 {
+
+	if (!mbIsGrounded && _grounded)
+	{
+		auto transform = GetTransform();
+		if (transform)
+		{
+			const VECTOR pos = transform->GetPosition();
+			const float apawnX = pos.x;
+			const float spawnY = pos.y + (GameConfig::CELL_SIZE * 0.5f);
+
+			const VECTOR position = this->GetModule<Transform>()->GetPosition();
+			const VECTOR offset = VGet(0.0f, 20.0f, 0.0f);
+			VECTOR playPos = VAdd(position, offset);
+			Master::mpSceneManager->GetCurrentScene()->GetEffectManager()->Play<EffectFall>(playPos.x, playPos.y);
+		}
+
+
+	}
 	mbIsGrounded = _grounded;
 
 	if (auto gravity = GetModule<Gravity>())
