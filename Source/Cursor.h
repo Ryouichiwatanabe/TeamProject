@@ -3,13 +3,12 @@
 class Cursor
 {
 public:
-    Cursor();
-    ~Cursor();
+    Cursor() = default;
+    ~Cursor() = default;
 
-    void Initialize();
-    void Update();
-    void Draw();
-    void Finalize();
+    void Initialize();  // 画像のロード & デフォルトカーソルを非表示
+    void Draw();        // カーソルの描画
+    void Finalize();    
 
 private:
     int mHandle = -1;

@@ -5,6 +5,8 @@
 #include "UIGraphic.h"
 #include "UIText.h"
 #include "UIButton.h"
+#include "UIHoverScaler.h"
+#include "UIFloatingMotion.h"
 
 #include <vector>
 #include <string>	// filenameの指定用
@@ -42,6 +44,8 @@ public:
 	UIGraphic& GetGraphic() { return mGraphic; }
 	UIText& GetText() { return mText; }
 	UIButton& GetButton() { return mButton; }
+	UIHoverScaler& GetHoverScaler() { return mHoverScaler; }
+	UIFloatingMotion& GetFloatingMotion() { return mFloatingMotion; }
 
 	// -- Managerの取得 -- //
 	UIManager* GetUIManager() { return mpUIManager; }
@@ -60,6 +64,8 @@ private:
 	UIGraphic mGraphic;
 	UIText mText;
 	UIButton mButton;
+	UIHoverScaler mHoverScaler;
+	UIFloatingMotion mFloatingMotion;
 
 	bool mbIsEnabled = false;
 

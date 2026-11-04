@@ -88,16 +88,15 @@ void Scene::Update(float _deltaTime)
 void Scene::Draw()
 {
 
-	if (mpUIManager != nullptr)
-	{
-		mpUIManager->Draw();
-	}
-
 	if (mpObjectManager != nullptr)
 	{
 		mpObjectManager->Draw();
 	}
 
+	if (mpUIManager != nullptr)
+	{
+		mpUIManager->Draw();
+	}
 	
 	if (mpEffectManager != nullptr)
 	{

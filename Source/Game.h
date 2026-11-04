@@ -47,7 +47,6 @@ private:
     ResourceManager   m_resourceManager{};
     FontManager       m_fontManager{};
     SceneManager      m_sceneManager{};
+
     Cursor            m_cursor{};
-    Mouse             m_mouse{};
-  
 };

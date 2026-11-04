@@ -2,7 +2,6 @@
 #include "EffectBase.h"
 #include <algorithm>
 
-// 前方宣言（定義元ヘッダーを直接 include しても構いません）
 struct DivGraphData;
 
 class EffectSmokeSpriteSheet : public EffectBase
@@ -20,7 +19,9 @@ public:
         int nAlpha = 255,
         int nRed = 255,
         int nGreen = 255,
-        int nBlue = 255
+        int nBlue = 255,
+        float fPivotX = -1.0f, // 負の値の場合は画像中心を使用
+        float fPivotY = -1.0f
     );
 
     virtual ~EffectSmokeSpriteSheet() override = default;
@@ -36,8 +37,15 @@ public:
         m_nBlue = std::clamp(nBlue, 0, 255);
     }
 
+    // コマ内の回転・配置基準点（ローカル座標）を設定
+    void SetPivot(float fPivotX, float fPivotY)
+    {
+        m_fPivotX = fPivotX;
+        m_fPivotY = fPivotY;
+    }
+
 private:
-    const DivGraphData* m_pDivData{ nullptr }; // ここが認識されていないと m_pDivData 関連のエラーになる
+    const DivGraphData* m_pDivData{ nullptr };
     float  m_fFrameDuration{ 0.1f };
     bool   m_bIsLoop{ false };
     bool   m_bIsAddBlend{ false };
@@ -48,4 +56,8 @@ private:
     int m_nRed{ 255 };
     int m_nGreen{ 255 };
     int m_nBlue{ 255 };
+
+    // ピボット（コマ内基準座標）。負値なら画像中央
+    float m_fPivotX{ -1.0f };
+    float m_fPivotY{ -1.0f };
 };

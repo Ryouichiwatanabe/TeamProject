@@ -47,10 +47,10 @@ void StageSelectScene::Initialize()
 
 void StageSelectScene::Update(float _deltaTime)
 {
-	if (Master::mpSceneManager->IsChangingScene())
+	/*if (Master::mpSceneManager->IsChangingScene())
 	{
 		return;
-	}
+	}*/
 
 	int mouseX = 0;
 	int mouseY = 0;

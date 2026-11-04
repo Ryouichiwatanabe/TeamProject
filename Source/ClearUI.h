@@ -1,7 +1,7 @@
 #pragma once
 
 #include "UI.h"
-#include "FloatingMotion.h"
+#include "UIFloatingMotion.h"
 
 #include <string>
 
@@ -38,7 +38,7 @@ private:
 
     float mfItemTimer = 0.0f;
 
-    FloatingMotion mClearTextMotion;
+    // FloatingMotion mClearTextMotion;
 
     UI* mpStageSelectUI = nullptr;
 };
