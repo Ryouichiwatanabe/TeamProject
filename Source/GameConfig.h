@@ -8,7 +8,8 @@
 class GameConfig
 {
 public:
-	static constexpr float CELL_SIZE = ScreenConfig::SCREEN_HEIGHT / 9.0f;	// マスの大きさ(例 1.0fの場合、1.0f × 1.0fのマス目になる)
+	// static constexpr float CELL_SIZE = ScreenConfig::SCREEN_HEIGHT / 9.0f;	// マスの大きさ(例 1.0fの場合、1.0f × 1.0fのマス目になる)
+	static constexpr float CELL_SIZE = 100.0f;	// マスの大きさ(例 1.0fの場合、1.0f × 1.0fのマス目になる)
 
 	static constexpr int PLAYER_PIECE_SIZE = 3;	
 
@@ -17,7 +18,7 @@ public:
 
 	// -- ステージ・アイテム -- //
 	static constexpr int STAGE_COUNT = 8;                                   // ステージ総数
-	static constexpr int MAX_ITEMS_PER_STAGE = 3;                                   // 1ステージのアイテム上限
+	static constexpr int MAX_ITEMS_PER_STAGE = 3;                           // 1ステージのアイテム上限
 
 	// -- 物理・回転・倒れ込み用定数 -- //
 	static constexpr float ALLOWED_PENETRATION = CELL_SIZE * 0.1f;	// 回転判定における許容めり込み量
