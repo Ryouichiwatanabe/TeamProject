@@ -245,7 +245,15 @@ void GameScene::Update(float deltaTime)
 
 		if (collectible->IsPickedUp())
 		{
+			// 現在のステージ内でアイテムを取得済みにする
 			mbIsCollectibleCollected[itemIndex] = true;
+
+			// ステージ選択画面でも取得状態を確認できるように保存する
+			StageClearData::SetItemCollected(
+				mnStageNumber,
+				itemIndex,
+				true
+			);
 		}
 	}
 
