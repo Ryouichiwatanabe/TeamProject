@@ -196,7 +196,7 @@ void GameScene::Update(float deltaTime)
 	if (IsPlayingSE)
 	{
 		// SE_GOAL がまだ再生中かどうかをチェック
-		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOAL))
+		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOALVOICE))
 		{
 			// 再生が終わったら、別のBGMを再生する
 			SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title); // 例としてゲームBGMなど
@@ -245,7 +245,15 @@ void GameScene::Update(float deltaTime)
 
 		if (collectible->IsPickedUp())
 		{
+			// 現在のステージ内でアイテムを取得済みにする
 			mbIsCollectibleCollected[itemIndex] = true;
+
+			// ステージ選択画面でも取得状態を確認できるように保存する
+			StageClearData::SetItemCollected(
+				mnStageNumber,
+				itemIndex,
+				true
+			);
 		}
 	}
 
@@ -299,7 +307,7 @@ void GameScene::Update(float deltaTime)
 			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
 
 			// SE
-			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOAL);
+			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOALVOICE);
 
 			IsPlayingSE = true;
 

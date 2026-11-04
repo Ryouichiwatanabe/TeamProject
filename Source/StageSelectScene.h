@@ -58,4 +58,11 @@ private:
         int _mouseX,
         int _mouseY
     );
+
+    // 各ステージの各アイテム画像を保持する
+    // [ステージ番号 - 1][アイテム番号]
+    int mCollectibleHandles[8][3] = {};
+
+    // ステージ選択画面に取得済みアイテムを表示する
+    void DrawStageCollectibleImages();
 };

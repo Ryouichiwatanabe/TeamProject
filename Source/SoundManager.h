@@ -26,6 +26,7 @@ public:     // enum, struct ‚È‚Ç‚Ì’è‹`
 		SE_FALL = 3,
 		SE_GOAL = 4,
 		SE_FAILED = 5,
+		SE_GOALVOICE = 6
 
 	};
 
