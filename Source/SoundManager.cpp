@@ -46,6 +46,8 @@ void SoundManager::Initialize()
 
 	LoadSE(SOUND_SE::SE_FAILED, "Resource/SE/JingleSE/FailedSE.mp3");
 
+	LoadSE(SOUND_SE::SE_GOALVOICE, "Resource/SE/WE_SOUND.mp3");
+
 	//3DBGM
 	LoadBGM(SOUND_BGM::BGM_Title, "Resource/BGM/Title and Select/TitleBGM.mp3");
 	LoadBGM(SOUND_BGM::BGM_Game, "Resource/BGM/Game/The real thing.mp3");
