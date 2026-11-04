@@ -7,6 +7,7 @@
 #include "UIManager.h"
 #include "UIBackground.h"
 #include "SoundManager.h"
+#include "StageClearData.h"
 
 //-- Effect --//
 #include "EffectClear.h"
@@ -285,9 +286,34 @@ void GameScene::Update(float deltaTime)
 		}
 	}
 
-	if (mpGoal != nullptr &&
-		mpGoal->IsPlayerTouching())
+	bool isAllCollected =
+		mbIsCollectibleCollected[0] &&
+		mbIsCollectibleCollected[1] &&
+		mbIsCollectibleCollected[2];
+
+	if (isAllCollected)
 	{
+		StageClearData::SetStageCleared(
+			mnStageNumber,
+			true
+		);
+	}
+
+	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
+	{
+		bool isAllCollected =
+			mbIsCollectibleCollected[0] &&
+			mbIsCollectibleCollected[1] &&
+			mbIsCollectibleCollected[2];
+
+		if (isAllCollected)
+		{
+			StageClearData::SetStageCleared(
+				mnStageNumber,
+				true
+			);
+		}
+
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
 

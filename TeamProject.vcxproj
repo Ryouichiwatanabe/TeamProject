@@ -66,6 +66,8 @@
     <ClCompile Include="Source\Spike.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
+    <ClCompile Include="Source\StageClearData.cpp" />
+    <ClCompile Include="Source\StageSelectData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
@@ -133,6 +135,8 @@
     <ClInclude Include="Source\Spike.h" />
     <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StageBlock.h" />
+    <ClInclude Include="Source\StageClearData.h" />
+    <ClInclude Include="Source\StageSelectData.h" />
     <ClInclude Include="Source\StageSelectScene.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
