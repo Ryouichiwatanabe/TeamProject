@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "UIManager.h"
 #include "UIBackground.h"
+#include "StageClearData.h"
 
 //-- Effect --//
 #include "EffectClear.h"
@@ -267,32 +268,34 @@ void GameScene::Update(float deltaTime)
 		}
 	}
 
-	for (auto collectible : collectibles)
+	bool isAllCollected =
+		mbIsCollectibleCollected[0] &&
+		mbIsCollectibleCollected[1] &&
+		mbIsCollectibleCollected[2];
+
+	if (isAllCollected)
 	{
-		int itemIndex = collectible->GetItemIndex();
-
-		if (itemIndex < 0 || itemIndex >= 3)
-		{
-			continue;
-		}
-
-		if (collectible->IsPickedUp())
-		{
-			mbIsCollectibleCollected[itemIndex] = true;
-		}
+		StageClearData::SetStageCleared(
+			mnStageNumber,
+			true
+		);
 	}
 
-	for (int i = 0; i < 3; i++)
+	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
 	{
-		if (mbIsCollectibleCollected[i])
-		{
-			mpCollectibleIconUI[i]->SetCollected(true);
-		}
-	}
+		bool isAllCollected =
+			mbIsCollectibleCollected[0] &&
+			mbIsCollectibleCollected[1] &&
+			mbIsCollectibleCollected[2];
 
-	if (mpGoal != nullptr &&
-		mpGoal->IsPlayerTouching())
-	{
+		if (isAllCollected)
+		{
+			StageClearData::SetStageCleared(
+				mnStageNumber,
+				true
+			);
+		}
+
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
 
