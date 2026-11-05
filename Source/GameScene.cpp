@@ -322,18 +322,7 @@ void GameScene::Draw()
 		mpBackgroundUI->DrawBackground();
 	}
 
-	// -- 描画時 -- //
-	DrawStringToHandle(100, 100, "おちんこ祭り！！！",
-		GetColor(255, 255, 255),              // 文字色
-		Master::mpFontManager->GetHandle(FontId::Title),
-		GetColor(0, 0, 0));                   // 縁の色
-
-    Debug::Print(
-        "InputMode : ",
-        static_cast<int>(InputManager::GetInstance().GetInputMode())
-    );
-
-    Debug::Draw();
+    // Debug::Draw();
     Scene::Draw();
 
 	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
