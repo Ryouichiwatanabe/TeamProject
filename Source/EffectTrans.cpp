@@ -9,143 +9,99 @@ EffectTrans::EffectTrans(float fX, float fY, float fOutwardAngleRad)
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    const float halfEdge = GameConfig::CELL_SIZE * 0.45f;
+    const float halfEdge = GameConfig::CELL_SIZE * 0.38f;
     std::uniform_real_distribution<float> distAlongEdge(-halfEdge, halfEdge);
 
-    // 外向きにパァン！と広がる角度
-    std::uniform_real_distribution<float> distAngleOffset(-0.85f, 0.85f);
+    // 外向きに豪快に広がる角度
+    std::uniform_real_distribution<float> distAngleOffset(-0.75f, 0.75f);
 
-    // 気持ちよく弾け飛ぶスピード (240?480 px/s)
-    std::uniform_real_distribution<float> distSpeed(240.0f, 480.0f);
+    // ドカン！と力強く吹き飛ぶ初速 (350?650 px/s)
+    std::uniform_real_distribution<float> distSpeed(350.0f, 650.0f);
 
-    // 1ドットのサイズ（3px または 4px → 星全体で 27px?36px の上品なサイズ）
-    std::uniform_int_distribution<int> distDotSize(3, 4);
+    // ★細かい粒は一切なし！ 半径16px?26px（全体で32px?52px）の特大サイズのみ！
+    std::uniform_real_distribution<float> distHalfSize(16.0f, 26.0f);
 
     const float edgeDirX = -std::sin(fOutwardAngleRad);
     const float edgeDirY = std::cos(fOutwardAngleRad);
 
-    m_particles.reserve(PARTICLE_COUNT);
+    m_chunks.reserve(CHUNK_COUNT);
 
-    for (int i = 0; i < PARTICLE_COUNT; ++i)
+    for (int i = 0; i < CHUNK_COUNT; ++i)
     {
         const float edgeOffset = distAlongEdge(gen);
         const float flyAngle = fOutwardAngleRad + distAngleOffset(gen);
         const float speed = distSpeed(gen);
 
-        TofuStarParticle p;
-        p.fX = m_fX + edgeDirX * edgeOffset;
-        p.fY = m_fY + edgeDirY * edgeOffset;
-        p.fVelocityX = std::cos(flyAngle) * speed;
-        p.fVelocityY = std::sin(flyAngle) * speed;
-        p.nDotSize = distDotSize(gen);
-        p.nColorType = i % 4;
-        p.nAnimOffset = i;
-        p.bIsMiniTofu = (i % 3 == 1); // 3個に1個は「ミニ豆腐キューブ」、残りは「ドット絵の星」
+        BigTofuChunk chunk;
+        chunk.fX = m_fX + edgeDirX * edgeOffset;
+        chunk.fY = m_fY + edgeDirY * edgeOffset;
+        chunk.fVelocityX = std::cos(flyAngle) * speed;
+        chunk.fVelocityY = std::sin(flyAngle) * speed - 50.0f;
+        chunk.fBaseHalfSize = distHalfSize(gen);
+        chunk.nColorType = i % 3;
 
-        m_particles.emplace_back(p);
+        m_chunks.emplace_back(chunk);
     }
 }
 
 void EffectTrans::OnUpdate(float fDeltaTime)
 {
-    for (auto& p : m_particles)
+    for (auto& chunk : m_chunks)
     {
-        p.fX += p.fVelocityX * fDeltaTime;
-        p.fY += p.fVelocityY * fDeltaTime;
+        chunk.fX += chunk.fVelocityX * fDeltaTime;
+        chunk.fY += chunk.fVelocityY * fDeltaTime;
 
-        // 最初にパァン！と広がり、空中でふわっと減速する
-        const float drag = std::pow(0.86f, fDeltaTime * 60.0f);
-        p.fVelocityX *= drag;
-        p.fVelocityY *= drag;
+        // ドカンと飛び出してキュッと止まる力強い減速
+        const float drag = std::pow(0.83f, fDeltaTime * 60.0f);
+        chunk.fVelocityX *= drag;
+        chunk.fVelocityY *= drag;
 
-        // 軽い重力でコロンと落ちる
-        p.fVelocityY += 180.0f * fDeltaTime;
+        // 重力でゴロンと落ちる
+        chunk.fVelocityY += 450.0f * fDeltaTime;
     }
 }
 
-// 9×9 マスの繊細でかわいいドット絵スターを描く関数
-void EffectTrans::DrawPixelStar(int cx, int cy, int dotSize, int pattern, unsigned int mainCol, unsigned int edgeCol, unsigned int hiCol)
+// 太い輪郭と立体的な影がついた「特大の豆腐ブロック（四角）」を描く関数
+void EffectTrans::DrawBigTofuBlock(int cx, int cy, int halfSize, int colorType)
 {
-    // 0:透明, 1:やさしい茶フチ, 2:メイン色(豆腐・大豆・水色), 3:純白ハイライト
-    static constexpr int STAR_A[9][9] = {
-        { 0, 0, 0, 0, 1, 0, 0, 0, 0 },
-        { 0, 0, 0, 1, 2, 1, 0, 0, 0 },
-        { 0, 0, 1, 2, 3, 2, 1, 0, 0 },
-        { 0, 1, 2, 3, 3, 3, 2, 1, 0 },
-        { 1, 2, 3, 3, 3, 3, 3, 2, 1 },
-        { 0, 1, 2, 3, 3, 3, 2, 1, 0 },
-        { 0, 0, 1, 2, 3, 2, 1, 0, 0 },
-        { 0, 0, 0, 1, 2, 1, 0, 0, 0 },
-        { 0, 0, 0, 0, 1, 0, 0, 0, 0 }
+    if (halfSize < 4) return;
+
+    // 豆腐の3色バリエーション（すべて落ち着いた豆腐色）
+    const unsigned int mainColors[3] = {
+        GetColor(248, 244, 230), // 絹ごし豆腐色
+        GetColor(240, 232, 210), // 木綿豆腐色
+        GetColor(245, 228, 190)  // 大豆クリーム色
     };
-
-    // 斜めきらめき付きの星パターン
-    static constexpr int STAR_B[9][9] = {
-        { 0, 0, 0, 0, 1, 0, 0, 0, 0 },
-        { 0, 1, 0, 1, 2, 1, 0, 1, 0 },
-        { 0, 0, 2, 2, 3, 2, 2, 0, 0 },
-        { 0, 1, 2, 3, 3, 3, 2, 1, 0 },
-        { 1, 2, 3, 3, 3, 3, 3, 2, 1 },
-        { 0, 1, 2, 3, 3, 3, 2, 1, 0 },
-        { 0, 0, 2, 2, 3, 2, 2, 0, 0 },
-        { 0, 1, 0, 1, 2, 1, 0, 1, 0 },
-        { 0, 0, 0, 0, 1, 0, 0, 0, 0 }
+    const unsigned int shadowColors[3] = {
+        GetColor(222, 214, 195), // 立体感を出す下側の影色
+        GetColor(212, 200, 175),
+        GetColor(218, 198, 155)
     };
+    const unsigned int outlineCol = GetColor(55, 45, 38); // パキッと目立たせる太いこげ茶の輪郭
+    const unsigned int hiCol = GetColor(255, 255, 250); // 上面のハイライト
 
-    const auto& grid = (pattern % 2 == 0) ? STAR_A : STAR_B;
-    const int startX = cx - (9 * dotSize) / 2;
-    const int startY = cy - (9 * dotSize) / 2;
+    const int x1 = cx - halfSize;
+    const int y1 = cy - halfSize;
+    const int x2 = cx + halfSize;
+    const int y2 = cy + halfSize;
+    const int border = 3; // 3pxの太い輪郭線でデカさと迫力を強調！
 
-    for (int r = 0; r < 9; ++r)
+    // 1. 一番外側の太い輪郭（こげ茶・黒系）
+    DrawBox(x1 - border, y1 - border, x2 + border, y2 + border, outlineCol, TRUE);
+
+    // 2. 豆腐のベース色（全体）
+    DrawBox(x1, y1, x2, y2, mainColors[colorType], TRUE);
+
+    // 3. 下側・右側に厚みの影を入れて「塊（ブロック）感」を出す
+    const int shadeWidth = halfSize / 2;
+    DrawBox(x1, y2 - shadeWidth, x2, y2, shadowColors[colorType], TRUE);
+    DrawBox(x2 - shadeWidth, y1, x2, y2, shadowColors[colorType], TRUE);
+
+    // 4. 左上に太い白ハイライトを入れてパキッとさせる
+    if (halfSize >= 10)
     {
-        for (int c = 0; c < 9; ++c)
-        {
-            const int cell = grid[r][c];
-            if (cell == 0) continue;
-
-            const int x1 = startX + c * dotSize;
-            const int y1 = startY + r * dotSize;
-
-            unsigned int col = mainCol;
-            if (cell == 1) col = edgeCol;
-            else if (cell == 3) col = hiCol;
-
-            DrawBox(x1, y1, x1 + dotSize, y1 + dotSize, col, TRUE);
-        }
-    }
-}
-
-// 5×5 マスの「ミニ豆腐ブロック」を描く関数
-void EffectTrans::DrawMiniTofu(int cx, int cy, int dotSize, unsigned int mainCol, unsigned int edgeCol, unsigned int hiCol)
-{
-    static constexpr int TOFU_MAP[5][5] = {
-        { 0, 1, 1, 1, 0 },
-        { 1, 3, 3, 2, 1 },
-        { 1, 3, 2, 2, 1 },
-        { 1, 2, 2, 2, 1 },
-        { 0, 1, 1, 1, 0 }
-    };
-
-    const int d = dotSize + 1; // 豆腐キューブは少しぷっくりさせる
-    const int startX = cx - (5 * d) / 2;
-    const int startY = cy - (5 * d) / 2;
-
-    for (int r = 0; r < 5; ++r)
-    {
-        for (int c = 0; c < 5; ++c)
-        {
-            const int cell = TOFU_MAP[r][c];
-            if (cell == 0) continue;
-
-            const int x1 = startX + c * d;
-            const int y1 = startY + r * d;
-
-            unsigned int col = mainCol;
-            if (cell == 1) col = edgeCol;
-            else if (cell == 3) col = hiCol;
-
-            DrawBox(x1, y1, x1 + d, y1 + d, col, TRUE);
-        }
+        DrawBox(x1 + 3, y1 + 3, cx, y1 + 7, hiCol, TRUE);
+        DrawBox(x1 + 3, y1 + 3, x1 + 7, cy, hiCol, TRUE);
     }
 }
 
@@ -154,51 +110,55 @@ void EffectTrans::Draw() const
     const float fProgress = GetProgress();
     if (fProgress >= 1.0f) return;
 
-    // 豆腐コンセプトに合わせた和風・やさしいカラーパレット
-    const unsigned int mainPalette[4] = {
-        GetColor(250, 246, 232), // ① 木綿とうふホワイト（クリーム白）
-        GetColor(248, 228, 165), // ② 大豆・湯葉イエロー（やさしい黄色）
-        GetColor(180, 232, 250), // ③ 湧き水アクア（澄んだ水色）
-        GetColor(175, 230, 160)  // ④ 薬味ネギグリーン（爽やかな若草色）
-    };
-    const unsigned int edgeCol = GetColor(95, 80, 68); // 豆腐の輪郭に馴染むやさしい茶色フチ
-    const unsigned int hiCol = GetColor(255, 255, 255); // ツヤっとした純白ハイライト
-
-    // 後半にかけて自然にフェードアウト＆ドット縮小
-    const int nAlpha = (fProgress < 0.6f) ? 255 : static_cast<int>(255.0f * (1.0f - (fProgress - 0.6f) / 0.4f));
-    SetDrawBlendMode(DX_BLENDMODE_ALPHA, nAlpha);
-
-    const int animFrame = static_cast<int>(m_fElapsedTime / 0.08f);
-
-    for (const auto& p : m_particles)
+    // =============================================================
+    // 1. 発生瞬間の「ドカン！」という太い四角の衝撃波枠（キラキラせず力強い枠）
+    // =============================================================
+    if (fProgress < 0.25f)
     {
-        // 2px グリッドにスナップ（荒すぎず、ドット絵らしい動きに）
-        const int snapX = (static_cast<int>(p.fX) / 2) * 2;
-        const int snapY = (static_cast<int>(p.fY) / 2) * 2;
+        const float rate = fProgress / 0.25f;
+        const int expand = static_cast<int>(20.0f + 75.0f * rate);
+        const int bx = static_cast<int>(m_fX);
+        const int by = static_cast<int>(m_fY);
 
-        // 消え際に1段階小さくなる
-        int dotSize = (fProgress < 0.7f) ? p.nDotSize : (p.nDotSize - 1);
-        if (dotSize < 2) dotSize = 2;
+        const int alpha = static_cast<int>(255.0f * (1.0f - rate));
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
-        if (p.bIsMiniTofu)
+        const unsigned int waveCol = GetColor(248, 244, 230);
+        const unsigned int waveOut = GetColor(70, 58, 48);
+
+        // 太さ4pxの力強い四角い衝撃波
+        for (int t = 0; t < 4; ++t)
         {
-            // コロンとしたミニ豆腐キューブを描画
-            DrawMiniTofu(snapX, snapY, dotSize, mainPalette[0], edgeCol, hiCol);
+            DrawBox(bx - expand - t, by - expand - t, bx + expand + t, by + expand + t, waveCol, FALSE);
         }
-        else
-        {
-            // 9×9 の整ったドット絵スターを描画
-            DrawPixelStar(
-                snapX,
-                snapY,
-                dotSize,
-                animFrame + p.nAnimOffset,
-                mainPalette[p.nColorType],
-                edgeCol,
-                hiCol
-            );
-        }
+        DrawBox(bx - expand - 5, by - expand - 5, bx + expand + 5, by + expand + 5, waveOut, FALSE);
+    }
+
+    // =============================================================
+    // 2. 特大サイズの豆腐ブロック片（四角）をドカンと描画！
+    // =============================================================
+    // 最初に1.3倍にボッと大きく膨らんで迫力を出し、最後にシュッと縮んで消える
+    float scale = 1.0f;
+    if (fProgress < 0.18f)
+    {
+        scale = 0.7f + 0.6f * (fProgress / 0.18f); // 最大 1.3倍！
+    }
+    else
+    {
+        scale = 1.3f * (1.0f - (fProgress - 0.18f) / 0.82f);
     }
 
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+    for (const auto& chunk : m_chunks)
+    {
+        // 4px グリッドにスナップさせて重厚なドット感を出す
+        const int snapX = (static_cast<int>(chunk.fX) / 4) * 4;
+        const int snapY = (static_cast<int>(chunk.fY) / 4) * 4;
+
+        const int currentHalfSize = static_cast<int>(chunk.fBaseHalfSize * scale);
+        if (currentHalfSize < 4) continue;
+
+        DrawBigTofuBlock(snapX, snapY, currentHalfSize, chunk.nColorType);
+    }
 }

@@ -14,26 +14,22 @@ protected:
     void OnUpdate(float fDeltaTime) override;
 
 private:
-    // 9×9 の整ったドット絵スターを描画
-    static void DrawPixelStar(int cx, int cy, int dotSize, int pattern, unsigned int mainCol, unsigned int edgeCol, unsigned int hiCol);
-    // 5×5 のミニ豆腐キューブ（かけら）を描画
-    static void DrawMiniTofu(int cx, int cy, int dotSize, unsigned int mainCol, unsigned int edgeCol, unsigned int hiCol);
+    // 存在感のある特大の立体豆腐ブロック片（四角）を描画
+    static void DrawBigTofuBlock(int cx, int cy, int halfSize, int colorType);
 
 private:
-    struct TofuStarParticle
+    struct BigTofuChunk
     {
         float fX = 0.0f;
         float fY = 0.0f;
         float fVelocityX = 0.0f;
         float fVelocityY = 0.0f;
-        int   nDotSize = 3;       // 1ドットの大きさ（3px?4pxのちょうどいいドット感）
-        int   nColorType = 0;     // 0:豆腐白, 1:大豆クリーム, 2:湧き水ブルー, 3:薬味グリーン
-        int   nAnimOffset = 0;
-        bool  bIsMiniTofu = false;// false:ドット星, true:ミニ豆腐キューブ
+        float fBaseHalfSize = 18.0f; // 半径16?26px（直径32?52pxのデカい四角！）
+        int   nColorType = 0;        // 0:絹ごし白, 1:木綿アイボリー, 2:大豆クリーム
     };
 
-    std::vector<TofuStarParticle> m_particles;
+    std::vector<BigTofuChunk> m_chunks;
 
-    static constexpr float EFFECT_LIFETIME = 0.48f;
-    static constexpr int   PARTICLE_COUNT = 6;
+    static constexpr float EFFECT_LIFETIME = 0.45f;
+    static constexpr int   CHUNK_COUNT = 1;     // 細かい粒は出さず、デカい塊を3個ドカンと飛ばす！
 };
