@@ -5,11 +5,12 @@
 #include "GameScene.h"
 #include "StageSelectScene.h"
 #include "TitleScene.h"
+#include "TutorialScene.h"
 
 void SceneManager::Initialize()
 {
 	// 最初のシーンを作る（フェードなしで即座に作成）
-	mnNextSceneType = SCENE_TYPE::TITLE_SCENE;
+	mnNextSceneType = SCENE_TYPE::TUTORIAL_SCENE;
 	ChangeSceneIfNeeded();
 
 	// 真っ黒な状態から明転させる
@@ -76,6 +77,9 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene = gameScene;
 		break;
 	}
+	case SCENE_TYPE::TUTORIAL_SCENE:
+		mpCurrentScene = new TutorialScene();
+		break;
 
 	default:
 		break;

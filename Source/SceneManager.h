@@ -10,6 +10,7 @@ enum class SCENE_TYPE
 	TITLE_SCENE = 1,    // タイトル
 	STAGE_SELECT_SCENE = 2, // ステージセレクト
 	GAME_SCENE = 3,		// GameScene
+	TUTORIAL_SCENE = 4, //チュートリアル
 };
 
 class SceneManager

@@ -73,6 +73,7 @@
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
+    <ClCompile Include="Source\TutorialScene.cpp" />
     <ClCompile Include="Source\UI.cpp" />
     <ClCompile Include="Source\UIBackground.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
+    <ClInclude Include="Source\TutorialScene.h" />
     <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />

@@ -94,23 +94,31 @@ void PauseUI::Update()
         SetEnabled(false);
     }
 
-    // -- 「ステージ選択シーンへ」を選択した場合
-    if (mpStageSelectUI != nullptr &&
-        mpStageSelectUI->GetButton().IsClicked())
+    // -- 制限中でない場合のみ、他シーンへの遷移ボタンを有効にする -- //
+    if (!mbResumeOnly)
     {
-        SoundManager::GetInstance()->StopBGM();
-        SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
-        Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);   
+        // -- 「ステージ選択シーンへ」を選択した場合 -- //
+        if (mpStageSelectUI != nullptr &&
+            mpStageSelectUI->GetButton().IsClicked())
+        {
+            SoundManager::GetInstance()->StopBGM();
+            SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
+            Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
+        }
+
+        // -- 「タイトルへ」ボタンを選択した場合 -- //
+        // ★ここも必ず if (!mbResumeOnly) の { } の中に入れます！
+        if (mpTitleUI != nullptr &&
+            mpTitleUI->GetButton().IsClicked())
+        {
+            SoundManager::GetInstance()->StopBGM();
+            Master::mpSceneManager->RequestScene(SCENE_TYPE::TITLE_SCENE);
+        }
+
     }
 
-    // -- 「タイトルへ」ボタンを選択した場合 -- //
-    if (mpTitleUI != nullptr &&
-        mpTitleUI->GetButton().IsClicked())
-    {
-        SoundManager::GetInstance()->StopBGM();
-        Master::mpSceneManager->RequestScene(SCENE_TYPE::TITLE_SCENE);
-    }
 
+  
     if (IsEnabled()) {
         mpResumeUI->SetEnabled(true);
         mpStageSelectUI->SetEnabled(true);
