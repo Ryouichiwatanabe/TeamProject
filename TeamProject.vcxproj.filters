@@ -294,14 +294,23 @@
     <ClCompile Include="Source\UIBackground.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Item.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ItemTable.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\UIFloatingMotion.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectFall.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StageClearData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StageSelectData.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TutorialScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectTrans.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -491,12 +500,6 @@
     <ClInclude Include="Source\UIBackground.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Item.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ItemTable.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\FadeEffect.h">
       <Filter>ヘッダー ファイル\Scene\Fade</Filter>
     </ClInclude>
@@ -505,6 +508,21 @@
     </ClInclude>
     <ClInclude Include="Source\UIHoverScaler.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectFall.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StageClearData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StageSelectData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TutorialScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectTrans.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
