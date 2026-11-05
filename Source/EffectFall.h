@@ -5,7 +5,9 @@
 class EffectFall final : public EffectBase
 {
 public:
-    EffectFall(float fX, float fY);
+    // fX, fY : 発生元の辺の中心座標
+    // fOutwardAngleRad : 外側へ向かう角度（ラジアン）
+    EffectFall(float fX, float fY, float fOutwardAngleRad = -1.570796f);
     ~EffectFall() override = default;
 
     void Draw() const override;
@@ -14,22 +16,20 @@ protected:
     void OnUpdate(float fDeltaTime) override;
 
 private:
-    // 水滴1粒ごとの状態（コンポジション）
+    // ドット絵風の水飛沫1粒ごとの状態
     struct SplashDrop
     {
         float fX = 0.0f;
         float fY = 0.0f;
         float fVelocityX = 0.0f;
         float fVelocityY = 0.0f;
-        float fBaseRadius = 3.0f;
+        int   nPixelSize = 6;     // ドット1粒のサイズ（4px, 6px, 8pxなど）
+        bool  bIsWhite = false;   // 白ハイライトか水色か
     };
 
     std::vector<SplashDrop> m_drops;
 
-    // パラメータ定数
-    static constexpr float EFFECT_LIFETIME = 0.45f;    // エフェクトの生存時間（秒）
-    static constexpr int   DROP_COUNT = 14;       // 飛び散る水滴の数
-    static constexpr float GRAVITY = 850.0f;   // 重力加速度 (px/s^2)
-    static constexpr float MAX_RIPPLE_X = 100.0f;    // 地面波紋の最大半径X
-    static constexpr float MAX_RIPPLE_Y = 33.0f;    // 地面波紋の最大半径Y（楕円のつぶれ具合）
+    static constexpr float EFFECT_LIFETIME = 0.35f; // パッと弾けて消える秒数
+    static constexpr int   DROP_COUNT = 7;     // 1つの外辺から出るドット粒の数
+    static constexpr float GRAVITY = 750.0f;// 重力加速度 (px/s^2)
 };

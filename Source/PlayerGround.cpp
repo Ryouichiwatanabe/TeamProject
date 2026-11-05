@@ -1,4 +1,5 @@
 ﻿#include "Player.h"
+#include "PlayerPiece.h"
 
 /* memo :
 * Player の「衝突・接地」部分。
@@ -287,24 +288,67 @@ void Player::Topple(const std::vector<PieceContact>& _groundContacts)
 
 void Player::SetGroundedState(bool _grounded)
 {
-
+	// 空中から着地した瞬間、有効な全ピースの「外側のフチ」から外向きに水飛沫を出す
 	if (!mbIsGrounded && _grounded)
 	{
+		auto scene = Master::mpSceneManager ? Master::mpSceneManager->GetCurrentScene() : nullptr;
+		auto effectManager = scene ? scene->GetEffectManager() : nullptr;
 		auto transform = GetTransform();
-		if (transform)
+
+		if (effectManager && transform)
 		{
-			const VECTOR pos = transform->GetPosition();
-			const float apawnX = pos.x;
-			const float spawnY = pos.y + (GameConfig::CELL_SIZE * 0.5f);
+			const float rotZ = transform->GetRotation().z;
+			const float halfCell = GameConfig::CELL_SIZE * 0.5f;
 
-			const VECTOR position = this->GetModule<Transform>()->GetPosition();
-			const VECTOR offset = VGet(0.0f, 20.0f, 0.0f);
-			VECTOR playPos = VAdd(position, offset);
-			Master::mpSceneManager->GetCurrentScene()->GetEffectManager()->Play<EffectFall>(playPos.x, playPos.y);
+			// 4方向（上・下・左・右）のオフセットとローカル角度
+			struct EdgeDir { int dc; int dr; float localX; float localY; float localAngle; };
+			const EdgeDir dirs[4] = {
+				{  0, -1,  0.0f, -halfCell, -DX_PI_F * 0.5f }, // 上のフチ
+				{  0,  1,  0.0f,  halfCell,  DX_PI_F * 0.5f }, // 下のフチ
+				{ -1,  0, -halfCell,  0.0f,  DX_PI_F        }, // 左のフチ
+				{  1,  0,  halfCell,  0.0f,  0.0f           }  // 右のフチ
+			};
+
+			for (int r = 0; r < GameConfig::PLAYER_PIECE_SIZE; ++r)
+			{
+				for (int c = 0; c < GameConfig::PLAYER_PIECE_SIZE; ++c)
+				{
+					auto piece = mPieces[c][r];
+					if (!piece || !piece->IsActive())
+						continue;
+
+					auto pieceTransform = piece->GetModule<Transform>();
+					if (!pieceTransform)
+						continue;
+
+					const VECTOR piecePos = pieceTransform->GetPosition();
+
+					// 上下左右のうち、隣にピースがない「外側の辺」からだけ外向きに出す
+					for (const auto& dir : dirs)
+					{
+						const int nc = c + dir.dc;
+						const int nr = r + dir.dr;
+
+						// 隣に有効なピースがあるなら内側（つなぎ目）なので出さない
+						if (nc >= 0 && nc < GameConfig::PLAYER_PIECE_SIZE &&
+							nr >= 0 && nr < GameConfig::PLAYER_PIECE_SIZE &&
+							mPieces[nc][nr] != nullptr && mPieces[nc][nr]->IsActive())
+						{
+							continue;
+						}
+
+						// プレイヤーの回転角度に合わせてフチの座標と飛び出す角度を計算
+						const VECTOR edgeOffset = PlayerMath::RotateOffset(VGet(dir.localX, dir.localY, 0.0f), rotZ);
+						const VECTOR spawnPos = VAdd(piecePos, edgeOffset);
+						const float outwardAngle = dir.localAngle + rotZ;
+
+						effectManager->Play<EffectFall>(spawnPos.x, spawnPos.y, outwardAngle);
+					}
+				}
+			}
 		}
-
-
 	}
+
 	mbIsGrounded = _grounded;
 
 	if (auto gravity = GetModule<Gravity>())
