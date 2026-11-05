@@ -34,7 +34,7 @@ public:
 
 private:
 	void CreatePieceUI(int _column, int _row);
-	UI* CreateButtonUI(const std::string& _text, float _x, float _y);
+	//UI* CreateButtonUI(const std::string& _text, float _x, float _y);
 	UI* CreateMessageUI(float _x, float _y);
 
 	void SyncFromPlayer();		// Playerの現在形状 → UI

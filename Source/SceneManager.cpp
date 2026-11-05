@@ -9,7 +9,7 @@
 void SceneManager::Initialize()
 {
 	// 最初のシーンを作る（フェードなしで即座に作成）
-	mnNextSceneType = SCENE_TYPE::TITLE_SCENE;
+	mnNextSceneType = SCENE_TYPE::GAME_SCENE;
 	ChangeSceneIfNeeded();
 
 	// 真っ黒な状態から明転させる

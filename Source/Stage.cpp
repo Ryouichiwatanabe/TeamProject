@@ -114,9 +114,12 @@ void Stage::CreateObjects()
                 auto goalBlock = objectManager
                     ->CreateObject<Goal>();
 
-                goalBlock
-                    ->GetModule<Transform>()
-                    ->SetPosition(initPosition);
+                auto transform = goalBlock->GetModule<Transform>();
+                const VECTOR baseScale = transform->GetScale();
+                const VECTOR addScale = VGet(0.5f, 0.5f, 0.0f);
+                transform->SetScale(VAdd(baseScale, addScale));
+
+                transform->SetPosition(initPosition);
 
                 break;
             }
