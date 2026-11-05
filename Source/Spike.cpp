@@ -22,7 +22,7 @@ void Spike::InitComponent()
     {
         // PlayerPiece (Tag::PLAYER_CELL) との衝突を検知する
         collider->AddCollisionTag(Tag::PLAYER_CELL);
-        collider->SetHalfSize(VGet(GameConfig::CELL_SIZE / 2.0f, GameConfig::CELL_SIZE / 2.0f, 0.0f));
+        collider->SetHalfSize(VGet(GameConfig::CELL_SIZE / 4.0f, 1, 0.0f));
     }
 }
 

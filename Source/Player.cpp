@@ -93,7 +93,7 @@ void Player::Update(float _deltaTime)
 	if (mbIsShapeEditing)
 	{
 		UpdatePieceTransforms();
-		Debug::Print("Shape Editing...");
+		// Debug::Print("Shape Editing...");
 		return;
 	}
 
@@ -124,10 +124,10 @@ void Player::PrintDebugInfo()
 	if (deg < 0)
 		deg += 360;
 
-	Debug::Print("Player Pos: (", static_cast<int>(transform->GetPosition().x), ", ", static_cast<int>(transform->GetPosition().y), ")");
-	Debug::Print("Player Angle: ", deg, " deg");
-	Debug::Print("Grounded: ", mbIsGrounded ? "YES" : "NO", " / Toppling: ", mbIsToppling ? "YES" : "NO");
-	Debug::Print("Input Cooldown: ", mfInputCooldown > 0.0f ? "ACTIVE" : "IDLE");
+	// Debug::Print("Player Pos: (", static_cast<int>(transform->GetPosition().x), ", ", static_cast<int>(transform->GetPosition().y), ")");
+	// Debug::Print("Player Angle: ", deg, " deg");
+	// Debug::Print("Grounded: ", mbIsGrounded ? "YES" : "NO", " / Toppling: ", mbIsToppling ? "YES" : "NO");
+	// Debug::Print("Input Cooldown: ", mfInputCooldown > 0.0f ? "ACTIVE" : "IDLE");
 }
 
 // ============================================================ //

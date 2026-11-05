@@ -77,14 +77,8 @@ void GameScene::Initialize()
 	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
 	if (mpBackgroundUI != nullptr)
 	{
-		// 背景用として最背面のレイヤーに指定
-		mpBackgroundUI->SetLayer(-100);
-
-		// Stage クラスを渡して背景画像をロード＆適用
-		mpBackgroundUI->SetStage(stage);
-
-		// またはステージ番号を直接渡す場合:
-		// mpBackgroundUI->SetStageByNumber(mnStageNumber);
+		// ステージ番号に対応した背景画像をロード
+		mpBackgroundUI->SetStageByNumber(mnStageNumber);
 	}
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
@@ -197,7 +191,7 @@ void GameScene::Update(float deltaTime)
 	if (IsPlayingSE)
 	{
 		// SE_GOAL がまだ再生中かどうかをチェック
-		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOAL))
+		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOALVOICE))
 		{
 			// 再生が終わったら、別のBGMを再生する
 			SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title); // 例としてゲームBGMなど
@@ -303,7 +297,7 @@ void GameScene::Update(float deltaTime)
 			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
 
 			// SE
-			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOAL);
+			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOALVOICE);
 
 			IsPlayingSE = true;
 
@@ -318,18 +312,13 @@ void GameScene::Update(float deltaTime)
 
 void GameScene::Draw()
 {
-	// -- 描画時 -- //
-	DrawStringToHandle(100, 100, "おちんこ祭り！！！",
-		GetColor(255, 255, 255),              // 文字色
-		Master::mpFontManager->GetHandle(FontId::Title),
-		GetColor(0, 0, 0));                   // 縁の色
+	// 背景（最背面なので一番最初に描く）
+	if (mpBackgroundUI != nullptr)
+	{
+		mpBackgroundUI->DrawBackground();
+	}
 
-    Debug::Print(
-        "InputMode : ",
-        static_cast<int>(InputManager::GetInstance().GetInputMode())
-    );
-
-    Debug::Draw();
+    // Debug::Draw();
     Scene::Draw();
 
 	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
