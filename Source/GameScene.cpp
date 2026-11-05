@@ -144,7 +144,7 @@ void GameScene::Initialize()
 			->GetTransform()
 			.SetPosition(
 				VGet(
-					1080.0f + i * 80.0f,
+					1680.0f + i * 100.0f,
 					50.0f,
 					0.0f
 				)
@@ -178,6 +178,7 @@ void GameScene::Initialize()
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 
 }
+
 void GameScene::Update(float deltaTime)
 {
 	// 1. エフェクトマネージャーの更新（クリア中も動かすため最優先）
@@ -259,17 +260,12 @@ void GameScene::Update(float deltaTime)
 		}
 	}
 
-	bool isAllCollected =
-		mbIsCollectibleCollected[0] &&
-		mbIsCollectibleCollected[1] &&
-		mbIsCollectibleCollected[2];
-
-	if (isAllCollected)
+	for (int i = 0; i < 3; i++)
 	{
-		StageClearData::SetStageCleared(
-			mnStageNumber,
-			true
-		);
+		if (mbIsCollectibleCollected[i])
+		{
+			mpCollectibleIconUI[i]->SetCollected(true);
+		}
 	}
 
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
@@ -288,7 +284,7 @@ void GameScene::Update(float deltaTime)
 		}
 
 		mbIsClear = true;
-		mClearTimer = 0.0f; // タイマー初期化
+		mClearTimer = 0.0f;
 
 		// タイトルBGMを停止
 		SoundManager::GetInstance()->StopBGM();
