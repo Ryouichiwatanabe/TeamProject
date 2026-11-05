@@ -11,7 +11,10 @@ public:
     bool IsBackRequested() const { return mbBackRequested; }
 
 private:
-    UI* mpGuideA;
+    UI* mpGuideA = nullptr;
+    UI* mpGuideD = nullptr;
+    UI* mpGuideP = nullptr;
+    UI* mpGuideE = nullptr;
     UI* mpBackButton = nullptr;
     bool mbBackRequested = false;
 };
