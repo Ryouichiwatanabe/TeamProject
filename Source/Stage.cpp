@@ -150,13 +150,9 @@ void Stage::CreateObjects()
 
             case 5:
             {
-                // リスポーン地点を設定
-                /*mvRespawnPos = VGet(
-                    (x * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
-                    (y * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
-                    0.0f
-                );*/
-
+                auto player = objectManager->CreateObject<Player>();
+                player->GetModule<Transform>()->SetPosition(initPosition);
+                player->UpdatePieceTransforms();    // Pieceに反映
                 break;
             }
 

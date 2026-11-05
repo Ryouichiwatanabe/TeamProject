@@ -53,9 +53,7 @@ void GameScene::Initialize()
 	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
 	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
 
-	
-	// 初期化処理
-	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
+	mpPlayer = this->GetObjectManager()->FindObject<Player>();	// Playerを取得
 	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
 	if (mpPlayer != nullptr)
 	{
@@ -361,7 +359,7 @@ void GameScene::UpdateClear()
 void GameScene::UpdatePauseInput()
 {
 	if (InputManager::GetInstance().GetButtonDown(Button::Pause))
-		mpPauseUI->ToggleEnabled();
+		mpPauseUI->OnPauseInput();
 }
 
 void GameScene::SetStageNumber(int _stageNumber)
