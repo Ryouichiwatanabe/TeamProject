@@ -5,22 +5,16 @@
 #include <memory>
 #include "EffectClear.h"
 
-
-//---コンポジション系統
-#include "UIFloatingMotion.h"
-#include "UITypewriterText.h"
 #include "UIBackground.h"
+#include "ItemRecord.h"		// StageFlags を使うため
 
 class Player;
 class Goal;
-class MovingBlock;
-class CollectibleIconUI;
 class PauseUI;
 class ClearUI;
+class ItemHUD;
 
 class PlayerShapeUI;
-
-//class Player_test;
 
 class GameScene : public Scene
 {
@@ -33,56 +27,26 @@ public:
     std::unique_ptr<EffectManager> mpEffectManager;
 
 private:
-    int StageNumberFontHandle = -1; // 左上のステージ番号用フォントハンドル
-    int mMessageFontHandle = -1;    // 下のTypeWriter用のフォントハンドル
+    void UpdatePauseInput();    // 入力に伴い、PauseUIを有効にする
+    void UpdateClear();
+    void UpdateItems();				// Item の取得状態を確認する
+    void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
 
-    void* mAddedFontHandle = nullptr; // フォントハンドル
-
-    int mCursorHandle = -1;
-
-    //  void DrawCursor();
-
-    float mClearTimer = 0.0f;
-
-    MovingBlock* mpMovingBlock = nullptr;
+private:
+    Goal* mpGoal = nullptr;
 
     PauseUI* mpPauseUI = nullptr;
     ClearUI* mpClearUI = nullptr;
-
-private:
-    int mnStageNumber = 1;
-
-    bool mbIsPaused = false;
-    bool mbPreviousP = false;
-    bool mbPreviousMouseLeft = false;
-
-    void UpdatePauseInput();    // 入力に伴い、PauseUIを有効にする
-    void UpdateClear();
-
-    Player* mpPlayer = nullptr;
-    bool mbIsClear = false;
-
-    Goal* mpGoal = nullptr;
-
-    CollectibleIconUI* mpCollectibleIconUI[3] = {};
-
-    bool mbIsCollectibleCollected[3] = {};
-
-    //FontやTitleLogoなどのアニメーションをするためのコンポジション
-
-
-    void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
-
-    bool IsPlayingSE = false;
-
-private:
-
-    //FloatingMotion mClearTextMotion;   // Clear用
-    //FloatingMotion mMessageMotion;     // メッセージ用
-    float mfClearItemTimer = 0.0f;
-
-    bool mbIsMessageActive = false; //メッセージ表示フラグ
+    ItemHUD* mpItemHUD = nullptr;
+    ItemRecord::StageFlags mPickedItems{};		// 今回のプレイの仮取得
 
     PlayerShapeUI* mpShapeUI = nullptr;
     UIBackground* mpBackgroundUI = nullptr;
+
+    int mnStageNumber = 1;
+
+    bool mbIsClear = false;
+    float mClearTimer = 0.0f;
+
+    bool IsPlayingSE = false;
 };

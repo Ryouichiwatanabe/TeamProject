@@ -20,6 +20,7 @@
 #include "SwitchBlock.h"
 #include "Collectible.h"
 #include "CollectibleData.h"
+#include "Item.h"
 
 #include "Transform.h"
 
@@ -188,21 +189,9 @@ void Stage::CreateObjects()
             case 10:
             case 11:
             {
-                // Collectibleを生成
-                int itemIndex = tile - 9;
-
-                std::string filename =
-                    GetCollectibleFilename(itemIndex);
-
-                auto collectible = objectManager
-                    ->CreateObject<Collectible>(
-                        filename,
-                        itemIndex
-                    );
-
-                collectible
-                    ->GetModule<Transform>()
-                    ->SetPosition(initPosition);
+                auto item = objectManager->CreateObject<Item>(mStageNumber, tile - 9);
+                item->GetModule<Transform>()->SetPosition(initPosition);
+                break;
 
                 break;
             }

@@ -44,6 +44,15 @@ void PauseUI::Init()
     ChangeState(State::Menu);
 }
 
+void PauseUI::AddMenuContent(UI* _ui)
+{
+    if (_ui == nullptr)
+        return;
+
+    mpMenuRoot->AddChild(_ui);
+    _ui->SetParent(mpMenuRoot);	// メニュー表示中だけ見える（操作説明中は消える）
+}
+
 UI* PauseUI::CreateMenuButton(const std::string& _text, float _y)
 {
     UI* button = GetUIManager()->CreateUI<UI>();

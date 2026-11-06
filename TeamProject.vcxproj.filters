@@ -124,6 +124,12 @@
     <Filter Include="ヘッダー ファイル\UI\Pause">
       <UniqueIdentifier>{ecfdaf40-52fe-422d-a762-e067733a3e63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Item">
+      <UniqueIdentifier>{247ef287-93c6-4ad3-a9a1-b436c804249c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Item">
+      <UniqueIdentifier>{28a7feff-b458-4017-bc65-f20be798ee41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GamePad.cpp">
@@ -320,6 +326,18 @@
     </ClCompile>
     <ClCompile Include="Source\OperationGuideUI.cpp">
       <Filter>ソース ファイル\UI\Pause</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Item.cpp">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemTable.cpp">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemRecord.cpp">
+      <Filter>ソース ファイル\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemHUD.cpp">
+      <Filter>ソース ファイル\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -529,6 +547,18 @@
     </ClInclude>
     <ClInclude Include="Source\OperationGuideUI.h">
       <Filter>ヘッダー ファイル\UI\Pause</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemTable.h">
+      <Filter>ヘッダー ファイル\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Item.h">
+      <Filter>ヘッダー ファイル\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemRecord.h">
+      <Filter>ヘッダー ファイル\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemHUD.h">
+      <Filter>ヘッダー ファイル\Item</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

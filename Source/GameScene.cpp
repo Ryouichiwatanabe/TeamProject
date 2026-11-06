@@ -7,7 +7,6 @@
 #include "UIManager.h"
 #include "UIBackground.h"
 #include "SoundManager.h"
-#include "StageClearData.h"
 
 //-- Effect --//
 #include "EffectClear.h"
@@ -24,8 +23,6 @@
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
-#include "CollectibleIconUI.h"
-#include "Collectible.h"
 #include "PauseUI.h"
 #include "ClearUI.h"
 
@@ -37,141 +34,54 @@
 
 #include "EffectManager.h"
 
+// -- Item -- //
+#include "Item.h"
+#include "ItemHUD.h"
+#include "ItemTable.h"
+#include "ItemRecord.h"
 
 #include "InputManager.h"
 #include "ScreenConfig.h"
 
 void GameScene::Initialize()
 {
-	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-
 	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
 	mpEffectManager = std::make_unique<EffectManager>();
 	
-
-	// 画面中央の座標を計算
-	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
-	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
-
-	mpPlayer = this->GetObjectManager()->FindObject<Player>();	// Playerを取得
-	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
-	if (mpPlayer != nullptr)
-	{
-		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
-	}
-
+	// -- ステージの生成 -- //
 	auto* stage = new Stage();
-
 	std::string stageFileName =
 		"Resource/Stage/Stage"
 		+ std::to_string(mnStageNumber)
 		+ ".csv";
-
 	stage->Load(stageFileName);
-
-	// ==========================================
-	// ★ 背景UIの生成とステージ反映
-	// ==========================================
+	
+	// -- 「Player変形UI」の生成 -- //
+	if (this->GetObjectManager()->FindObject<Player>())
+		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
+	
+	// -- 「背景」の生成 -- //
 	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
-	if (mpBackgroundUI != nullptr)
-	{
-		// ステージ番号に対応した背景画像をロード
+	if (mpBackgroundUI != nullptr) {
 		mpBackgroundUI->SetStageByNumber(mnStageNumber);
 	}
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
-	mpMovingBlock = this->GetObjectManager()->FindObject<MovingBlock>();
+	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(mnStageNumber);
 
-
-	// ★フォントの取得（サイズ32、太さ3、アンチエイリアス）
-	// 引数を省略した場合は既定の太さ(-1)になります
-	//mFontHandle = Master::mpFontManager->GetFont("メイリオ", 32, 3);
-
-	mAddedFontHandle = static_cast<void*>(AddFontFile("Resource/Font/PixelMplus10-Regular.ttf"));
-
-	// 2. アンチエイリアスを切ってフォントハンドルを作成
-//    フォント名にはファイル名ではなく、フォント自体の「フォントファミリー名」を指定
-	int fontType = DX_FONTTYPE_NORMAL; // アンチエイリアス無効（ドットがくっきり残る）
-
-	StageNumberFontHandle = CreateFontToHandle("PixelMplus10", 80, -1, fontType);
-
-	mMessageFontHandle = CreateFontToHandle("PixelMplus10", 30, -1, fontType);
-
-
-	//Stage文字ラベルの初期化
-	/*std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
-	FloatingMotion stageMotion(120, 15.0f);*/
-
-
-	//Typewriter
-	//mMessageMotion = FloatingMotion(90, 4.0f);
-	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
-	mbIsMessageActive = true;//メッセージ表示開始
-
-	// mClearTextMotion = FloatingMotion(120, 5.0f);
-
-   /* auto* fakePlayer = 
-        this
-        ->GetObjectManager()ljl
-        ->CreateObject<FakePlayer>();*/
-
-	auto* testUI =
-		this
-		->GetUIManager()
-		->CreateUI<PlayerShapeUI>();
-
-	for (int i = 0; i < 3; i++)
-	{
-		mpCollectibleIconUI[i] =
-			this
-			->GetUIManager()
-			->CreateUI<CollectibleIconUI>();
-
-		mpCollectibleIconUI[i]->SetGraph(
-			stage->GetCollectibleFilename(i)
-		);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetAnchor(
-				VGet(0.0f, 0.0f, 0.0f)
-			);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetPosition(
-				VGet(
-					1080.0f + i * 80.0f,
-					50.0f,
-					0.0f
-				)
-			);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetScale(
-				VGet(0.8f, 0.8f, 1.0f)
-			);
-
-		mpCollectibleIconUI[i]->SetEnabled(false);
-	}
-
-	// クリアUI
-	mpClearUI =
-		this->GetUIManager()
-		->CreateUI<ClearUI>(
-			stage->GetCollectibleFilename(0),
-			stage->GetCollectibleFilename(1),
-			stage->GetCollectibleFilename(2)
-		);
-
-	mpClearUI->SetEnabled(false);
+	mpClearUI = GetUIManager()->CreateUI<ClearUI>(
+		ItemTable::GetFilePath(mnStageNumber, 0),
+		ItemTable::GetFilePath(mnStageNumber, 1),
+		ItemTable::GetFilePath(mnStageNumber, 2)
+	);
 
 	mpPauseUI =
 		this->GetUIManager()
 		->CreateUI<PauseUI>();
 	mpPauseUI->SetEnabled(false);
+	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(mnStageNumber);
+	mpPauseUI->AddMenuContent(mpItemHUD);
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 
@@ -219,71 +129,13 @@ void GameScene::Update(float deltaTime)
 
 	// 更新処理
 	Scene::Update(deltaTime);
+	UpdateItems();
 
 	auto player = GetObjectManager()->FindObject<Player>();
 
-	// Collectibleの取得状態を確認
-	auto collectibles =
-		GetObjectManager()->FindObjects<Collectible>();
-
-	for (auto collectible : collectibles)
-	{
-		int itemIndex = collectible->GetItemIndex();
-
-		if (itemIndex < 0 || itemIndex >= 3)
-		{
-			continue;
-		}
-
-		if (collectible->IsPickedUp())
-		{
-			// 現在のステージ内でアイテムを取得済みにする
-			mbIsCollectibleCollected[itemIndex] = true;
-
-			// ステージ選択画面でも取得状態を確認できるように保存する
-			StageClearData::SetItemCollected(
-				mnStageNumber,
-				itemIndex,
-				true
-			);
-		}
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (mbIsCollectibleCollected[i])
-		{
-			mpCollectibleIconUI[i]->SetCollected(true);
-		}
-	}
-
-	bool isAllCollected =
-		mbIsCollectibleCollected[0] &&
-		mbIsCollectibleCollected[1] &&
-		mbIsCollectibleCollected[2];
-
-	if (isAllCollected)
-	{
-		StageClearData::SetStageCleared(
-			mnStageNumber,
-			true
-		);
-	}
-
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
 	{
-		bool isAllCollected =
-			mbIsCollectibleCollected[0] &&
-			mbIsCollectibleCollected[1] &&
-			mbIsCollectibleCollected[2];
-
-		if (isAllCollected)
-		{
-			StageClearData::SetStageCleared(
-				mnStageNumber,
-				true
-			);
-		}
+		ItemRecord::GetInstance().Commit(mnStageNumber, mPickedItems);	// Item取得状態の記録
 
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
@@ -345,15 +197,30 @@ void GameScene::UpdateShapeUIToggle()
 		mpShapeUI->Open();
 }
 
+void GameScene::UpdateItems()
+{
+	for (auto* item : GetObjectManager()->FindObjects<Item>())
+	{
+		if (!item->IsPicked())
+			continue;
+
+		const int slot = item->GetSlot();
+		if (slot < 0 || slot >= GameConfig::MAX_ITEMS_PER_STAGE)
+			continue;
+
+		if (mPickedItems[slot])		// 取得済みなら何もしない
+			continue;
+
+		// ここに来るのは「取った最初のフレーム」だけ
+		mPickedItems[slot] = true;
+		mpItemHUD->SetPicked(slot);
+	}
+}
+
 void GameScene::UpdateClear()
 {
-	for (int i = 0; i < 3; i++)
-	{
-		mpClearUI->SetCollected(
-			i,
-			mbIsCollectibleCollected[i]
-		);
-	}
+	for (int i = 0; i < GameConfig::MAX_ITEMS_PER_STAGE; i++)
+		mpClearUI->SetCollected(i, mPickedItems[i]);
 }
 
 void GameScene::UpdatePauseInput()
@@ -369,30 +236,5 @@ void GameScene::SetStageNumber(int _stageNumber)
 
 void GameScene::Finalize()
 {
-
-	//===リソースの開放===//
-	if (StageNumberFontHandle != -1)
-	{
-		DeleteFontToHandle(StageNumberFontHandle);
-		StageNumberFontHandle = -1;
-	}
-
-	//===リソースの開放===//
-	if (mMessageFontHandle != -1)
-	{
-		DeleteFontToHandle(mMessageFontHandle);
-		mMessageFontHandle = -1;
-	}
-
-	if (mAddedFontHandle != nullptr)
-	{
-		//===登録したフォントの削除===//
-		RemoveFontFile(static_cast<HANDLE>(mAddedFontHandle));
-		mAddedFontHandle = nullptr;
-	}
-
-
-
-    // 終了処理
     Scene::Finalize();
 }

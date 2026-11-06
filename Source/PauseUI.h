@@ -13,6 +13,8 @@ public:
 
     void OnPauseInput();    // ポーズキーが押されたとき（GameSceneから呼ぶ）
 
+    void AddMenuContent(UI* _ui);	// メニュー表示中だけ見せたいUIを登録する
+
 private:
     enum class State { Menu, Guide };
 
@@ -21,6 +23,7 @@ private:
     void UpdateGuide();
     UI* CreateMenuButton(const std::string& _text, float _y);
 
+private:
     State mState = State::Menu;
 
     UI* mpPauseOverlay = nullptr;
