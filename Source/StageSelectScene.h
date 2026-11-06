@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Scene.h"
+#include "StageSelectLayout.h"
 
 class StageSelectScene : public Scene
 {
@@ -11,19 +12,28 @@ public:
     void Finalize() override;
 
 private:
-    // 現在選択しているステージ
+    // 現在選択しているステージ番号
     int mnSelectedStage = 0;
 
     // 前フレームのマウス左クリック状態
     bool mbPreviousMouseLeft = true;
 
-    // ステージセレクト背景画像
+    // ステージセレクトの背景画像
     int mBackgroundHandle = -1;
-    void DrawStageClearImages();
-    int mStageClearHandles[8] = {};
-    int mStage1ClearHandle = -1;
 
-    // 画像上のステージ選択位置
+    // 各ステージのクリア画像を保持する
+    // [ステージ番号 - 1]
+    int mStageClearHandles[8] = {};
+
+    // ステージ選択範囲
+    // 1920×1080の背景画像上での各ステージの位置
+    //
+    // x     : 左端
+    // y     : 上端
+    // width : 横幅
+    // height: 縦幅
+    //
+    // この範囲内をクリックすると、そのステージを選択する
     struct StageButton
     {
         float x;
@@ -32,35 +42,72 @@ private:
         float height;
     };
 
+    // 1920×1080用のステージ選択範囲
+    //
+    // 画像の左上から見て、
+    // 上段 : Stage1 ～ Stage4
+    // 下段 : Stage5 ～ Stage8
     StageButton mStageButtons[8] =
     {
         // 上段
-        { 189.0f, 166.5f, 110.0f, 80.0f },
-        { 331.5f, 166.5f, 110.0f, 80.0f },
-        { 493.0f, 166.5f, 110.0f, 80.0f },
-        { 637.7f, 166.5f, 110.0f, 80.0f },
+        { 375.0f, 225.0f, 245.0f, 375.0f }, // Stage1
+        { 655.0f, 225.0f, 250.0f, 375.0f }, // Stage2
+        { 980.0f, 225.0f, 250.0f, 375.0f }, // Stage3
+        { 1270.0f, 225.0f, 250.0f, 375.0f }, // Stage4
 
         // 下段
-        { 189.0f, 370.0f, 110.0f, 80.0f },
-        { 337.5f, 370.0f, 110.0f, 80.0f },
-        { 497.5f, 370.0f, 110.0f, 80.0f },
-        { 634.7f, 370.0f, 110.0f, 80.0f }
+        { 375.0f, 645.0f, 245.0f, 375.0f }, // Stage5
+        { 655.0f, 645.0f, 250.0f, 375.0f }, // Stage6
+        { 980.0f, 645.0f, 250.0f, 375.0f }, // Stage7
+        { 1270.0f, 645.0f, 250.0f, 375.0f }  // Stage8
     };
 
-    // 背景画像を画面いっぱいに描画
+    struct StageClearImage
+    {
+        float x;
+        float y;
+        float width;
+        float height;
+    };
+
+    StageClearImage mStageClearImages[8] =
+    {
+        // 上段
+        { 375.0f, 225.0f, 245.0f, 375.0f },
+        { 655.0f, 225.0f, 250.0f, 375.0f },
+        { 980.0f, 225.0f, 250.0f, 375.0f },
+        { 1270.0f, 225.0f, 250.0f, 375.0f },
+
+        // 下段
+        { 375.0f, 645.0f, 245.0f, 375.0f },
+        { 655.0f, 645.0f, 250.0f, 375.0f },
+        { 980.0f, 645.0f, 250.0f, 375.0f },
+        { 1270.0f, 645.0f, 250.0f, 375.0f }
+    };
+
+    // 背景画像を1920×1080の画面いっぱいに描画する
     void DrawBackground();
 
-    /*void DrawStageButtonDebug();*/
+    // ステージをクリアしたときの完成画像を描画する
+    void DrawStageClearImages();
 
-    // ステージボタンのクリック判定
+    // ステージ選択範囲内をクリックしたか判定する
     bool IsMouseInsideStageButton(
         int _stageIndex,
         int _mouseX,
         int _mouseY
     );
 
-    // 各ステージの各アイテム画像を保持する
+    // ステージごとの取得アイテム画像
+    //
     // [ステージ番号 - 1][アイテム番号]
+    //
+    // 例：
+    // mCollectibleHandles[0][0]
+    // → Stage1のアイテム1
+    //
+    // mCollectibleHandles[7][2]
+    // → Stage8のアイテム3
     int mCollectibleHandles[8][3] = {};
 
     // ステージ選択画面に取得済みアイテムを表示する

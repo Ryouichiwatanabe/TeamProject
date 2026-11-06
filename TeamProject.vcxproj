@@ -107,6 +107,7 @@
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
+    <ClInclude Include="Source\StageSelectLayout.h" />
     <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />
