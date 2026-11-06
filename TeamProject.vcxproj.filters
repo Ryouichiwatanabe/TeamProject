@@ -270,9 +270,6 @@
     <ClCompile Include="Source\Game.cpp">
       <Filter>ソース ファイル\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\UITypewriterText.cpp">
-      <Filter>ソース ファイル\UI\UIModule</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ClearUI.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
@@ -296,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="Source\UIFloatingMotion.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CollectibleUI.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\EffectFall.cpp">
       <Filter>ソース ファイル</Filter>
@@ -386,9 +386,6 @@
     <ClInclude Include="Source\UIText.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UITransform.h">
-      <Filter>ヘッダー ファイル\UI\UIModule</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphic.h">
       <Filter>ヘッダー ファイル\Module</Filter>
     </ClInclude>
@@ -427,9 +424,6 @@
     </ClInclude>
     <ClInclude Include="Source\UIManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Module.h">
-      <Filter>ヘッダー ファイル\Module</Filter>
     </ClInclude>
     <ClInclude Include="Source\EffectManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
@@ -482,9 +476,6 @@
     <ClInclude Include="Source\ClearCollectibleUI.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UITypewriterText.h">
-      <Filter>ヘッダー ファイル\UI\UIModule</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CollectibleIconUI.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
@@ -509,6 +500,9 @@
     <ClInclude Include="Source\UIHoverScaler.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
+    <ClInclude Include="Source\CollectibleUI.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
     <ClInclude Include="Source\EffectFall.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -523,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="Source\EffectTrans.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
+	</ClInclude>
+    <ClInclude Include="Source\StageSelectLayout.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

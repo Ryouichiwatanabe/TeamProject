@@ -24,7 +24,6 @@
 
 // -- UI -- //
 #include "PlayerShapeUI.h"
-#include "CollectibleIconUI.h"
 #include "Collectible.h"
 #include "PauseUI.h"
 #include "ClearUI.h"
@@ -123,42 +122,6 @@ void GameScene::Initialize()
 		->GetUIManager()
 		->CreateUI<PlayerShapeUI>();
 
-	for (int i = 0; i < 3; i++)
-	{
-		mpCollectibleIconUI[i] =
-			this
-			->GetUIManager()
-			->CreateUI<CollectibleIconUI>();
-
-		mpCollectibleIconUI[i]->SetGraph(
-			stage->GetCollectibleFilename(i)
-		);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetAnchor(
-				VGet(0.0f, 0.0f, 0.0f)
-			);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetPosition(
-				VGet(
-					1680.0f + i * 100.0f,
-					50.0f,
-					0.0f
-				)
-			);
-
-		mpCollectibleIconUI[i]
-			->GetTransform()
-			.SetScale(
-				VGet(0.8f, 0.8f, 1.0f)
-			);
-
-		mpCollectibleIconUI[i]->SetEnabled(false);
-	}
-
 	// クリアUI
 	mpClearUI =
 		this->GetUIManager()
@@ -252,22 +215,6 @@ void GameScene::Update(float deltaTime)
 		}
 	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		if (mbIsCollectibleCollected[i])
-		{
-			mpCollectibleIconUI[i]->SetCollected(true);
-		}
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (mbIsCollectibleCollected[i])
-		{
-			mpCollectibleIconUI[i]->SetCollected(true);
-		}
-	}
-
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
 	{
 		bool isAllCollected =
@@ -307,8 +254,6 @@ void GameScene::Update(float deltaTime)
 		mpClearUI->SetEnabled(true);
 	}
 }
-
-
 
 void GameScene::Draw()
 {
