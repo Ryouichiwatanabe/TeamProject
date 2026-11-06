@@ -1,4 +1,4 @@
-#include "TutorialScene.h"
+ï»¿#include "TutorialScene.h"
 
 // -- Manager -- //
 #include "Master.h"
@@ -20,6 +20,8 @@
 #include "EffectClear.h"
 #include "UI.h"
 
+#include "StageClearData.h" // SetTutorialCleared()
+
 #include <DxLib.h>
 #include <string>
 
@@ -28,27 +30,27 @@ void TutorialScene::Initialize()
     mbIsClear = false;
     mfClearTimer = 0.0f;
 
-    // -- PlayerE•ÏŒ`UI‚Ì¶¬ (•ÏŒ`UI‚ÍInit“à‚ÅPlayer‚ğ’T‚·‚½‚ßŒã‚Éì‚é) -- //
+    // -- Playerãƒ»å¤‰å½¢UIã®ç”Ÿæˆ (å¤‰å½¢UIã¯Initå†…ã§Playerã‚’æ¢ã™ãŸã‚å¾Œã«ä½œã‚‹) -- //
     mpPlayer = GetObjectManager()->CreateObject<Player>();
     if (mpPlayer != nullptr)
     {
         mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
     }
 
-    // -- ƒXƒe[ƒW“Ç‚İ‚İ -- //
+    // -- ã‚¹ãƒ†ãƒ¼ã‚¸èª­ã¿è¾¼ã¿ -- //
     auto* stage = new Stage();
     stage->Load("Resource/Stage/Stage0.csv");
 
     mpGoal = GetObjectManager()->FindObject<Goal>();
 
-    // -- ”wŒiUI -- //
+    // -- èƒŒæ™¯UI -- //
     mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
     if (mpBackgroundUI != nullptr)
     {
         mpBackgroundUI->SetStageByNumber(0);
     }
 
-    // -- ƒ|[ƒYUI -- //
+    // -- ãƒãƒ¼ã‚ºUI -- //
     mpPauseUI = GetUIManager()->CreateUI<PauseUI>();
     if (mpPauseUI != nullptr)
     {
@@ -56,7 +58,7 @@ void TutorialScene::Initialize()
         mpPauseUI->SetResumeOnly(true);
     }
 
-    // -- uSkipvƒ{ƒ^ƒ“ -- //
+    // -- ã€ŒSkipã€ãƒœã‚¿ãƒ³ -- //
     mpSkipButton = GetUIManager()->CreateUI<UI>();
     mpSkipButton->LoadUIGraph("Resource/UI/Scene_Title/Spoon.png");
     mpSkipButton->SetEnabled(true);
@@ -67,18 +69,18 @@ void TutorialScene::Initialize()
     mpSkipButton->GetText().SetText("Skip");
     mpSkipButton->GetTransform().SetPosition(VGet(480.0f, -280.0f, 0.0f));
 
-    // -- ƒƒbƒZ[ƒW•\¦İ’è -- //
+    // -- ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤ºè¨­å®š -- //
     mMessageFontHandle = CreateFontToHandle("PixelMplus10", 36, -1, DX_FONTTYPE_EDGE);
     mnTutorialStep = 0;
-    mfStepTimer = 0.0f; // šƒ^ƒCƒ}[‚ğ0‚É‰Šú‰»
+    mfStepTimer = 0.0f; // â˜…ã‚¿ã‚¤ãƒãƒ¼ã‚’0ã«åˆæœŸåŒ–
     mpMessageUI = GetUIManager()->CreateUI<UI>();
     mpMessageUI->SetEnabled(false);
     mTypewriter.Initialize(mpMessageUI);
     mTypewriter.SetFrameInterval(2);
-    // šÅ‰‚Í“±“üƒƒbƒZ[ƒW‚ğ•\¦I
-    SetTutorialMessage("‚±‚ê‚©‚çƒ`ƒ…[ƒgƒŠƒAƒ‹‚ğn‚ß‚é‚æI\nŠî–{‚Ì‘€ì‚ğˆê‚ÉŠo‚¦‚æ‚¤I");
+    // â˜…æœ€åˆã¯å°å…¥ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¡¨ç¤ºï¼
+    SetTutorialMessage("ã“ã‚Œã‹ã‚‰ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚’å§‹ã‚ã‚‹ã‚ˆï¼\nåŸºæœ¬ã®æ“ä½œã‚’ä¸€ç·’ã«è¦šãˆã‚ˆã†ï¼");
 
-    // -- BGMÄ¶ -- //
+    // -- BGMå†ç”Ÿ -- //
     SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 }
 
@@ -93,7 +95,7 @@ void TutorialScene::SetTutorialMessage(const char* _text)
 
 void TutorialScene::Update(float _deltaTime)
 {
-    // -- ƒNƒŠƒA‰‰o’†‚ÌXV -- //
+    // -- ã‚¯ãƒªã‚¢æ¼”å‡ºä¸­ã®æ›´æ–° -- //
     if (mbIsClear)
     {
         mTypewriter.Update();
@@ -107,56 +109,58 @@ void TutorialScene::Update(float _deltaTime)
         if (mnTutorialStep != 99 && mfClearTimer >= 1.8f)
         {
             mnTutorialStep = 99;
-            SetTutorialMessage("‚±‚±‚©‚ç‚ÍŞ—¿‚ª‚ ‚é‚©‚çA\n‚»‚ê‚ğE‚Á‚Ä“¤•…—¿—‚ğì‚ë‚¤I");
+            SetTutorialMessage("ã“ã“ã‹ã‚‰ã¯ææ–™ãŒã‚ã‚‹ã‹ã‚‰ã€\nãã‚Œã‚’æ‹¾ã£ã¦è±†è…æ–™ç†ã‚’ä½œã‚ã†ï¼");
         }
 
         if (mfClearTimer >= 5.0f ||
             (mnTutorialStep == 99 && mTypewriter.IsFinished() && InputManager::GetInstance().GetButtonDown(Button::Confirm)))
         {
+            StageClearData::SetTutorialCleared(true);   // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¯ãƒªã‚¢ã‚’è¨˜éŒ²
             Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
         }
         return;
     }
 
-    // -- uSkipvƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½ê‡ -- //
+    // -- ã€ŒSkipã€ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸå ´åˆ -- //
     if (mpSkipButton != nullptr && mpSkipButton->GetButton().IsClicked())
     {
         InputManager::GetInstance().ConsumeButton(Button::Confirm);
         SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
+        StageClearData::SetTutorialCleared(true);   // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®ã‚¯ãƒªã‚¢ã‚’è¨˜éŒ²
         Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
         return;
     }
 
  
-    // -- ƒ|[ƒY§Œä & Å‰‚Ìˆ¥A’†iStep 0j‚Ì‘€ìƒƒbƒN -- //
+    // -- ãƒãƒ¼ã‚ºåˆ¶å¾¡ & æœ€åˆã®æŒ¨æ‹¶ä¸­ï¼ˆStep 0ï¼‰ã®æ“ä½œãƒ­ãƒƒã‚¯ -- //
     if (mnTutorialStep > 0)
     {
-        // Step 0 ‚ªI‚í‚Á‚Ä‚©‚çƒ|[ƒYƒL[‚ğó‚¯•t‚¯‚é
+        // Step 0 ãŒçµ‚ã‚ã£ã¦ã‹ã‚‰ãƒãƒ¼ã‚ºã‚­ãƒ¼ã‚’å—ã‘ä»˜ã‘ã‚‹
         UpdatePause();
     }
 
     float gameDeltaTime = _deltaTime;
 
-    // ƒ|[ƒY’†A‚Ü‚½‚Íu‚±‚ê‚©‚çƒ`ƒ…[ƒgƒŠƒAƒ‹‚ğn‚ß‚é‚æiStep 0jv‚ÌŠÔ‚ÍŠÔ‚ğ~‚ß‚Ä‘€ì•s‰Â‚É‚·‚é
+    // ãƒãƒ¼ã‚ºä¸­ã€ã¾ãŸã¯ã€Œã“ã‚Œã‹ã‚‰ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚’å§‹ã‚ã‚‹ã‚ˆï¼ˆStep 0ï¼‰ã€ã®é–“ã¯æ™‚é–“ã‚’æ­¢ã‚ã¦æ“ä½œä¸å¯ã«ã™ã‚‹
     if ((mpPauseUI != nullptr && mpPauseUI->IsEnabled()) || mnTutorialStep == 0)
     {
         gameDeltaTime = 0.0f;
     }
     else
     {
-        // Step 0 ‚ªI‚í‚Á‚Ä‚¨‚èA‚©‚Âƒ|[ƒY’†‚Å‚È‚¢‚Æ‚«‚¾‚¯•ÏŒ`UI‚ÌŠJ•Â‚ğó‚¯•t‚¯‚é
+        // Step 0 ãŒçµ‚ã‚ã£ã¦ãŠã‚Šã€ã‹ã¤ãƒãƒ¼ã‚ºä¸­ã§ãªã„ã¨ãã ã‘å¤‰å½¢UIã®é–‹é–‰ã‚’å—ã‘ä»˜ã‘ã‚‹
         UpdateShapeUIToggle();
     }
 
 
-    // -- ƒƒbƒZ[ƒWEisƒXƒeƒbƒvXV -- //
+    // -- ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ»é€²è¡Œã‚¹ãƒ†ãƒƒãƒ—æ›´æ–° -- //
     mTypewriter.Update();
     UpdateTutorialStep(_deltaTime);
 
     Scene::Update(gameDeltaTime);
 
-    // -- ƒS[ƒ‹”»’è -- //
+    // -- ã‚´ãƒ¼ãƒ«åˆ¤å®š -- //
     if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
     {
         mbIsClear = true;
@@ -176,7 +180,7 @@ void TutorialScene::Update(float _deltaTime)
             );
         }
 
-        SetTutorialMessage("ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒNƒŠƒAI ‚¨‚ß‚Å‚Æ‚¤I");
+        SetTutorialMessage("ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã‚¯ãƒªã‚¢ï¼ ãŠã‚ã§ã¨ã†ï¼");
     }
 }
 
@@ -184,54 +188,54 @@ void TutorialScene::UpdateTutorialStep(float _deltaTime)
 {
     auto& input = InputManager::GetInstance();
 
-    // Step 0: Å‰‚Ìˆ¥A•¶‚ğ“Ç‚ŞŠÔi•¶š‚ªoI‚í‚Á‚Ä‚©‚ç2.0•bŒo‚Á‚½‚ç‰ñ“]‚Ìà–¾‚Öj
+    // Step 0: æœ€åˆã®æŒ¨æ‹¶æ–‡ã‚’èª­ã‚€æ™‚é–“ï¼ˆæ–‡å­—ãŒå‡ºçµ‚ã‚ã£ã¦ã‹ã‚‰2.0ç§’çµŒã£ãŸã‚‰å›è»¢ã®èª¬æ˜ã¸ï¼‰
     if (mnTutorialStep == 0)
     {
         if (mTypewriter.IsFinished())
         {
             mfStepTimer += _deltaTime;
-            if (mfStepTimer >= 2.0f) // š“Ç‚ŞŠÔ‚Ì’·‚³i2.0•bj
+            if (mfStepTimer >= 2.0f) // â˜…èª­ã‚€æ™‚é–“ã®é•·ã•ï¼ˆ2.0ç§’ï¼‰
             {
                 mnTutorialStep = 1;
-                SetTutorialMessage("‚Ü‚¸‚Í [J][L] ƒL[‚ğ‰Ÿ‚µ‚ÄA\n“¤•…‚ğ‰ñ“]‚³‚¹‚Ä‚İ‚æ‚¤I");
+                SetTutorialMessage("ã¾ãšã¯ [J][L] ã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ã€\nè±†è…ã‚’å›è»¢ã•ã›ã¦ã¿ã‚ˆã†ï¼");
             }
         }
     }
-    // Step 1: ‰ñ“]“ü—Í‚Å•ÏŒ`à–¾‚Ö
+    // Step 1: å›è»¢å…¥åŠ›ã§å¤‰å½¢èª¬æ˜ã¸
     else if (mnTutorialStep == 1)
     {
         if (input.GetAxis(Axis::Rotation) != 0.0f ||
             CheckHitKey(KEY_INPUT_J) != 0 || CheckHitKey(KEY_INPUT_L) != 0)
         {
             mnTutorialStep = 2;
-            SetTutorialMessage("ƒiƒCƒXI Ÿ‚Í•ÏŒ`ƒL[‚ğ‰Ÿ‚µ‚ÄA\n“¤•…‚ÌŒ`‚ğ•Ï‚¦‚Ä‚İ‚æ‚¤I");
+            SetTutorialMessage("ãƒŠã‚¤ã‚¹ï¼ æ¬¡ã¯å¤‰å½¢ã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ã€\nè±†è…ã®å½¢ã‚’å¤‰ãˆã¦ã¿ã‚ˆã†ï¼");
         }
     }
-    // Step 2: •ÏŒ`UI‚ğŠJ‚¢‚½‚çƒ|[ƒYà–¾‚Ö
+    // Step 2: å¤‰å½¢UIã‚’é–‹ã„ãŸã‚‰ãƒãƒ¼ã‚ºèª¬æ˜ã¸
     else if (mnTutorialStep == 2)
     {
         if (mpShapeUI != nullptr && mpShapeUI->IsEnabled())
         {
             mnTutorialStep = 3;
-            SetTutorialMessage("ƒ}ƒX‚ğƒNƒŠƒbƒN‚µ‚Ä•ÏŒ`‚Å‚«‚é‚æI\nŸ‚Í [P]ƒL[ ‚Åƒ|[ƒY‰æ–Ê‚ğŠJ‚¢‚Ä‚İ‚æ‚¤I");
+            SetTutorialMessage("ãƒã‚¹ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦å¤‰å½¢ã§ãã‚‹ã‚ˆï¼\næ¬¡ã¯ [P]ã‚­ãƒ¼ ã§ãƒãƒ¼ã‚ºç”»é¢ã‚’é–‹ã„ã¦ã¿ã‚ˆã†ï¼");
         }
     }
-    // Step 3: ƒ|[ƒY‰æ–Ê‚ğŠJ‚¢‚½‚çÄŠJ‚ÌˆÄ“à‚Ö
+    // Step 3: ãƒãƒ¼ã‚ºç”»é¢ã‚’é–‹ã„ãŸã‚‰å†é–‹ã®æ¡ˆå†…ã¸
     else if (mnTutorialStep == 3)
     {
         if (mpPauseUI != nullptr && mpPauseUI->IsEnabled())
         {
             mnTutorialStep = 4;
-            SetTutorialMessage("ƒ|[ƒY‰æ–Ê‚Å‚ÍÄŠJ‚âƒXƒe[ƒW‘I‘ğ‚Ö–ß‚ê‚é‚æI\nuÄŠJv‚ğ‰Ÿ‚»‚¤I");
+            SetTutorialMessage("ãƒãƒ¼ã‚ºç”»é¢ã§ã¯å†é–‹ã‚„ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠã¸æˆ»ã‚Œã‚‹ã‚ˆï¼\nã€Œå†é–‹ã€ã‚’æŠ¼ãã†ï¼");
         }
     }
-    // Step 4: ƒ|[ƒY‰æ–Ê‚ğ•Â‚¶‚½‚çƒS[ƒ‹ˆÄ“à‚Ö
+    // Step 4: ãƒãƒ¼ã‚ºç”»é¢ã‚’é–‰ã˜ãŸã‚‰ã‚´ãƒ¼ãƒ«æ¡ˆå†…ã¸
     else if (mnTutorialStep == 4)
     {
         if (mpPauseUI != nullptr && !mpPauseUI->IsEnabled())
         {
             mnTutorialStep = 5;
-            SetTutorialMessage("ƒoƒbƒ`ƒŠI\n‚»‚ê‚Å‚ÍƒXƒe[ƒW‰E‚É‚ ‚éƒS[ƒ‹‚ğ–Úw‚»‚¤I");
+            SetTutorialMessage("ãƒãƒƒãƒãƒªï¼\nãã‚Œã§ã¯ã‚¹ãƒ†ãƒ¼ã‚¸å³ã«ã‚ã‚‹ã‚´ãƒ¼ãƒ«ã‚’ç›®æŒ‡ãã†ï¼");
         }
     }
 }
@@ -263,7 +267,7 @@ void TutorialScene::UpdateShapeUIToggle()
 
 void TutorialScene::Draw()
 {
-    // -- ”wŒi•`‰æ -- //
+    // -- èƒŒæ™¯æç”» -- //
     if (mpBackgroundUI != nullptr)
     {
         mpBackgroundUI->DrawBackground();
@@ -271,28 +275,28 @@ void TutorialScene::Draw()
 
     Scene::Draw();
 
-    // -- ƒƒbƒZ[ƒWƒEƒBƒ“ƒhƒE•`‰æ (¶ã‚É‘å‚«‚­”z’u) -- //
+    // -- ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æç”» (å·¦ä¸Šã«å¤§ããé…ç½®) -- //
     constexpr int boxLeft = 30;
     constexpr int boxTop = 25;
-    constexpr int boxRight = 920;  // š‘å‚«‚È•¶š‚ª—]—T‚Åû‚Ü‚é‚æ‚¤‚É‰¡•‚ğŠg‘å
-    constexpr int boxBottom = 165;  // šc•‚à140px‚ÉŠg‘å
+    constexpr int boxRight = 920;  // â˜…å¤§ããªæ–‡å­—ãŒä½™è£•ã§åã¾ã‚‹ã‚ˆã†ã«æ¨ªå¹…ã‚’æ‹¡å¤§
+    constexpr int boxBottom = 165;  // â˜…ç¸¦å¹…ã‚‚140pxã«æ‹¡å¤§
 
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 190);
     DrawBox(boxLeft, boxTop, boxRight, boxBottom, GetColor(0, 0, 0), TRUE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-    // ŠO˜g‚ğ2dü‚É‚µ‚Ä‚Í‚Á‚«‚èŒ©‚â‚·‚­‚·‚é
+    // å¤–æ ã‚’2é‡ç·šã«ã—ã¦ã¯ã£ãã‚Šè¦‹ã‚„ã™ãã™ã‚‹
     DrawBox(boxLeft, boxTop, boxRight, boxBottom, GetColor(255, 255, 255), FALSE);
     DrawBox(boxLeft + 2, boxTop + 2, boxRight - 2, boxBottom - 2, GetColor(255, 255, 255), FALSE);
 
-    // -- ƒeƒLƒXƒg‚ğƒEƒBƒ“ƒhƒE“à‚É‘å‚«‚­•`‰æi‰üs‘Î‰j -- //
+    // -- ãƒ†ã‚­ã‚¹ãƒˆã‚’ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å†…ã«å¤§ããæç”»ï¼ˆæ”¹è¡Œå¯¾å¿œï¼‰ -- //
     if (mMessageFontHandle != -1 && mpMessageUI != nullptr)
     {
         const std::string visibleText = mTypewriter.GetVisibleText();
 
-        constexpr int textX = boxLeft + 30; // ¶’[‚©‚ç30px“à‘¤
-        constexpr int textY = boxTop + 25;  // ã’[‚©‚ç25px“à‘¤
-        constexpr int lineSpacing = 48;     // š36pxƒtƒHƒ“ƒg‚É‡‚í‚¹‚ÄsŠÔ‚àL‚­(48px)
+        constexpr int textX = boxLeft + 30; // å·¦ç«¯ã‹ã‚‰30pxå†…å´
+        constexpr int textY = boxTop + 25;  // ä¸Šç«¯ã‹ã‚‰25pxå†…å´
+        constexpr int lineSpacing = 48;     // â˜…36pxãƒ•ã‚©ãƒ³ãƒˆã«åˆã‚ã›ã¦è¡Œé–“ã‚‚åºƒã(48px)
 
         size_t newlinePos = visibleText.find('\n');
         if (newlinePos == std::string::npos)

@@ -1,7 +1,9 @@
-#include "StageClearData.h"
+﻿#include "StageClearData.h"
 
 bool StageClearData::mbIsStageCleared[8] = {};
 bool StageClearData::mbIsItemCollected[8][3] = {};
+
+bool StageClearData::mbIsTutorialCleared = false;
 
 void StageClearData::SetStageCleared(
     int _stageNumber,
