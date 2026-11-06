@@ -11,10 +11,14 @@ public:
     bool IsBackRequested() const { return mbBackRequested; }
 
 private:
-    UI* mpGuideA = nullptr;
-    UI* mpGuideD = nullptr;
-    UI* mpGuideP = nullptr;
-    UI* mpGuideE = nullptr;
+    // 操作説明をしているUIを生成する純粋関数
+    UI* CreateGuideUI(const std::string _filename, const std::string _text, const VECTOR _offset);
+
+private:
+    UI* mpGuideA;
+    UI* mpGuideD;
+    UI* mpGuideE;
+    UI* mpGuideP;
     UI* mpBackButton = nullptr;
     bool mbBackRequested = false;
 };
