@@ -1,47 +1,42 @@
 ﻿#include "GameScene.h"
 
-#include "Master.h"
-#include "SceneManager.h"
+// -- SceneBase -- //
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
-#include "UIBackground.h"
-#include "SoundManager.h"
 
-//-- Effect --//
-#include "EffectClear.h"
-#include "EffectSmokeSpriteSheet.h"
+// -- Manager(グローバル) -- //
+#include "InputManager.h"
+#include "SoundManager.h"
+#include "ItemRecord.h"
+
+// -- Config -- //
+#include "GameConfig.h"
+#include "ScreenConfig.h"
 
 // -- GameObject -- //
 #include "Stage.h"
 #include "Player.h"
-#include "StageBlock.h"
-#include "MovingBlock.h"
-
-#include <string>
-#include <DxLib.h>
+#include "Goal.h"
+#include "Item.h"
+#include "ItemTable.h"
 
 // -- UI -- //
+#include "UIBackground.h"
 #include "PlayerShapeUI.h"
 #include "PauseUI.h"
 #include "ClearUI.h"
-
-#include "Debug.h"
-#include "GameConfig.h"
-#include "Goal.h"
-
-#include "FontManager.h"
-
-#include "EffectManager.h"
-
-// -- Item -- //
-#include "Item.h"
 #include "ItemHUD.h"
-#include "ItemTable.h"
-#include "ItemRecord.h"
 
-#include "InputManager.h"
-#include "ScreenConfig.h"
+// -- Effect -- //
+#include "EffectManager.h"
+#include "EffectClear.h"
+
+// -- 外部ライブラリ -- //
+#include <DxLib.h>
+
+// -- 標準ライブラリ -- //
+#include <string>
 
 void GameScene::Initialize()
 {
@@ -67,8 +62,6 @@ void GameScene::Initialize()
 	}
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
-
-	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(mnStageNumber);
 
 	mpClearUI = GetUIManager()->CreateUI<ClearUI>(
 		ItemTable::GetFilePath(mnStageNumber, 0),
@@ -131,8 +124,6 @@ void GameScene::Update(float deltaTime)
 	Scene::Update(deltaTime);
 	UpdateItems();
 
-	auto player = GetObjectManager()->FindObject<Player>();
-
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
 	{
 		ItemRecord::GetInstance().Commit(mnStageNumber, mPickedItems);	// Item取得状態の記録
@@ -172,7 +163,6 @@ void GameScene::Draw()
 		mpBackgroundUI->DrawBackground();
 	}
 
-    // Debug::Draw();
     Scene::Draw();
 
 	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）

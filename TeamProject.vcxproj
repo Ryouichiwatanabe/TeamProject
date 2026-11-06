@@ -47,6 +47,7 @@
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\ItemHUD.cpp" />
+    <ClCompile Include="Source\ItemIconUI.cpp" />
     <ClCompile Include="Source\ItemRecord.cpp" />
     <ClCompile Include="Source\ItemTable.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="Source\DisappearingBlock.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemHUD.h" />
+    <ClInclude Include="Source\ItemIconUI.h" />
     <ClInclude Include="Source\ItemRecord.h" />
     <ClInclude Include="Source\ItemTable.h" />
     <ClInclude Include="Source\OperationGuideUI.h" />

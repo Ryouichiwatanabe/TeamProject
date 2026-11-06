@@ -37,7 +37,7 @@ void OperationGuideUI::Init()
     );
 
     // -- 「戻る」ボタンの生成 -- //
-        // memo : これはフォントや画像サイズの関係で、共通化できるとこが少ないので共通化なし
+        // memo : これはフォントや画像サイズの関係で、共通化できるとこが少ないのでベタ書き
     mpBackButton = GetUIManager()->CreateUI<UI>();
     mpBackButton->LoadUIGraph("Resource/UI/Pause/Pause_button.png");
     mpBackButton->GetText().SetFontId(FontId::SubTitle);

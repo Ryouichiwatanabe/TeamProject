@@ -112,23 +112,29 @@
     <Filter Include="ヘッダー ファイル\Scene\Fade">
       <UniqueIdentifier>{ffa64b51-f19f-401c-9764-76cf1fa9f70e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\UI\Pause">
-      <UniqueIdentifier>{9d973f95-e708-4ca9-9448-b352c1e76b82}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\UI\Shape">
-      <UniqueIdentifier>{3ef6d2cb-3fa3-456c-a048-9a99429e0ef2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\UI\Shape">
-      <UniqueIdentifier>{43d15fc6-3d9d-4027-8e52-7eb3557e4568}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\UI\Pause">
-      <UniqueIdentifier>{ecfdaf40-52fe-422d-a762-e067733a3e63}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Item">
       <UniqueIdentifier>{247ef287-93c6-4ad3-a9a1-b436c804249c}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\Item">
       <UniqueIdentifier>{28a7feff-b458-4017-bc65-f20be798ee41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\ItemUI">
+      <UniqueIdentifier>{dd99b30f-8f23-41e2-99d6-a0c23f6a6e97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\PauseUI">
+      <UniqueIdentifier>{ecfdaf40-52fe-422d-a762-e067733a3e63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\ShapeUI">
+      <UniqueIdentifier>{43d15fc6-3d9d-4027-8e52-7eb3557e4568}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\ItemUI">
+      <UniqueIdentifier>{4e9fe684-4694-497d-b342-bdcea231ac85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\PauseUI">
+      <UniqueIdentifier>{9d973f95-e708-4ca9-9448-b352c1e76b82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\ShapeUI">
+      <UniqueIdentifier>{3ef6d2cb-3fa3-456c-a048-9a99429e0ef2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -316,16 +322,16 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\PauseUI.cpp">
-      <Filter>ソース ファイル\UI\Pause</Filter>
+      <Filter>ソース ファイル\UI\PauseUI</Filter>
     </ClCompile>
     <ClCompile Include="Source\PlayerPieceUI.cpp">
-      <Filter>ソース ファイル\UI\Shape</Filter>
+      <Filter>ソース ファイル\UI\ShapeUI</Filter>
     </ClCompile>
     <ClCompile Include="Source\PlayerShapeUI.cpp">
-      <Filter>ソース ファイル\UI\Shape</Filter>
+      <Filter>ソース ファイル\UI\ShapeUI</Filter>
     </ClCompile>
     <ClCompile Include="Source\OperationGuideUI.cpp">
-      <Filter>ソース ファイル\UI\Pause</Filter>
+      <Filter>ソース ファイル\UI\PauseUI</Filter>
     </ClCompile>
     <ClCompile Include="Source\Item.cpp">
       <Filter>ソース ファイル\Item</Filter>
@@ -337,7 +343,10 @@
       <Filter>ソース ファイル\Item</Filter>
     </ClCompile>
     <ClCompile Include="Source\ItemHUD.cpp">
-      <Filter>ソース ファイル\Item</Filter>
+      <Filter>ソース ファイル\UI\ItemUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ItemIconUI.cpp">
+      <Filter>ソース ファイル\UI\ItemUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -537,16 +546,16 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\PauseUI.h">
-      <Filter>ヘッダー ファイル\UI\Pause</Filter>
+      <Filter>ヘッダー ファイル\UI\PauseUI</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayerShapeUI.h">
-      <Filter>ヘッダー ファイル\UI\Shape</Filter>
+      <Filter>ヘッダー ファイル\UI\ShapeUI</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayerPieceUI.h">
-      <Filter>ヘッダー ファイル\UI\Shape</Filter>
+      <Filter>ヘッダー ファイル\UI\ShapeUI</Filter>
     </ClInclude>
     <ClInclude Include="Source\OperationGuideUI.h">
-      <Filter>ヘッダー ファイル\UI\Pause</Filter>
+      <Filter>ヘッダー ファイル\UI\PauseUI</Filter>
     </ClInclude>
     <ClInclude Include="Source\ItemTable.h">
       <Filter>ヘッダー ファイル\Item</Filter>
@@ -558,7 +567,10 @@
       <Filter>ヘッダー ファイル\Item</Filter>
     </ClInclude>
     <ClInclude Include="Source\ItemHUD.h">
-      <Filter>ヘッダー ファイル\Item</Filter>
+      <Filter>ヘッダー ファイル\UI\ItemUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ItemIconUI.h">
+      <Filter>ヘッダー ファイル\UI\ItemUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
