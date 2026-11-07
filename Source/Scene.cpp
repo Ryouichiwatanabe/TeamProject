@@ -56,33 +56,32 @@ void Scene::Finalize() {
 
 void Scene::Update(float _deltaTime)
 {
+	UpdateWorld(_deltaTime * mfWorldTimeScale);
+	UpdateOverlay(_deltaTime);
+}
+
+void Scene::UpdateWorld(float _worldDelta)
+{
 	if (mpObjectManager != nullptr)
-	{
-		mpObjectManager->Update(_deltaTime);
-	}
+		mpObjectManager->Update(_worldDelta);
 
 	if (mpCollisionManager != nullptr)
-	{
 		mpCollisionManager->Update();
-	}
 
 	if (mpObjectManager != nullptr)
-	{
 		mpObjectManager->ResolveCollision();
-	}
+}
 
+void Scene::UpdateOverlay(float _realDelta)
+{
 	if (mpUIManager != nullptr)
-	{
 		mpUIManager->Update();
-	}
+
 	if (mpEffectManager != nullptr)
 	{
-		mpEffectManager->Update(_deltaTime);
-
-		//メンバ変数で呼び出し
+		mpEffectManager->Update(_realDelta);
 		mpEffectManager->PlayClickRipple();
 	}
-
 }
 
 void Scene::Draw()

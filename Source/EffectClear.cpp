@@ -1,6 +1,7 @@
 ﻿#include "EffectClear.h"
 #include "Master.h"
 #include "ResourceManager.h"
+
 #include <cmath>
 
 EffectClear::EffectClear(float fCenterX, float fCenterY)

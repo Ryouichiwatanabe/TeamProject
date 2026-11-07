@@ -41,9 +41,6 @@
 
 void GameScene::Initialize()
 {
-	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
-	mpEffectManager = std::make_unique<EffectManager>();
-	
 	// -- ステージの生成 -- //
 	auto* stage = new Stage();
 	std::string stageFileName =
@@ -51,103 +48,92 @@ void GameScene::Initialize()
 		+ std::to_string(Master::mpSceneManager->GetStageNumber())
 		+ ".csv";
 	stage->Load(stageFileName);
-	
+
 	// -- 「Player変形UI」の生成 -- //
 	if (this->GetObjectManager()->FindObject<Player>())
 		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
-	
+
 	// -- 「背景」の生成 -- //
 	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
 	if (mpBackgroundUI != nullptr) {
 		mpBackgroundUI->SetStageByNumber(Master::mpSceneManager->GetStageNumber());
 	}
 
+	// -- 「Goal」の取得 -- //
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
+	// -- 「ClearUI」の生成 -- //
 	mpClearUI = GetUIManager()->CreateUI<ClearUI>();
-
-	mpPauseUI =
-		this->GetUIManager()
-		->CreateUI<PauseUI>();
+	
+	// -- 「PauseUI」の生成 -- //
+	mpPauseUI = GetUIManager()->CreateUI<PauseUI>();
 	mpPauseUI->SetEnabled(false);
+
+	// -- 「ItemHUD」の生成 -- //
 	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(Master::mpSceneManager->GetStageNumber());
 	mpPauseUI->AddMenuContent(mpItemHUD);
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
-
 }
+
 void GameScene::Update(float deltaTime)
 {
-	// 1. エフェクトマネージャーの更新（クリア中も動かすため最優先）
-	if (mpEffectManager != nullptr)
+	switch (mState)
 	{
-		mpEffectManager->Update(deltaTime);
+	case PlayState::Playing:
+		UpdatePlaying(deltaTime);
+		break;
+
+	case PlayState::Cleared:
+		UpdateCleared(deltaTime);
+		break;
 	}
+}
 
-	// SEチェック
-	if (IsPlayingSE)
-	{
-		// SE_GOAL がまだ再生中かどうかをチェック
-		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOALVOICE))
-		{
-			// 再生が終わったら、別のBGMを再生する
-			SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title); // 例としてゲームBGMなど
-
-			// 2回目以降に発火しないようフラグを下ろす
-			IsPlayingSE = false;
-		}
-	}
-
-	// 2. クリア状態の処理
-	if (mbIsClear)
-	{
-		GetUIManager()->Update();
-
-		return;
-	}
-
+void GameScene::UpdatePlaying(float deltaTime)
+{
 	// -- Pauseの処理 -- //
 	UpdatePauseInput();
-	if (mpPauseUI->IsEnabled())
-		deltaTime = 0.0f;
-	
+	SetWorldTimeScale(mpPauseUI->IsEnabled() ? 0.0f : 1.0f);
 
 	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
-	UpdateShapeUIToggle();
+	UpdateShapeInput();
 
 	// 更新処理
 	Scene::Update(deltaTime);
 	UpdateItems();
 
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
-	{
-		ItemRecord::GetInstance().Commit(Master::mpSceneManager->GetStageNumber(), mPickedItems);	// Item取得状態の記録
-
-		mbIsClear = true;
-
-		// タイトルBGMを停止
-		SoundManager::GetInstance()->StopBGM();
-
-		// クリアエフェクトの再生
-		if (mpEffectManager != nullptr)
-		{
-			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
-			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
-			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
-
-			// SE
-			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOALVOICE);
-
-			IsPlayingSE = true;
-
-			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
-		}
-		mpPauseUI->SetEnabled(false);
-		mpClearUI->Show(mPickedItems);
-	}
+		EnterClear();
 }
 
+void GameScene::EnterClear()
+{
+	// Item取得状態の記録
+	ItemRecord::GetInstance().Commit(Master::mpSceneManager->GetStageNumber(), mPickedItems);
 
+	// ゲーム世界を停止
+	SetWorldTimeScale(0.0f);
+
+	SoundManager::GetInstance()->StopBGM();
+	SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOALVOICE);
+
+	GetEffectManager()->Play<EffectClear>();
+	mpPauseUI->SetEnabled(false);
+	mpClearUI->Show(mPickedItems);
+
+	mState = PlayState::Cleared;
+}
+
+void GameScene::UpdateCleared(float deltaTime)
+{
+	// ゴールボイスが終わったらBGMを流す
+	if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOALVOICE))
+		SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, false);
+
+	// 時間倍率はEnterClearで0にしてあるので、世界は止まったまま
+	Scene::Update(deltaTime);
+}
 
 void GameScene::Draw()
 {
@@ -157,28 +143,13 @@ void GameScene::Draw()
 		mpBackgroundUI->DrawBackground();
 	}
 
-    Scene::Draw();
-
-	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
-	if (mpEffectManager != nullptr)
-	{
-		mpEffectManager->Draw();
-	}
+	Scene::Draw();
 }
 
-void GameScene::UpdateShapeUIToggle()
+void GameScene::UpdateShapeInput()
 {
-	if (mpShapeUI == nullptr)
-		return;
-
-	if (!InputManager::GetInstance().GetButtonDown(Button::Shape))
-		return;
-
-	// ※企画書の「接地中のみ変形可」の条件は今回は加味しない
-	if (mpShapeUI->IsEnabled())
-		mpShapeUI->Close();
-	else
-		mpShapeUI->Open();
+	if (mpShapeUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Shape))
+		mpShapeUI->OnShapeInput();
 }
 
 void GameScene::UpdateItems()
@@ -201,20 +172,13 @@ void GameScene::UpdateItems()
 	}
 }
 
-void GameScene::UpdateClear()
-{
-	/*for (int i = 0; i < GameConfig::MAX_ITEMS_PER_STAGE; i++)
-		mpClearUI->SetCollected(i, mPickedItems[i]);*/
-	mpClearUI->SetEnabled(true);
-}
-
 void GameScene::UpdatePauseInput()
 {
-	if (InputManager::GetInstance().GetButtonDown(Button::Pause))
+	if (mpPauseUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Pause))
 		mpPauseUI->OnPauseInput();
 }
 
 void GameScene::Finalize()
 {
-    Scene::Finalize();
+	Scene::Finalize();
 }

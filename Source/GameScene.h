@@ -1,10 +1,6 @@
 ﻿#pragma once
 
 #include "Scene.h"
-#include <cstddef>
-#include <memory>
-#include "EffectClear.h"
-
 #include "UIBackground.h"
 #include "ItemRecord.h"		// StageFlags を使うため
 
@@ -13,25 +9,36 @@ class Goal;
 class PauseUI;
 class ClearUI;
 class ItemHUD;
-
 class PlayerShapeUI;
 
 class GameScene : public Scene
 {
 public:
-    void Initialize();
-    void Update(float deltaTime);
-    void Draw();
-    void Finalize();
-    std::unique_ptr<EffectManager> mpEffectManager;
+    void Initialize() override;
+    void Update(float deltaTime) override;
+    void Draw() override;
+    void Finalize() override;
 
 private:
-    void UpdatePauseInput();    // 入力に伴い、PauseUIを有効にする
-    void UpdateClear();
-    void UpdateItems();				// Item の取得状態を確認する
-    void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
+    // ゲームの進行状態
+    enum class PlayState
+    {
+        Playing,    // 通常プレイ（ポーズ含む）
+        Cleared,    // クリア後
+    };
 
 private:
+    void UpdatePlaying(float deltaTime);    // Playing中の更新
+    void UpdateCleared(float deltaTime);    // Cleared中の更新
+    void EnterClear();                      // Playing → Cleared への切り替え（1回だけ呼ばれる）
+
+    void UpdatePauseInput();        // 入力に伴い、PauseUIを有効にする
+    void UpdateShapeInput();     // 変形キーで変形UIを開閉する
+    void UpdateItems();             // Item の取得状態を確認する
+
+private:
+    PlayState mState = PlayState::Playing;
+
     Goal* mpGoal = nullptr;
 
     PauseUI* mpPauseUI = nullptr;
@@ -41,8 +48,4 @@ private:
 
     PlayerShapeUI* mpShapeUI = nullptr;
     UIBackground* mpBackgroundUI = nullptr;
-
-    bool mbIsClear = false;
-
-    bool IsPlayingSE = false;
 };
