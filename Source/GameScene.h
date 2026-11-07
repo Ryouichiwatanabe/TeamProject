@@ -43,7 +43,6 @@ private:
     UIBackground* mpBackgroundUI = nullptr;
 
     bool mbIsClear = false;
-    float mClearTimer = 0.0f;
 
     bool IsPlayingSE = false;
 };

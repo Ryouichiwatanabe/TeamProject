@@ -124,7 +124,6 @@ void GameScene::Update(float deltaTime)
 		ItemRecord::GetInstance().Commit(Master::mpSceneManager->GetStageNumber(), mPickedItems);	// Item取得状態の記録
 
 		mbIsClear = true;
-		mClearTimer = 0.0f; // タイマー初期化
 
 		// タイトルBGMを停止
 		SoundManager::GetInstance()->StopBGM();
