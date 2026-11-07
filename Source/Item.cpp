@@ -1,8 +1,14 @@
 ﻿#include "Item.h"
+
+// -- Itemデータ -- //
 #include "ItemTable.h"
+
+// -- Module -- //
 #include "Transform.h"
 #include "Graphic.h"
 #include "Collider.h"
+
+// -- Config -- //
 #include "GameConfig.h"
 
 void Item::InitComponent() {

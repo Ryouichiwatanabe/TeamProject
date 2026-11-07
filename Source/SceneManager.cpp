@@ -24,6 +24,13 @@ void SceneManager::RequestScene(SCENE_TYPE _nextType)
 	mTransition.Start();
 }
 
+void SceneManager::RequestGameScene(int _stageNumber)
+{
+	if (mTransition.IsActive()) return;   // 遷移中なら番号も書き換えない
+	mnStageNumber = _stageNumber;
+	RequestScene(SCENE_TYPE::GAME_SCENE);
+}
+
 void SceneManager::Update(float _deltaTime)
 {
 	if (mTransition.Update()) {
@@ -68,14 +75,8 @@ void SceneManager::ChangeSceneIfNeeded()
 		break;
 
 	case SCENE_TYPE::GAME_SCENE:
-	{
-		auto* gameScene = new GameScene();
-
-		gameScene->SetStageNumber(mnStageNumber);
-
-		mpCurrentScene = gameScene;
+		mpCurrentScene = new GameScene();
 		break;
-	}
 
 	default:
 		break;
@@ -85,11 +86,6 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene->Initialize();	// 新シーンの初期処理をする
 	}
 	
-}
-
-void SceneManager::SetStageNumber(int _stageNumber)
-{
-	mnStageNumber = _stageNumber;
 }
 
 int SceneManager::GetStageNumber() const

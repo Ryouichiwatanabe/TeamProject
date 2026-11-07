@@ -1,6 +1,7 @@
 ﻿#include "GameScene.h"
 
 // -- SceneBase -- //
+#include "Master.h"
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
@@ -47,7 +48,7 @@ void GameScene::Initialize()
 	auto* stage = new Stage();
 	std::string stageFileName =
 		"Resource/Stage/Stage"
-		+ std::to_string(mnStageNumber)
+		+ std::to_string(Master::mpSceneManager->GetStageNumber())
 		+ ".csv";
 	stage->Load(stageFileName);
 	
@@ -58,22 +59,18 @@ void GameScene::Initialize()
 	// -- 「背景」の生成 -- //
 	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
 	if (mpBackgroundUI != nullptr) {
-		mpBackgroundUI->SetStageByNumber(mnStageNumber);
+		mpBackgroundUI->SetStageByNumber(Master::mpSceneManager->GetStageNumber());
 	}
 
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
-	mpClearUI = GetUIManager()->CreateUI<ClearUI>(
-		ItemTable::GetFilePath(mnStageNumber, 0),
-		ItemTable::GetFilePath(mnStageNumber, 1),
-		ItemTable::GetFilePath(mnStageNumber, 2)
-	);
+	mpClearUI = GetUIManager()->CreateUI<ClearUI>();
 
 	mpPauseUI =
 		this->GetUIManager()
 		->CreateUI<PauseUI>();
 	mpPauseUI->SetEnabled(false);
-	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(mnStageNumber);
+	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(Master::mpSceneManager->GetStageNumber());
 	mpPauseUI->AddMenuContent(mpItemHUD);
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
@@ -104,8 +101,6 @@ void GameScene::Update(float deltaTime)
 	// 2. クリア状態の処理
 	if (mbIsClear)
 	{
-		UpdateClear();
-
 		GetUIManager()->Update();
 
 		return;
@@ -126,7 +121,7 @@ void GameScene::Update(float deltaTime)
 
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
 	{
-		ItemRecord::GetInstance().Commit(mnStageNumber, mPickedItems);	// Item取得状態の記録
+		ItemRecord::GetInstance().Commit(Master::mpSceneManager->GetStageNumber(), mPickedItems);	// Item取得状態の記録
 
 		mbIsClear = true;
 		mClearTimer = 0.0f; // タイマー初期化
@@ -149,7 +144,7 @@ void GameScene::Update(float deltaTime)
 			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
 		}
 		mpPauseUI->SetEnabled(false);
-		mpClearUI->SetEnabled(true);
+		mpClearUI->Show(mPickedItems);
 	}
 }
 
@@ -209,19 +204,15 @@ void GameScene::UpdateItems()
 
 void GameScene::UpdateClear()
 {
-	for (int i = 0; i < GameConfig::MAX_ITEMS_PER_STAGE; i++)
-		mpClearUI->SetCollected(i, mPickedItems[i]);
+	/*for (int i = 0; i < GameConfig::MAX_ITEMS_PER_STAGE; i++)
+		mpClearUI->SetCollected(i, mPickedItems[i]);*/
+	mpClearUI->SetEnabled(true);
 }
 
 void GameScene::UpdatePauseInput()
 {
 	if (InputManager::GetInstance().GetButtonDown(Button::Pause))
 		mpPauseUI->OnPauseInput();
-}
-
-void GameScene::SetStageNumber(int _stageNumber)
-{
-    mnStageNumber = _stageNumber;
 }
 
 void GameScene::Finalize()

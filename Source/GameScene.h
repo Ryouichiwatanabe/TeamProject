@@ -23,7 +23,6 @@ public:
     void Update(float deltaTime);
     void Draw();
     void Finalize();
-    void SetStageNumber(int _stageNumber);
     std::unique_ptr<EffectManager> mpEffectManager;
 
 private:
@@ -42,8 +41,6 @@ private:
 
     PlayerShapeUI* mpShapeUI = nullptr;
     UIBackground* mpBackgroundUI = nullptr;
-
-    int mnStageNumber = 1;
 
     bool mbIsClear = false;
     float mClearTimer = 0.0f;

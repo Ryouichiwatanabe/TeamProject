@@ -81,13 +81,7 @@ void StageSelectScene::Update(float _deltaTime)
 
 			mnSelectedStage = i;
 
-			Master::mpSceneManager->SetStageNumber(
-				i + 1
-			);
-
-			Master::mpSceneManager->RequestScene(
-				SCENE_TYPE::GAME_SCENE
-			);
+			Master::mpSceneManager->RequestGameScene(i + 1);
 
 			break;
 		}
