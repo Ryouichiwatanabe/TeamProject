@@ -90,5 +90,5 @@ void ClearUI::Update()
     UI::Update();
 
     if (mpStageSelectUI->GetButton().IsClicked())
-        Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
+        Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE_EX);
 }

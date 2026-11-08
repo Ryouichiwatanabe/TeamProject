@@ -76,6 +76,7 @@
     <ClCompile Include="Source\StageClearData.cpp" />
     <ClCompile Include="Source\StageSelectData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
+    <ClCompile Include="Source\StageSelectScene_ex.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
@@ -116,6 +117,7 @@
     <ClInclude Include="Source\ItemRecord.h" />
     <ClInclude Include="Source\ItemTable.h" />
     <ClInclude Include="Source\OperationGuideUI.h" />
+    <ClInclude Include="Source\StageSelectScene_ex.h" />
     <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />

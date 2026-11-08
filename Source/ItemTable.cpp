@@ -14,6 +14,17 @@ namespace {
 		{7,0,"Mentuyu.png"}, {7,1,"Negi.png"},       {7,2,"Oil.png"},
 		{8,0,"Kukonomi.png"},{8,1,"Kyouninsou.png"}, {8,2,"Milk.png"},
 	};
+
+	constexpr DishDef DISH_DEFS[] = {
+		{ 1, "hiyayakko.png", "冷奴" },
+		{ 2, "Yudouhu.png", "湯豆腐" },
+		{ 3, "Atsuage.png", "厚揚げ" },
+		{ 4, "Misosiru.png", "味噌汁" },
+		{ 5, "Ma-bo.png", "麻婆豆腐" },
+		{ 6, "Nikudouhu.png", "肉豆腐" },
+		{ 7, "Agedasidouhu.png", "揚げ出し豆腐" },
+		{ 8, "Anninndouhu.png", "杏仁豆腐" },
+	};
 }
 
 const ItemDef* ItemTable::Find(int _stage, int _slot) {
@@ -29,4 +40,24 @@ std::string ItemTable::GetFilePath(int _stage, int _slot) {
 	if (def == nullptr)
 		return "";
 	return std::string(ITEM_DIR) + std::to_string(def->stage) + "/" + def->filename;
+}
+
+const DishDef* ItemTable::FindDish(int _stage) {
+	for (const auto& def : DISH_DEFS) {
+		if (def.stage == _stage)
+			return &def;
+	}
+	return nullptr;
+}
+
+std::string ItemTable::GetDishFilePath(int _stage) {
+	const DishDef* def = FindDish(_stage);
+	if (def == nullptr)
+		return "";
+	return std::string(ITEM_DIR) + std::to_string(def->stage) + "/" + def->filename;
+}
+
+std::string ItemTable::GetDishName(int _stage) {
+	const DishDef* def = FindDish(_stage);
+	return (def != nullptr) ? def->name : "";
 }

@@ -11,7 +11,9 @@ void ItemIconUI::Draw() {
 	int r, g, b;
 	GetDrawBright(&r, &g, &b);
 
-	SetDrawBright(SHADOW_BRIGHT, SHADOW_BRIGHT, SHADOW_BRIGHT);
-	UI::Draw();
+	SetDrawBright(mnShadowBright, mnShadowBright, mnShadowBright);
+	GetGraphic().Draw();	// 画像だけ暗くする
 	SetDrawBright(r, g, b);	// 必ず元に戻す
+
+	GetText().Draw();		// 「?」などの文字は通常の明るさで描く
 }

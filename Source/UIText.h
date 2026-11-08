@@ -51,6 +51,9 @@ public:
 	void SetAlign(UITextAlign _align) { mAlign = _align; }
 	UITextAlign GetAlign() const { return mAlign; }
 
+	// -- 下線 -- //
+	void SetUnderline(bool _enabled) { mbUnderline = _enabled; }
+
 	void SetVerticalAlign(UITextVerticalAlign _align) { mVerticalAlign = _align; }
 	UITextVerticalAlign GetVerticalAlign() const { return mVerticalAlign; }
 
@@ -58,6 +61,7 @@ public:
 
 private:
 	VECTOR CalculateTextDrawPosition(int _fontHandle) const;	// Alignを考慮した描画座標を返す
+	void DrawUnderline(const VECTOR& _textPosition, int _fontHandle) const;
 
 private:
 	std::string mText;	// 描画するテキストの全文
@@ -71,6 +75,11 @@ private:
 	UITextVerticalAlign mVerticalAlign = UITextVerticalAlign::CENTER;	// 縦の配置(デフォルトは中央揃え)
 
 	VECTOR mvOffset = VGet(0.0f, 0.0f, 0.0f);	// 配置後の追加オフセット
+
+	bool mbUnderline = false;	// 下線を引くか
+	static constexpr int UNDERLINE_GAP = 4;			// 文字と下線の隙間
+	static constexpr int UNDERLINE_THICKNESS = 3;	// 下線の太さ
+	static constexpr int UNDERLINE_PADDING = 6;		// 下線を文字幅より左右に伸ばす量
 
 	UI* mpUI = nullptr;	// 付与先のUI
 };
