@@ -11,11 +11,11 @@
 
 namespace
 {
-	// ステージ用の背景画像がないときに使う画像
+	// ステージ専用の背景画像がないときに使う画像
 	constexpr const char* DEFAULT_BG_PATH =
 		"Resource/StageSelect/StageSelectMaterial/Foundation.png";
 
-	// 背景の明るさ（0:真っ黒 ～ 255:通常）
+	// 背景の明るさ（0:真っ暗 ～ 255:通常）
 	constexpr int BG_BRIGHTNESS = 160;
 }
 
@@ -31,13 +31,6 @@ UIBackground::~UIBackground()
 void UIBackground::Init()
 {
 	SetEnabled(true);
-
-	//Master経由で現在のシーンのEffectManagerを呼び出して湯気を再生（引数省略で中央の鍋から出る）
-	Master::mpSceneManager
-		->GetCurrentScene()
-		->GetEffectManager()
-		->Play<EffectSteam>();
-
 }
 
 void UIBackground::Update()
@@ -47,8 +40,8 @@ void UIBackground::Update()
 
 void UIBackground::Draw()
 {
-	// UIManagerからも呼ばれるが、ここで描くとステージより手前に出てしまう
-	// 描画は DrawBackground() で行う
+	// UIManagerから呼ばれるが、ここで描くとステージより前に出てしまう
+	// 実際の描画は DrawBackground() で行う
 }
 
 void UIBackground::DrawBackground()
@@ -82,6 +75,12 @@ void UIBackground::SetStageByNumber(int _stageNumber)
 	}
 
 	mnCurrentStageNumber = _stageNumber;
+
+	// ★ステージ番号を渡して、そのステージ専用の位置・範囲で湯気エフェクトを生成！
+	Master::mpSceneManager
+		->GetCurrentScene()
+		->GetEffectManager()
+		->Play<EffectSteam>(_stageNumber);
 
 	const std::string bgFilePath = BuildBackgroundPath(mnCurrentStageNumber);
 

@@ -104,6 +104,7 @@
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
     <ClInclude Include="Source\EffectSteam.h" />
+    <ClInclude Include="Source\EffectSteamConfig.h" />
     <ClInclude Include="Source\EffectTrans.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />

@@ -14,11 +14,32 @@ void EffectManager::Update(float deltaTime)
         });
 }
 
+
+
+// ★追加：背面エフェクト（湯気など）だけを描画
+void EffectManager::DrawBackground() const
+{
+    for (const auto& effect : effects_)
+    {
+        if (effect->IsBackgroundEffect())
+        {
+            effect->Draw();
+        }
+    }
+}
+
+// 前面エフェクト（クリック・水飛沫・変形・クリアなど）だけを描画
 void EffectManager::Draw() const
 {
     for (const auto& effect : effects_)
-        effect->Draw();
+    {
+        if (!effect->IsBackgroundEffect())
+        {
+            effect->Draw();
+        }
+    }
 }
+
 
 void EffectManager::Clear()
 {

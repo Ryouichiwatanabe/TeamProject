@@ -18,7 +18,7 @@ public:
     void Update(float deltaTime);
     void Draw() const;
     void Clear();
-
+    void DrawBackground() const; // ★追加：背面エフェクトの描画
     void PlayClickRipple();
 
     /**
