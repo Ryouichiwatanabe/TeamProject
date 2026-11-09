@@ -1,258 +1,138 @@
 ﻿#include "GameScene.h"
 
+// -- SceneBase -- //
 #include "Master.h"
-#include "SceneManager.h"
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "UIManager.h"
-#include "UIBackground.h"
-#include "SoundManager.h"
-#include "StageClearData.h"
 
-//-- Effect --//
-#include "EffectClear.h"
-#include "EffectSmokeSpriteSheet.h"
+// -- Manager(グローバル) -- //
+#include "InputManager.h"
+#include "SoundManager.h"
+#include "ItemRecord.h"
+
+// -- Config -- //
+#include "GameConfig.h"
+#include "ScreenConfig.h"
 
 // -- GameObject -- //
 #include "Stage.h"
 #include "Player.h"
-#include "StageBlock.h"
-#include "MovingBlock.h"
-
-#include <string>
-#include <DxLib.h>
+#include "Goal.h"
+#include "Item.h"
+#include "ItemTable.h"
 
 // -- UI -- //
+#include "UIBackground.h"
 #include "PlayerShapeUI.h"
-#include "Collectible.h"
 #include "PauseUI.h"
 #include "ClearUI.h"
+#include "ItemHUD.h"
 
-#include "Debug.h"
-#include "GameConfig.h"
-#include "Goal.h"
-
-#include "FontManager.h"
-
+// -- Effect -- //
 #include "EffectManager.h"
+#include "EffectClear.h"
 
+// -- 外部ライブラリ -- //
+#include <DxLib.h>
 
-#include "InputManager.h"
-#include "ScreenConfig.h"
+// -- 標準ライブラリ -- //
+#include <string>
 
 void GameScene::Initialize()
 {
-	mbPreviousMouseLeft = (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
-
-	// エフェクトマネージャーの生成（ヘッダーで std::unique_ptr<EffectManager> mpEffectManager を宣言）
-	mpEffectManager = std::make_unique<EffectManager>();
-	
-
-	// 画面中央の座標を計算
-	constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;  // 640.0f
-	constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f; // 360.0f
-
-	
-	// 初期化処理
-	mpPlayer = this->GetObjectManager()->CreateObject<Player>();
-	// -- 変形UIの生成 (Player生成後に行うこと : Init内でPlayerを探すため) -- //
-	if (mpPlayer != nullptr)
-	{
-		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
-	}
-
+	// -- ステージの生成 -- //
 	auto* stage = new Stage();
-
 	std::string stageFileName =
 		"Resource/Stage/Stage"
-		+ std::to_string(mnStageNumber)
+		+ std::to_string(Master::mpSceneManager->GetStageNumber())
 		+ ".csv";
-
 	stage->Load(stageFileName);
 
-	// ==========================================
-	// ★ 背景UIの生成とステージ反映
-	// ==========================================
+	// -- 「Player変形UI」の生成 -- //
+	if (this->GetObjectManager()->FindObject<Player>())
+		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
+
+	// -- 「背景」の生成 -- //
 	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
-	if (mpBackgroundUI != nullptr)
-	{
-		// ステージ番号に対応した背景画像をロード
-		mpBackgroundUI->SetStageByNumber(mnStageNumber);
+	if (mpBackgroundUI != nullptr) {
+		mpBackgroundUI->SetStageByNumber(Master::mpSceneManager->GetStageNumber());
 	}
 
+	// -- 「Goal」の取得 -- //
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();
 
-	mpMovingBlock = this->GetObjectManager()->FindObject<MovingBlock>();
-
-
-	// ★フォントの取得（サイズ32、太さ3、アンチエイリアス）
-	// 引数を省略した場合は既定の太さ(-1)になります
-	//mFontHandle = Master::mpFontManager->GetFont("メイリオ", 32, 3);
-
-	mAddedFontHandle = static_cast<void*>(AddFontFile("Resource/Font/PixelMplus10-Regular.ttf"));
-
-	// 2. アンチエイリアスを切ってフォントハンドルを作成
-//    フォント名にはファイル名ではなく、フォント自体の「フォントファミリー名」を指定
-	int fontType = DX_FONTTYPE_NORMAL; // アンチエイリアス無効（ドットがくっきり残る）
-
-	StageNumberFontHandle = CreateFontToHandle("PixelMplus10", 80, -1, fontType);
-
-	mMessageFontHandle = CreateFontToHandle("PixelMplus10", 30, -1, fontType);
-
-
-	//Stage文字ラベルの初期化
-	/*std::string stageText = "Stage" + std::to_string(mnStageNumber) + " ";
-	FloatingMotion stageMotion(120, 15.0f);*/
-
-
-	//Typewriter
-	//mMessageMotion = FloatingMotion(90, 4.0f);
-	std::string startMessage = "Stage" + std::to_string(mnStageNumber) + "スタート! ゴールをめざせ!";
-	mbIsMessageActive = true;//メッセージ表示開始
-
-	// mClearTextMotion = FloatingMotion(120, 5.0f);
-
-   /* auto* fakePlayer = 
-        this
-        ->GetObjectManager()ljl
-        ->CreateObject<FakePlayer>();*/
-
-	auto* testUI =
-		this
-		->GetUIManager()
-		->CreateUI<PlayerShapeUI>();
-
-	// クリアUI
-	mpClearUI =
-		this->GetUIManager()
-		->CreateUI<ClearUI>(
-			stage->GetCollectibleFilename(0),
-			stage->GetCollectibleFilename(1),
-			stage->GetCollectibleFilename(2)
-		);
-
-	mpClearUI->SetEnabled(false);
-
-	mpPauseUI =
-		this->GetUIManager()
-		->CreateUI<PauseUI>();
+	// -- 「ClearUI」の生成 -- //
+	mpClearUI = GetUIManager()->CreateUI<ClearUI>();
+	
+	// -- 「PauseUI」の生成 -- //
+	mpPauseUI = GetUIManager()->CreateUI<PauseUI>();
 	mpPauseUI->SetEnabled(false);
 
-	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
+	// -- 「ItemHUD」の生成 -- //
+	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(Master::mpSceneManager->GetStageNumber());
+	mpPauseUI->AddMenuContent(mpItemHUD);
 
+	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 }
 
 void GameScene::Update(float deltaTime)
 {
-	// 1. エフェクトマネージャーの更新（クリア中も動かすため最優先）
-	if (mpEffectManager != nullptr)
+	switch (mState)
 	{
-		mpEffectManager->Update(deltaTime);
+	case PlayState::Playing:
+		UpdatePlaying(deltaTime);
+		break;
+
+	case PlayState::Cleared:
+		UpdateCleared(deltaTime);
+		break;
 	}
+}
 
-	// SEチェック
-	if (IsPlayingSE)
-	{
-		// SE_GOAL がまだ再生中かどうかをチェック
-		if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOALVOICE))
-		{
-			// 再生が終わったら、別のBGMを再生する
-			SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title); // 例としてゲームBGMなど
-
-			// 2回目以降に発火しないようフラグを下ろす
-			IsPlayingSE = false;
-		}
-	}
-
-	// 2. クリア状態の処理
-	if (mbIsClear)
-	{
-		UpdateClear();
-
-		GetUIManager()->Update();
-
-		return;
-	}
-
+void GameScene::UpdatePlaying(float deltaTime)
+{
 	// -- Pauseの処理 -- //
 	UpdatePauseInput();
-	if (mpPauseUI->IsEnabled())
-		deltaTime = 0.0f;
-	
+	SetWorldTimeScale(mpPauseUI->IsEnabled() ? 0.0f : 1.0f);
 
 	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
-	UpdateShapeUIToggle();
+	UpdateShapeInput();
 
 	// 更新処理
 	Scene::Update(deltaTime);
-
-	auto player = GetObjectManager()->FindObject<Player>();
-
-	// Collectibleの取得状態を確認
-	auto collectibles =
-		GetObjectManager()->FindObjects<Collectible>();
-
-	for (auto collectible : collectibles)
-	{
-		int itemIndex = collectible->GetItemIndex();
-
-		if (itemIndex < 0 || itemIndex >= 3)
-		{
-			continue;
-		}
-
-		if (collectible->IsPickedUp())
-		{
-			// 現在のステージ内でアイテムを取得済みにする
-			mbIsCollectibleCollected[itemIndex] = true;
-
-			// ステージ選択画面でも取得状態を確認できるように保存する
-			StageClearData::SetItemCollected(
-				mnStageNumber,
-				itemIndex,
-				true
-			);
-		}
-	}
+	UpdateItems();
 
 	if (mpGoal != nullptr && mpGoal->IsPlayerTouching())
-	{
-		bool isAllCollected =
-			mbIsCollectibleCollected[0] &&
-			mbIsCollectibleCollected[1] &&
-			mbIsCollectibleCollected[2];
+		EnterClear();
+}
 
-		if (isAllCollected)
-		{
-			StageClearData::SetStageCleared(
-				mnStageNumber,
-				true
-			);
-		}
+void GameScene::EnterClear()
+{
+	// Item取得状態の記録
+	ItemRecord::GetInstance().Commit(Master::mpSceneManager->GetStageNumber(), mPickedItems);
 
-		mbIsClear = true;
-		mClearTimer = 0.0f;
+	// ゲーム世界を停止
+	SetWorldTimeScale(0.0f);
 
-		// タイトルBGMを停止
-		SoundManager::GetInstance()->StopBGM();
+	SoundManager::GetInstance()->StopBGM();
+	SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOALVOICE);
 
-		// クリアエフェクトの再生
-		if (mpEffectManager != nullptr)
-		{
-			// 画面の中心座標（1280x720 の中央）で花火エフェクトを再生
-			constexpr float screenCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f;   // 640.0f
-			constexpr float screenCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f;  // 360.0f
+	GetEffectManager()->Play<EffectClear>();
+	mpPauseUI->SetEnabled(false);
+	mpClearUI->Show(mPickedItems);
 
-			// SE
-			SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_GOALVOICE);
+	mState = PlayState::Cleared;
+}
 
-			IsPlayingSE = true;
+void GameScene::UpdateCleared(float deltaTime)
+{
+	// ゴールボイスが終わったらBGMを流す
+	if (!SoundManager::GetInstance()->IsPlayingSE(SoundManager::SOUND_SE::SE_GOALVOICE))
+		SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, false);
 
-			mpEffectManager->Play<EffectClear>(screenCenterX, screenCenterY);
-		}
-		mpPauseUI->SetEnabled(false);
-		mpClearUI->SetEnabled(true);
-	}
+	// 時間倍率はEnterClearで0にしてあるので、世界は止まったまま
+	Scene::Update(deltaTime);
 }
 
 void GameScene::Draw()
@@ -263,79 +143,42 @@ void GameScene::Draw()
 		mpBackgroundUI->DrawBackground();
 	}
 
-    // Debug::Draw();
-    Scene::Draw();
-
-	// エフェクト描画（オブジェクトの上、クリア暗転UIの下）
-	if (mpEffectManager != nullptr)
-	{
-		mpEffectManager->Draw();
-	}
+	Scene::Draw();
 }
 
-void GameScene::UpdateShapeUIToggle()
+void GameScene::UpdateShapeInput()
 {
-	if (mpShapeUI == nullptr)
-		return;
-
-	if (!InputManager::GetInstance().GetButtonDown(Button::Shape))
-		return;
-
-	// ※企画書の「接地中のみ変形可」の条件は今回は加味しない
-	if (mpShapeUI->IsEnabled())
-		mpShapeUI->Close();
-	else
-		mpShapeUI->Open();
+	if (mpShapeUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Shape))
+		mpShapeUI->OnShapeInput();
 }
 
-void GameScene::UpdateClear()
+void GameScene::UpdateItems()
 {
-	for (int i = 0; i < 3; i++)
+	for (auto* item : GetObjectManager()->FindObjects<Item>())
 	{
-		mpClearUI->SetCollected(
-			i,
-			mbIsCollectibleCollected[i]
-		);
+		if (!item->IsPicked())
+			continue;
+
+		const int slot = item->GetSlot();
+		if (slot < 0 || slot >= GameConfig::MAX_ITEMS_PER_STAGE)
+			continue;
+
+		if (mPickedItems[slot])		// 取得済みなら何もしない
+			continue;
+
+		// ここに来るのは「取った最初のフレーム」だけ
+		mPickedItems[slot] = true;
+		mpItemHUD->SetPicked(slot);
 	}
 }
 
 void GameScene::UpdatePauseInput()
 {
-	if (InputManager::GetInstance().GetButtonDown(Button::Pause))
-		mpPauseUI->ToggleEnabled();
-}
-
-void GameScene::SetStageNumber(int _stageNumber)
-{
-    mnStageNumber = _stageNumber;
+	if (mpPauseUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Pause))
+		mpPauseUI->OnPauseInput();
 }
 
 void GameScene::Finalize()
 {
-
-	//===リソースの開放===//
-	if (StageNumberFontHandle != -1)
-	{
-		DeleteFontToHandle(StageNumberFontHandle);
-		StageNumberFontHandle = -1;
-	}
-
-	//===リソースの開放===//
-	if (mMessageFontHandle != -1)
-	{
-		DeleteFontToHandle(mMessageFontHandle);
-		mMessageFontHandle = -1;
-	}
-
-	if (mAddedFontHandle != nullptr)
-	{
-		//===登録したフォントの削除===//
-		RemoveFontFile(static_cast<HANDLE>(mAddedFontHandle));
-		mAddedFontHandle = nullptr;
-	}
-
-
-
-    // 終了処理
-    Scene::Finalize();
+	Scene::Finalize();
 }

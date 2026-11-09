@@ -41,10 +41,35 @@ void PlayerShapeUI::Init()
 	}
 
 	// -- ボタン・メッセージ生成 -- //
-	// Todo : 画像が決まり次第差し替え
-	mpConfirmUI = CreateButtonUI("OK", -BUTTON_OFFSET_X, BUTTON_OFFSET_Y);
-	mpBackUI = CreateButtonUI("Back", BUTTON_OFFSET_X, BUTTON_OFFSET_Y);
 	mpMessageUI = CreateMessageUI(0.0f, MESSAGE_OFFSET_Y);
+
+	// -- 「OK」ボタン生成 -- //
+	mpConfirmUI = GetUIManager()->CreateUI<UI>();
+	mpConfirmUI->LoadUIGraph("Resource/UI/ShapeSelect/Spoon.png");
+	mpConfirmUI->SetLayer(LAYER_BUTTON);
+	mpConfirmUI->GetTransform().SetScale(VGet(1.0f, 1.0f, 1.0f));
+	mpConfirmUI->GetTransform().SetPosition(VGet(-BUTTON_OFFSET_X, BUTTON_OFFSET_Y, 0.0f));
+	mpConfirmUI->GetText().SetColor(GetColor(255, 113, 36));
+	mpConfirmUI->GetText().SetFontId(FontId::Button);
+	mpConfirmUI->GetText().SetText("OK!");
+
+	this->AddChild(mpConfirmUI);
+	mpConfirmUI->SetParent(this);
+	mpConfirmUI->SetEnabled(true);
+
+	// -- 「Back」ボタン生成 -- //
+	mpBackUI = GetUIManager()->CreateUI<UI>();
+	mpBackUI->LoadUIGraph("Resource/UI/ShapeSelect/Fork.png");
+	mpBackUI->SetLayer(LAYER_BUTTON);
+	mpBackUI->GetTransform().SetScale(VGet(1.0f, 1.0f, 1.0f));
+	mpBackUI->GetTransform().SetPosition(VGet(BUTTON_OFFSET_X, BUTTON_OFFSET_Y, 0.0f));
+	mpBackUI->GetText().SetColor(GetColor(255, 113, 36));
+	mpBackUI->GetText().SetFontId(FontId::Button);
+	mpBackUI->GetText().SetText("Back!");
+
+	this->AddChild(mpBackUI);
+	mpBackUI->SetParent(this);
+	mpBackUI->SetEnabled(true);
 	
 	// -- オーバーレイ生成 -- //
 	mpOverlay = GetUIManager()->CreateUI<UI>();
@@ -88,23 +113,6 @@ void PlayerShapeUI::CreatePieceUI(int _column, int _row)
 	));
 }
 
-UI* PlayerShapeUI::CreateButtonUI(const std::string& _text, float _x, float _y)
-{
-	UI* button = GetUIManager()->CreateUI<UI>();
-
-	button->LoadUIGraph("Resource/UI/ShapeSelect/Shape_cell.png");
-	button->SetLayer(LAYER_BUTTON);
-	button->GetTransform().SetScale(VGet(1.0f, 0.8f, 1.0f));
-	button->GetTransform().SetPosition(VGet(_x, _y, 0.0f));
-	button->GetText().SetText(_text);
-
-	this->AddChild(button);
-	button->SetParent(this);
-	button->SetEnabled(true);
-
-	return button;
-}
-
 UI* PlayerShapeUI::CreateMessageUI(float _x, float _y)
 {
 	// 画像なし・テキストのみのUI
@@ -140,6 +148,14 @@ void PlayerShapeUI::Close()
 		mpPlayer->EndShapeEdit();
 
 	SetEnabled(false);
+}
+
+void PlayerShapeUI::OnShapeInput()
+{
+	if (IsEnabled())
+		Close();
+	else
+		Open();
 }
 
 void PlayerShapeUI::Update()

@@ -18,8 +18,7 @@
 #include "DisappearingBlock.h"
 #include "Switch.h"
 #include "SwitchBlock.h"
-#include "Collectible.h"
-#include "CollectibleData.h"
+#include "Item.h"
 
 #include "Transform.h"
 
@@ -65,14 +64,6 @@ void Stage::Load(const std::string& _filename)
 	CreateObjects();
 }
 
-std::string Stage::GetCollectibleFilename(int _itemIndex) const
-{
-    return ::GetCollectibleFilename(
-        mStageNumber,
-        _itemIndex
-    );
-}
-
 void Stage::CreateObjects()
 {
     auto* objectManager =
@@ -114,9 +105,12 @@ void Stage::CreateObjects()
                 auto goalBlock = objectManager
                     ->CreateObject<Goal>();
 
-                goalBlock
-                    ->GetModule<Transform>()
-                    ->SetPosition(initPosition);
+                auto transform = goalBlock->GetModule<Transform>();
+                const VECTOR baseScale = transform->GetScale();
+                const VECTOR addScale = VGet(0.5f, 0.5f, 0.0f);
+                transform->SetScale(VAdd(baseScale, addScale));
+
+                transform->SetPosition(initPosition);
 
                 break;
             }
@@ -147,13 +141,9 @@ void Stage::CreateObjects()
 
             case 5:
             {
-                // リスポーン地点を設定
-                /*mvRespawnPos = VGet(
-                    (x * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
-                    (y * GameConfig::CELL_SIZE) + GameConfig::CELL_SIZE / 2.0f,
-                    0.0f
-                );*/
-
+                auto player = objectManager->CreateObject<Player>();
+                player->GetModule<Transform>()->SetPosition(initPosition);
+                player->UpdatePieceTransforms();    // Pieceに反映
                 break;
             }
 
@@ -189,21 +179,9 @@ void Stage::CreateObjects()
             case 10:
             case 11:
             {
-                // Collectibleを生成
-                int itemIndex = tile - 9;
-
-                std::string filename =
-                    GetCollectibleFilename(itemIndex);
-
-                auto collectible = objectManager
-                    ->CreateObject<Collectible>(
-                        filename,
-                        itemIndex
-                    );
-
-                collectible
-                    ->GetModule<Transform>()
-                    ->SetPosition(initPosition);
+                auto item = objectManager->CreateObject<Item>(mStageNumber, tile - 9);
+                item->GetModule<Transform>()->SetPosition(initPosition);
+                break;
 
                 break;
             }

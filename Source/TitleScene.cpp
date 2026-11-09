@@ -8,8 +8,9 @@
 #include "SceneManager.h"
 
 #include "InputManager.h"
-//#include "FontManager.h"	// FontId
 #include "SoundManager.h"
+
+#include "StageClearData.h"	// IsTutorialCleared()
 
 #include "ScreenConfig.h"	// 背景画像の拡縮
 
@@ -71,7 +72,10 @@ void TitleScene::Update(float _deltaTime)
 		InputManager::GetInstance().ConsumeButton(Button::Confirm);
 		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
-		Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
+		const SCENE_TYPE next = StageClearData::IsTutorialCleared()
+			? SCENE_TYPE::STAGE_SELECT_SCENE
+			: SCENE_TYPE::TUTORIAL_SCENE;
+		Master::mpSceneManager->RequestScene(next);
 	}
 
 	// -- 「Quit」ボタンを押した場合 -- //

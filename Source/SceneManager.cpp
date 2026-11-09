@@ -5,6 +5,7 @@
 #include "GameScene.h"
 #include "StageSelectScene.h"
 #include "TitleScene.h"
+#include "TutorialScene.h"
 
 void SceneManager::Initialize()
 {
@@ -22,6 +23,13 @@ void SceneManager::RequestScene(SCENE_TYPE _nextType)
 	if (mTransition.IsActive()) return;
 	mnNextSceneType = _nextType;
 	mTransition.Start();
+}
+
+void SceneManager::RequestGameScene(int _stageNumber)
+{
+	if (mTransition.IsActive()) return;   // 遷移中なら番号も書き換えない
+	mnStageNumber = _stageNumber;
+	RequestScene(SCENE_TYPE::GAME_SCENE);
 }
 
 void SceneManager::Update(float _deltaTime)
@@ -63,33 +71,27 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene = new TitleScene();
 		break;
 
-	case SCENE_TYPE::STAGE_SELECT_SCENE:
+	case SCENE_TYPE::GAME_SCENE:
+		mpCurrentScene = new GameScene();
+		break;
+
+		case SCENE_TYPE::STAGE_SELECT_SCENE:
 		mpCurrentScene = new StageSelectScene();
 		break;
 
-	case SCENE_TYPE::GAME_SCENE:
-	{
-		auto* gameScene = new GameScene();
-
-		gameScene->SetStageNumber(mnStageNumber);
-
-		mpCurrentScene = gameScene;
+	case SCENE_TYPE::TUTORIAL_SCENE:
+		mpCurrentScene = new TutorialScene();
 		break;
-	}
 
 	default:
 		break;
 	}
+	
 	if (mpCurrentScene != nullptr)
 	{
 		mpCurrentScene->Initialize();	// 新シーンの初期処理をする
 	}
 	
-}
-
-void SceneManager::SetStageNumber(int _stageNumber)
-{
-	mnStageNumber = _stageNumber;
 }
 
 int SceneManager::GetStageNumber() const

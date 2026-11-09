@@ -19,13 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ClearCollectibleUI.cpp" />
     <ClCompile Include="Source\ClearUI.cpp" />
-    <ClCompile Include="Source\Collectible.cpp" />
-    <ClCompile Include="Source\CollectibleData.cpp" />
-    <ClCompile Include="Source\CollectibleIconUI.cpp" />
-    <ClCompile Include="Source\CollectibleUI.cpp" />
-    <ClCompile Include="Source\EffectClick.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
     <ClCompile Include="Source\CsvLoader.cpp" />
@@ -37,6 +31,8 @@
     <ClCompile Include="Source\EffectFall.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp" />
+    <ClCompile Include="Source\EffectSteam.cpp" />
+    <ClCompile Include="Source\EffectTrans.cpp" />
     <ClCompile Include="Source\FontManager.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
@@ -47,12 +43,18 @@
     <ClCompile Include="Source\Graphic.cpp" />
     <ClCompile Include="Source\Gravity.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
+    <ClCompile Include="Source\Item.cpp" />
+    <ClCompile Include="Source\ItemHUD.cpp" />
+    <ClCompile Include="Source\ItemIconUI.cpp" />
+    <ClCompile Include="Source\ItemRecord.cpp" />
+    <ClCompile Include="Source\ItemTable.cpp" />
     <ClCompile Include="Source\Keyboard.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Master.cpp" />
     <ClCompile Include="Source\Mouse.cpp" />
     <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
+    <ClCompile Include="Source\OperationGuideUI.cpp" />
     <ClCompile Include="Source\PauseUI.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\PlayerController.cpp" />
@@ -69,12 +71,12 @@
     <ClCompile Include="Source\Spike.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
-    <ClCompile Include="Source\StageClearData.cpp" />
     <ClCompile Include="Source\StageSelectData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
+    <ClCompile Include="Source\TutorialScene.cpp" />
     <ClCompile Include="Source\UI.cpp" />
     <ClCompile Include="Source\UIBackground.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
@@ -84,16 +86,11 @@
     <ClCompile Include="Source\UIManager.cpp" />
     <ClCompile Include="Source\UIText.cpp" />
     <ClCompile Include="Source\UITransform.cpp" />
+    <ClCompile Include="Source\UITypewriterText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
-    <ClInclude Include="Source\ClearCollectibleUI.h" />
     <ClInclude Include="Source\ClearUI.h" />
-    <ClInclude Include="Source\Collectible.h" />
-    <ClInclude Include="Source\CollectibleData.h" />
-    <ClInclude Include="Source\CollectibleIconUI.h" />
-    <ClInclude Include="Source\CollectibleUI.h" />
-    <ClInclude Include="Source\EffectClick.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
     <ClInclude Include="Source\CsvLoader.h" />
@@ -105,9 +102,18 @@
     <ClInclude Include="Source\EffectFall.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\EffectSmokeSpriteSheet.h" />
+    <ClInclude Include="Source\EffectSteam.h" />
+    <ClInclude Include="Source\EffectTrans.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
-    <ClInclude Include="Source\StageSelectLayout.h" />
+    <ClInclude Include="Source\TutorialScene.h" />
+    <ClInclude Include="Source\Item.h" />
+    <ClInclude Include="Source\ItemHUD.h" />
+    <ClInclude Include="Source\ItemIconUI.h" />
+    <ClInclude Include="Source\ItemRecord.h" />
+    <ClInclude Include="Source\ItemTable.h" />
+    <ClInclude Include="Source\OperationGuideUI.h" />
+    <ClInclude Include="Source\StageSelectScene.h" />
     <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />
@@ -122,6 +128,7 @@
     <ClInclude Include="Source\InputManager.h" />
     <ClInclude Include="Source\Keyboard.h" />
     <ClInclude Include="Source\Master.h" />
+    <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\Mouse.h" />
     <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ObjectManager.h" />
@@ -142,17 +149,18 @@
     <ClInclude Include="Source\StageBlock.h" />
     <ClInclude Include="Source\StageClearData.h" />
     <ClInclude Include="Source\StageSelectData.h" />
-    <ClInclude Include="Source\StageSelectScene.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TitleScene.h" />
     <ClInclude Include="Source\UIBackground.h" />
+    <ClInclude Include="Source\UITypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UIGraphic.h" />
     <ClInclude Include="Source\UIHoverScaler.h" />
     <ClInclude Include="Source\UIManager.h" />
     <ClInclude Include="Source\UIText.h" />
+    <ClInclude Include="Source\UITransform.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

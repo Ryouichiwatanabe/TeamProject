@@ -5,8 +5,6 @@
 #include "EffectBase.h"
 #include "EffectClick.h"
 
-//class EffectClick
-
 class EffectManager final
 {
 public:
@@ -31,22 +29,11 @@ public:
     T* Play(Args&&... args)
     {
         auto effect = std::make_unique<T>(std::forward<Args>(args)...);
-        T* rawPtr = effect.get(); // 戻り値で受け取れば即座に操作も可能
+        T* rawPtr = effect.get();
         effects_.push_back(std::move(effect));
         return rawPtr;
     }
 
-
-    //void SpawnClickEffect(float x, float y)
-    //{
-    //    // 既に存在していれば、古いものを削除してメモリリークを防ぐ
-    //    delete mpEffectClick;
-    //    mpEffectClick = new EffectClick(x, y);
-    //}
-
-
 private:
     std::vector<std::unique_ptr<EffectBase>> effects_;
-
-
 };

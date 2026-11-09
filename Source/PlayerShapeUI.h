@@ -28,13 +28,14 @@ public:
 
 	void Open();
 	void Close();
+	void OnShapeInput();
 
 	// _column : 横(x) / _row : 縦(y)。どちらも画面の見た目どおりの向き
 	bool IsPieceSelected(int _column, int _row) const;
 
 private:
 	void CreatePieceUI(int _column, int _row);
-	UI* CreateButtonUI(const std::string& _text, float _x, float _y);
+	//UI* CreateButtonUI(const std::string& _text, float _x, float _y);
 	UI* CreateMessageUI(float _x, float _y);
 
 	void SyncFromPlayer();		// Playerの現在形状 → UI

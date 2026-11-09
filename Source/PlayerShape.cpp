@@ -1,4 +1,10 @@
-﻿#include "Player.h"
+﻿#include "Master.h"
+#include "SceneManager.h"
+#include "Scene.h"
+#include "EffectManager.h"
+#include "EffectTrans.h"
+#include "PlayerMath.h"
+#include "Player.h"
 
 /* memo :
 * Player の「形状」部分。
@@ -226,6 +232,49 @@ ShapeChangeResult Player::TryChangeShapeFromScreen(const PlayerShapeMask& _scree
 	// -- 5. 適用 (各Pieceのワールド位置は変わらないので、基盤ブロックも動かない) -- //
 	ApplyLocalShape(local);
 	UpdatePieceTransforms();
+	// -- 6. 変形成功エフェクト（EffectTrans）を全ピースの外側のフチから出す -- //
+	auto scene = Master::mpSceneManager ? Master::mpSceneManager->GetCurrentScene() : nullptr;
+	auto effectManager = scene ? scene->GetEffectManager() : nullptr;
+	if (effectManager && transform)
+	{
+		const float rotZ = transform->GetRotation().z;
+		const float halfCell = GameConfig::CELL_SIZE * 0.5f;
+		struct EdgeDir { int dc; int dr; float localX; float localY; float localAngle; };
+		const EdgeDir dirs[4] = {
+			{  0, -1,  0.0f, -halfCell, -DX_PI_F * 0.5f }, // 上
+			{  0,  1,  0.0f,  halfCell,  DX_PI_F * 0.5f }, // 下
+			{ -1,  0, -halfCell,  0.0f,  DX_PI_F        }, // 左
+			{  1,  0,  halfCell,  0.0f,  0.0f           }  // 右
+		};
+		for (int r = 0; r < GameConfig::PLAYER_PIECE_SIZE; ++r)
+		{
+			for (int c = 0; c < GameConfig::PLAYER_PIECE_SIZE; ++c)
+			{
+				auto piece = mPieces[c][r];
+				if (!piece || !piece->IsActive())
+					continue;
+				auto pieceTransform = piece->GetModule<Transform>();
+				if (!pieceTransform)
+					continue;
+				const VECTOR piecePos = pieceTransform->GetPosition();
+				for (const auto& dir : dirs)
+				{
+					const int nc = c + dir.dc;
+					const int nr = r + dir.dr;
+					if (nc >= 0 && nc < GameConfig::PLAYER_PIECE_SIZE &&
+						nr >= 0 && nr < GameConfig::PLAYER_PIECE_SIZE &&
+						mPieces[nc][nr] != nullptr && mPieces[nc][nr]->IsActive())
+					{
+						continue;
+					}
+					const VECTOR edgeOffset = PlayerMath::RotateOffset(VGet(dir.localX, dir.localY, 0.0f), rotZ);
+					const VECTOR spawnPos = VAdd(piecePos, edgeOffset);
+					const float outwardAngle = dir.localAngle + rotZ;
+					effectManager->Play<EffectTrans>(spawnPos.x, spawnPos.y, outwardAngle);
+				}
+			}
+		}
+	}
 	return ShapeChangeResult::Success;
 }
 

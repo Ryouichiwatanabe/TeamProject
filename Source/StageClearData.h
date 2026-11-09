@@ -1,39 +1,45 @@
-#pragma once
+ï»¿#pragma once
 
 class StageClearData
 {
 public:
-    // ƒXƒe[ƒW‚ğƒNƒŠƒAÏ‚İ‚Æ‚µ‚Ä•Û‘¶‚·‚é
+    // ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã‚¯ãƒªã‚¢æ¸ˆã¿ã¨ã—ã¦ä¿å­˜ã™ã‚‹
     static void SetStageCleared(
         int _stageNumber,
         bool _isCleared
     );
 
-    // w’è‚µ‚½ƒXƒe[ƒW‚ğƒNƒŠƒAÏ‚İ‚©Šm”F‚·‚é
+    // æŒ‡å®šã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã‚¯ãƒªã‚¢æ¸ˆã¿ã‹ç¢ºèªã™ã‚‹
     static bool IsStageCleared(
         int _stageNumber
     );
 
-    // ƒXƒe[ƒW“à‚ÌƒAƒCƒeƒ€‚ğæ“¾Ï‚İ‚Æ‚µ‚Ä•Û‘¶‚·‚é
-    // _itemIndex ‚Í 0`2 ‚ÌƒAƒCƒeƒ€”Ô†
+    // ã‚¹ãƒ†ãƒ¼ã‚¸å†…ã®ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–å¾—æ¸ˆã¿ã¨ã—ã¦ä¿å­˜ã™ã‚‹
+    // _itemIndex ã¯ 0ï½2 ã®ã‚¢ã‚¤ãƒ†ãƒ ç•ªå·
     static void SetItemCollected(
         int _stageNumber,
         int _itemIndex,
         bool _isCollected
     );
 
-    // w’è‚µ‚½ƒXƒe[ƒW‚ÌƒAƒCƒeƒ€‚ğæ“¾Ï‚İ‚©Šm”F‚·‚é
+    // æŒ‡å®šã—ãŸã‚¹ãƒ†ãƒ¼ã‚¸ã®ã‚¢ã‚¤ãƒ†ãƒ ã‚’å–å¾—æ¸ˆã¿ã‹ç¢ºèªã™ã‚‹
     static bool IsItemCollected(
         int _stageNumber,
         int _itemIndex
     );
 
+    // -- ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®çµ‚äº†çŠ¶æ…‹ã®ã‚¢ã‚¯ã‚»ã‚µ -- //
+    static void SetTutorialCleared(bool _isCleared) { mbIsTutorialCleared = _isCleared; }
+    static bool IsTutorialCleared() { return mbIsTutorialCleared; }
+
 private:
-    // ŠeƒXƒe[ƒW‚ÌƒNƒŠƒAó‘Ô‚ğ•Û‘¶‚·‚é
-    // [0] = Stage1A[7] = Stage8
+    // å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®ã‚¯ãƒªã‚¢çŠ¶æ…‹ã‚’ä¿å­˜ã™ã‚‹
+    // [0] = Stage1ã€[7] = Stage8
     static bool mbIsStageCleared[8];
 
-    // ŠeƒXƒe[ƒW‚Åæ“¾‚µ‚½ƒAƒCƒeƒ€‚ğ•Û‘¶‚·‚é
-    // [ƒXƒe[ƒW”Ô† - 1][ƒAƒCƒeƒ€”Ô†]
+    // å„ã‚¹ãƒ†ãƒ¼ã‚¸ã§å–å¾—ã—ãŸã‚¢ã‚¤ãƒ†ãƒ ã‚’ä¿å­˜ã™ã‚‹
+    // [ã‚¹ãƒ†ãƒ¼ã‚¸ç•ªå· - 1][ã‚¢ã‚¤ãƒ†ãƒ ç•ªå·]
     static bool mbIsItemCollected[8][3];
+
+    static bool mbIsTutorialCleared;    // ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ã®çµ‚äº†ã‚’ç¤ºã™
 };

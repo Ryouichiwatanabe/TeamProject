@@ -1,87 +1,50 @@
 ﻿#pragma once
 
 #include "Scene.h"
-#include <cstddef>
-#include <memory>
-#include "EffectClear.h"
-
-
-//---コンポジション系統
-#include "UIFloatingMotion.h"
-#include "UITypewriterText.h"
 #include "UIBackground.h"
+#include "ItemRecord.h"		// StageFlags を使うため
 
 class Player;
 class Goal;
-class MovingBlock;
-class CollectibleIconUI;
 class PauseUI;
 class ClearUI;
-
+class ItemHUD;
 class PlayerShapeUI;
-
-//class Player_test;
 
 class GameScene : public Scene
 {
 public:
-    void Initialize();
-    void Update(float deltaTime);
-    void Draw();
-    void Finalize();
-    void SetStageNumber(int _stageNumber);
-    std::unique_ptr<EffectManager> mpEffectManager;
+    void Initialize() override;
+    void Update(float deltaTime) override;
+    void Draw() override;
+    void Finalize() override;
 
 private:
-    int StageNumberFontHandle = -1; // 左上のステージ番号用フォントハンドル
-    int mMessageFontHandle = -1;    // 下のTypeWriter用のフォントハンドル
-
-    void* mAddedFontHandle = nullptr; // フォントハンドル
-
-    int mCursorHandle = -1;
-
-    //  void DrawCursor();
-
-    float mClearTimer = 0.0f;
-
-    MovingBlock* mpMovingBlock = nullptr;
-
-    PauseUI* mpPauseUI = nullptr;
-    ClearUI* mpClearUI = nullptr;
+    // ゲームの進行状態
+    enum class PlayState
+    {
+        Playing,    // 通常プレイ（ポーズ含む）
+        Cleared,    // クリア後
+    };
 
 private:
-    int mnStageNumber = 1;
+    void UpdatePlaying(float deltaTime);    // Playing中の更新
+    void UpdateCleared(float deltaTime);    // Cleared中の更新
+    void EnterClear();                      // Playing → Cleared への切り替え（1回だけ呼ばれる）
 
-    bool mbIsPaused = false;
-    bool mbPreviousP = false;
-    bool mbPreviousMouseLeft = false;
+    void UpdatePauseInput();        // 入力に伴い、PauseUIを有効にする
+    void UpdateShapeInput();     // 変形キーで変形UIを開閉する
+    void UpdateItems();             // Item の取得状態を確認する
 
-    void UpdatePauseInput();    // 入力に伴い、PauseUIを有効にする
-    void UpdateClear();
-
-    Player* mpPlayer = nullptr;
-    bool mbIsClear = false;
+private:
+    PlayState mState = PlayState::Playing;
 
     Goal* mpGoal = nullptr;
 
-    CollectibleIconUI* mpCollectibleIconUI[3] = {};
-
-    bool mbIsCollectibleCollected[3] = {};
-
-    //FontやTitleLogoなどのアニメーションをするためのコンポジション
-
-
-    void UpdateShapeUIToggle();     // 変形キーで変形UIを開閉する
-
-    bool IsPlayingSE = false;
-
-private:
-
-    //FloatingMotion mClearTextMotion;   // Clear用
-    //FloatingMotion mMessageMotion;     // メッセージ用
-    float mfClearItemTimer = 0.0f;
-
-    bool mbIsMessageActive = false; //メッセージ表示フラグ
+    PauseUI* mpPauseUI = nullptr;
+    ClearUI* mpClearUI = nullptr;
+    ItemHUD* mpItemHUD = nullptr;
+    ItemRecord::StageFlags mPickedItems{};		// 今回のプレイの仮取得
 
     PlayerShapeUI* mpShapeUI = nullptr;
     UIBackground* mpBackgroundUI = nullptr;

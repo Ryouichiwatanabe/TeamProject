@@ -26,8 +26,8 @@ void UIGraphic::Initialize(UI* _pUI, std::string _graphicFileName)
 
 	mpUI->GetTransform().SetSize(
 		VGet(
-			static_cast<int>(size_x),
-			static_cast<int>(size_y),
+			static_cast<float>(size_x),
+			static_cast<float>(size_y),
 			0.0f
 		)
 	);

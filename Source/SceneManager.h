@@ -10,6 +10,7 @@ enum class SCENE_TYPE
 	TITLE_SCENE = 1,    // タイトル
 	STAGE_SELECT_SCENE = 2, // ステージセレクト
 	GAME_SCENE = 3,		// GameScene
+	TUTORIAL_SCENE = 4, //チュートリアル
 };
 
 class SceneManager
@@ -30,8 +31,9 @@ public:
 	SCENE_TYPE GetCurrentSceneType() { return mnSceneType; }	// シーンタイプの取得関数
 	// 次のシーンを予約・フェードアウト開始
 	void RequestScene(SCENE_TYPE _nextType);
-	void SetStageNumber(int _stageNumber);
-	int GetStageNumber() const;
+	
+	void RequestGameScene(int _stageNumber);	// ステージ番号をStageSelectのみで設定するための窓口 & 次シーンの予約
+	int GetStageNumber() const;					// 最後に選択されたステージ番号の取得
 
 	// -- Quitの要求に用いる -- //
 	void RequestQuit() { mbQuitRequested = true; }
@@ -49,5 +51,5 @@ private:
 
 	bool mbQuitRequested = false;		// Quitの要求があった場合、それを示す
 
-	int mnStageNumber = 1;									//Stageの番号
+	int mnStageNumber = 1;	//選択されたStageの番号(1~8)
 };

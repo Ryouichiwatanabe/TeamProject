@@ -5,12 +5,14 @@
 #include <string_view>
 #include "EffectBase.h"
 
+#include "ScreenConfig.h"
+
 // ステージクリア時の花火演出クラス
 class EffectClear final : public EffectBase
 {
 public:
     // コンストラクタ（発生位置の中心座標を受け取る）
-    EffectClear(float fCenterX, float fCenterY);
+    EffectClear(float fCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f, float fCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f);
 
     // デストラクタ
     ~EffectClear() override = default;
@@ -54,19 +56,10 @@ private:
     // 【調整メモ】
     // ・数値を大きくする (例: 2.2f) -> フワッと長く余韻を残して漂う
     // ・数値を小さくする (例: 1.0f) -> 一瞬で激しく弾けて終わるキレ重視になる
-    static constexpr float DURATION = 2.6f;
+    static constexpr float DURATION = 3.0f;    // 2.6f → 3.0f（余韻を長く）
+    static constexpr int OUTER_COUNT = 72;     // 48 → 72（外へ飛び散る大粒を1.5倍に増量！）
+    static constexpr int INNER_COUNT = 48;     // 32 → 48（内側のキラキラも1.5倍に増量！）
 
-    // 外側へ高速に飛び散る大粒の数
-    // 【調整メモ】
-    // ・増やす (例: 70) -> 画面全体を覆うような密度の高い大爆発になる
-    // ・減らす (例: 24) -> 粒がまばらになり、すっきりした印象になる
-    static constexpr int OUTER_COUNT = 48;
-
-    // 内側に残りながら広がる中〜小粒の数
-    // 【調整メモ】
-    // ・増やす (例: 50) -> 中心付近がキラキラと埋まり、空間のスカスカ感が消える
-    // ・減らす (例: 16) -> 外側へ抜けるリング状の広がりが強調される
-    static constexpr int INNER_COUNT = 32;
 
     // =================================================================
     // 内部メンバ変数

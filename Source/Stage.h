@@ -10,7 +10,6 @@ class Stage
 public:
 	void Load(const std::string& _filename);
 
-	std::string GetCollectibleFilename(int _itemIndex) const;
 private:
 	void CreateObjects();
 

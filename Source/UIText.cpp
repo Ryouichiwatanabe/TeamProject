@@ -32,6 +32,9 @@ void UIText::Draw()
 		fontHandle,
 		mEdgeColor
 	);
+
+	if (mbUnderline)
+		DrawUnderline(position, fontHandle);
 }
 
 VECTOR UIText::CalculateTextDrawPosition(int _fontHandle) const
@@ -80,4 +83,20 @@ VECTOR UIText::CalculateTextDrawPosition(int _fontHandle) const
 	}
 
 	return VAdd(VGet(drawX, drawY, 0.0f), mvOffset);
+}
+
+void UIText::DrawUnderline(const VECTOR& _textPosition, int _fontHandle) const
+{
+	const int width = GetDrawStringWidthToHandle(
+		mText.c_str(),
+		static_cast<int>(mText.size()),
+		_fontHandle
+	);
+	const int height = GetFontSizeToHandle(_fontHandle);
+
+	const int left = static_cast<int>(_textPosition.x) - UNDERLINE_PADDING;
+	const int right = static_cast<int>(_textPosition.x) + width + UNDERLINE_PADDING;
+	const int top = static_cast<int>(_textPosition.y) + height + UNDERLINE_GAP;
+
+	DrawBox(left, top, right, top + UNDERLINE_THICKNESS, mColor, TRUE);
 }

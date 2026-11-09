@@ -53,6 +53,14 @@ Game::Game()
         subTitleDesc.fontType = DX_FONTTYPE_EDGE;
         subTitleDesc.edgeSize = 0;
         Master::mpFontManager->Register(FontId::SubTitle, subTitleDesc);
+
+        // -- ボタン -- //
+        FontDesc buttonDesc;
+        subTitleDesc.name = "PixelMplus10";                // .ttf内部のフォント名
+        subTitleDesc.size = 70;
+        subTitleDesc.fontType = DX_FONTTYPE_EDGE;
+        subTitleDesc.edgeSize = 0;
+        Master::mpFontManager->Register(FontId::Button, subTitleDesc);
     }
 }
 

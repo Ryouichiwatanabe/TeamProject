@@ -8,8 +8,12 @@
 void Goal::Init()
 {
     StageBlock::Init();
-    // プレイヤーとの衝突を見る
+
+    // -- 衝突対象「Player」の設定 -- //
     GetModule<Collider>()->AddCollisionTag(Tag::PLAYER);
+
+    // memo : Goalの画像は縦長なので拡縮の必要アリ。
+        // Init後にGraphicの初期処理に入ってしまうので、StageのLoad - Goal生成直後に拡縮処理を書いてます
 }
 
 bool Goal::IsPlayerTouching()
@@ -27,53 +31,4 @@ bool Goal::IsPlayerTouching()
     }
 
     return false;
-}
-
-//bool Goal::IsShapeMatched(Player* _player) const
-//{
-//    if (_player == nullptr)
-//        return false;
-//
-//    for (int y = 0; y < 3; y++)
-//    {
-//        for (int x = 0; x < 3; x++)
-//        {
-//            bool isPieceEnabled =
-//                _player->IsPieceEnabled(x, y);
-//
-//            if (isPieceEnabled != mShape[y][x])
-//                return false;
-//        }
-//    }
-//
-//    return true;
-//}
-
-bool Goal::IsWithinDistance(Player* _player)
-{
-    if (_player == nullptr)
-        return false;
-
-    auto playerTransform =
-        _player->GetModule<Transform>();
-
-    auto goalTransform =
-        GetModule<Transform>();
-
-    if (playerTransform == nullptr ||
-        goalTransform == nullptr)
-        return false;
-
-    VECTOR playerPos =
-        playerTransform->GetPosition();
-
-    VECTOR goalPos =
-        goalTransform->GetPosition();
-
-    float distance =
-        VSize(VSub(playerPos, goalPos));
-
-    const float clearDistance = 100.0f;
-
-    return distance <= clearDistance;
 }
