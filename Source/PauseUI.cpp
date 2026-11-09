@@ -120,7 +120,7 @@ void PauseUI::UpdateMenu()
     {
         SoundManager::GetInstance()->StopBGM();
         SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
-        Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE_EX);
+        Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
         return;
     }
     if (mpTitleUI->GetButton().IsClicked())

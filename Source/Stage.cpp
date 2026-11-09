@@ -18,8 +18,6 @@
 #include "DisappearingBlock.h"
 #include "Switch.h"
 #include "SwitchBlock.h"
-#include "Collectible.h"
-#include "CollectibleData.h"
 #include "Item.h"
 
 #include "Transform.h"
@@ -64,14 +62,6 @@ void Stage::Load(const std::string& _filename)
     }
 
 	CreateObjects();
-}
-
-std::string Stage::GetCollectibleFilename(int _itemIndex) const
-{
-    return ::GetCollectibleFilename(
-        mStageNumber,
-        _itemIndex
-    );
 }
 
 void Stage::CreateObjects()

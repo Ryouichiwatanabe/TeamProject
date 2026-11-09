@@ -11,7 +11,6 @@ enum class SCENE_TYPE
 	STAGE_SELECT_SCENE = 2, // ステージセレクト
 	GAME_SCENE = 3,		// GameScene
 	TUTORIAL_SCENE = 4, //チュートリアル
-	STAGE_SELECT_SCENE_EX = 5,
 };
 
 class SceneManager

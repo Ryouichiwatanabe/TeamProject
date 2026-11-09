@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "FadeEffect.h"
 
 // シーン遷移の演出手順（暗転 → 差し替え → 明転）を管理するクラス

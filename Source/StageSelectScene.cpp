@@ -1,379 +1,267 @@
 ﻿#include "StageSelectScene.h"
 
+#include "UI.h"
+#include "UIManager.h"
+#include "ItemIconUI.h"
+
+#include "ItemTable.h"
+#include "ItemRecord.h"
+
 #include "Master.h"
 #include "SceneManager.h"
-#include "DxLib.h"
 #include "InputManager.h"
 #include "SoundManager.h"
-#include "StageClearData.h"
-#include "StageSelectData.h"
-#include "CollectibleData.h"
-#include "CsvLoader.h"
 
-#include <string>
+#include "ScreenConfig.h"
 
+#include <algorithm>	// std::min
+
+namespace
+{
+	// -- 画像パス -- //
+	constexpr const char* BACKGROUND_PATH = "Resource/UI/Scene_StageSelect/notFoundation.png";
+	constexpr const char* DISH_PANEL_PATH = "Resource/UI/Scene_StageSelect/DeshPanel.png";
+	constexpr const char* ITEM_PANEL_PATH = "Resource/UI/Scene_StageSelect/ItemPanel.png";
+
+	// -- シークレット表示 -- //
+	constexpr const char* SECRET_NAME = "???";
+	constexpr const char* SECRET_DISH = "?";
+
+	// -- レイヤー -- //
+	constexpr int LAYER_BACKGROUND = 0;
+	constexpr int LAYER_CARD = 1;		// DeshPanel(灰色の枠ごと覆う)
+	constexpr int LAYER_PANEL = 2;		// ItemPanel
+	constexpr int LAYER_CONTENT = 3;	// 料理名・料理画像・アイテム画像
+
+	// -- レイアウト(すべて背景画像上のピクセル座標) -- //
+	// 灰色の枠の中心。並びは AllClear.png に合わせる(左ページ 1,2 / 3,4、右ページ 5,6 / 7,8)
+	constexpr float STAGE_CENTERS[GameConfig::STAGE_COUNT][2] = {
+		{ 242.0f, 206.5f }, { 384.5f, 206.5f },	// Stage1, 2
+		{ 242.0f, 410.5f }, { 389.5f, 410.5f },	// Stage3, 4
+		{ 545.5f, 206.5f }, { 688.0f, 206.5f },	// Stage5, 6
+		{ 546.0f, 410.5f }, { 690.0f, 410.5f },	// Stage7, 8
+	};
+
+	constexpr float CARD_WIDTH = 121.0f;	// 灰色の枠(117×174)を完全に隠すため少し大きめ
+	constexpr float CARD_HEIGHT = 178.0f;
+
+	constexpr float NAME_OFFSET_Y = -63.0f;	// 枠の中心からのずれ
+	constexpr float DISH_OFFSET_Y = -3.0f;
+	constexpr float ITEM_OFFSET_Y = 61.0f;
+	constexpr float ITEM_SPACING = 37.0f;	// アイテム枠どうしの間隔
+
+	constexpr float DISH_IMAGE_WIDTH = 100.0f;	// 料理画像を収める大きさ
+	constexpr float DISH_IMAGE_HEIGHT = 75.0f;
+
+	constexpr float ITEM_PANEL_SIZE = 32.0f;
+	constexpr float ITEM_IMAGE_SIZE = 26.0f;
+}
 
 void StageSelectScene::Initialize()
 {
-    // 前フレームのマウス左クリック状態を取得
-    mbPreviousMouseLeft =
-        (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
+	CreateBackground();
 
-    // 最初はステージ1を選択状態にする
-    mnSelectedStage = 0;
-
-    // ステージ選択画面の背景画像を読み込む
-    mBackgroundHandle =
-        LoadGraph(
-            "Resource/StageSelect/StageSelectMaterial/notClear.png"
-        );
-
-    // 各ステージのクリア画像を読み込む
-    //
-    // [0] → Stage1
-    // [1] → Stage2
-    // ...
-    // [7] → Stage8
-    for (int i = 0; i < 8; i++)
-    {
-        mStageClearHandles[i] =
-            LoadGraph(
-                StageSelectData::GetClearImageFilename(
-                    i + 1
-                ).c_str()
-            );
-    }
-
-    // 各ステージで使用する3種類のアイテム画像を読み込む
-    // [ステージ番号 - 1][アイテム番号]
-    // 取得済みのアイテムだけをステージ選択画面の下側に表示する
-    for (int stageIndex = 0; stageIndex < 8; stageIndex++)
-    {
-        for (int itemIndex = 0; itemIndex < 3; itemIndex++)
-        {
-            mCollectibleHandles[stageIndex][itemIndex] =
-                LoadGraph(
-                    GetCollectibleFilename(
-                        stageIndex + 1,
-                        itemIndex
-                    ).c_str()
-                );
-        }
-    }
+	for (int stage = 1; stage <= GameConfig::STAGE_COUNT; ++stage)
+		CreateStageCard(stage);
 }
-
 
 void StageSelectScene::Update(float _deltaTime)
 {
-    int mouseX = 0;
-    int mouseY = 0;
+	for (int i = 0; i < GameConfig::STAGE_COUNT; ++i)
+	{
+		UI* panel = mpDishPanels[i];
+		if (panel == nullptr || !panel->GetButton().IsClicked())
+			continue;
 
-    // 現在のマウス座標を取得
-    GetMousePoint(
-        &mouseX,
-        &mouseY
-    );
+		// Confirm を消費し、共通のクリックSE判定をスキップ
+		InputManager::GetInstance().ConsumeButton(Button::Confirm);
+		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
-    // 現在のマウス左クリック状態を取得
-    bool currentMouseLeft =
-        (GetMouseInput() & MOUSE_INPUT_LEFT) != 0;
+		Master::mpSceneManager->RequestGameScene(i + 1);
+		break;
+	}
 
-    // 左クリックした瞬間だけtrueにする
-    bool mouseLeftDown =
-        currentMouseLeft &&
-        !mbPreviousMouseLeft;
-
-    if (mouseLeftDown)
-    {
-        // 8ステージすべてのクリック範囲を確認する
-        for (int i = 0; i < 8; i++)
-        {
-            if (!IsMouseInsideStageButton(
-                i,
-                mouseX,
-                mouseY))
-            {
-                continue;
-            }
-
-            // 選択したステージを保存
-            mnSelectedStage = i;
-
-            // 選択したステージ番号をSceneManagerへ渡す
-            Master::mpSceneManager->SetStageNumber(
-                i + 1
-            );
-
-            // ゲームシーンへ移動
-            Master::mpSceneManager->RequestGameScene(i + 1);
-            break;
-        }
-    }
-
-    // 次のフレーム用に現在のクリック状態を保存
-    mbPreviousMouseLeft =
-        currentMouseLeft;
-
-    Scene::Update(_deltaTime);
+	Scene::Update(_deltaTime);
 }
-
 
 void StageSelectScene::Draw()
 {
-    // ステージ選択画面の背景を描画
-    DrawBackground();
-
-    // クリアしていないステージに、
-    // 取得済みのアイテムを表示する
-    DrawStageCollectibleImages();
-
-    // 完全クリア済みのステージに、
-    // 完成した料理画像を表示する
-    DrawStageClearImages();
-
-    // Sceneが管理しているオブジェクトなどを描画
-    Scene::Draw();
+	Scene::Draw();
 }
-
-
-void StageSelectScene::DrawBackground()
-{
-    if (mBackgroundHandle == -1)
-        return;
-
-    // 今回は1920×1080固定なので、
-    // 背景画像を画面いっぱいにそのまま描画する
-    DrawExtendGraph(
-        0,
-        0,
-        1920,
-        1080,
-        mBackgroundHandle,
-        TRUE
-    );
-}
-
-void StageSelectScene::DrawStageClearImages()
-{
-    for (int i = 0; i < 8; i++)
-    {
-        int stageNumber = i + 1;
-
-        // 完全クリアしたステージだけ完成料理画像を表示
-        if (!StageClearData::IsStageCleared(stageNumber))
-            continue;
-
-        int clearGraphHandle = mStageClearHandles[i];
-
-        if (clearGraphHandle == -1)
-            continue;
-
-        const StageClearImage& image =
-            mStageClearImages[i];
-
-        DrawExtendGraph(
-        static_cast<int>(
-            image.x + StageSelectLayout::CLEAR_IMAGE_OFFSET_X[i]
-        ),
-        static_cast<int>(
-            image.y + StageSelectLayout::CLEAR_IMAGE_OFFSET_Y[i]
-        ),
-        static_cast<int>(
-            image.x + image.width + StageSelectLayout::CLEAR_IMAGE_OFFSET_X[i]
-        ),
-        static_cast<int>(
-            image.y + image.height + StageSelectLayout::CLEAR_IMAGE_OFFSET_Y[i]
-        ),
-            clearGraphHandle,
-            FALSE
-
-        );
-    }
-}
-
-
-void StageSelectScene::DrawStageCollectibleImages()
-{
-    // 8ステージ分を確認する
-    for (int stageIndex = 0;
-        stageIndex < 8;
-        stageIndex++)
-    {
-        int stageNumber =
-            stageIndex + 1;
-
-        // 完全クリア済みなら、
-        // 料理画像が表示されるためアイテムは表示しない
-        if (StageClearData::IsStageCleared(
-            stageNumber))
-        {
-            continue;
-        }
-
-        const StageButton& button =
-            mStageButtons[stageIndex];
-
-        // 3種類のアイテムを確認する
-        for (int itemIndex = 0;
-            itemIndex < 3;
-            itemIndex++)
-        {
-            // まだ取得していないアイテムは表示しない
-            if (!StageClearData::IsItemCollected(
-                stageNumber,
-                itemIndex))
-            {
-                continue;
-            }
-
-            int graphHandle =
-                mCollectibleHandles
-                [stageIndex][itemIndex];
-
-            if (graphHandle == -1)
-                continue;
-
-            int imageWidth = 0;
-            int imageHeight = 0;
-
-            GetGraphSize(
-                graphHandle,
-                &imageWidth,
-                &imageHeight
-            );
-
-            if (imageWidth <= 0 ||
-                imageHeight <= 0)
-            {
-                continue;
-            }
-
-            float itemX =
-                button.x +
-                button.width *
-                (0.20f + itemIndex * 0.30f) +
-                StageSelectLayout::ITEM_OFFSET_X
-                [stageIndex][itemIndex];
-
-            float itemY =
-                button.y +
-                button.height * 0.88f +
-                StageSelectLayout::ITEM_OFFSET_Y
-                [stageIndex][itemIndex];
-
-            // アイテム画像の大きさを揃えるため、
-            // 縦横の大きい方を基準にする
-            int maxImageSize =
-                (imageWidth > imageHeight)
-                ? imageWidth
-                : imageHeight;
-
-            float itemScale =
-                (button.width * 0.20f) /
-                static_cast<float>(maxImageSize);
-
-            int drawItemWidth =
-                static_cast<int>(
-                    imageWidth * itemScale
-                    );
-
-            int drawItemHeight =
-                static_cast<int>(
-                    imageHeight * itemScale
-                    );
-
-            DrawExtendGraph(
-                static_cast<int>(
-                    itemX - drawItemWidth / 2
-                    ),
-                static_cast<int>(
-                    itemY - drawItemHeight / 2
-                    ),
-                static_cast<int>(
-                    itemX + drawItemWidth / 2
-                    ),
-                static_cast<int>(
-                    itemY + drawItemHeight / 2
-                    ),
-                graphHandle,
-                TRUE
-            );
-        }
-    }
-}
-
-
-bool StageSelectScene::IsMouseInsideStageButton(
-    int _stageIndex,
-    int _mouseX,
-    int _mouseY)
-{
-    // 不正なステージ番号の場合
-    if (_stageIndex < 0 ||
-        _stageIndex >= 8)
-    {
-        return false;
-    }
-
-    const StageButton& button =
-        mStageButtons[_stageIndex];
-
-    // 1920×1080の画面座標をそのまま使用して、
-    // ステージカードの範囲内か判定する
-    return
-        _mouseX >= button.x &&
-        _mouseX <= button.x + button.width &&
-        _mouseY >= button.y &&
-        _mouseY <= button.y + button.height;
-}
-
 
 void StageSelectScene::Finalize()
 {
-    // タイトルBGMを停止
-    SoundManager::GetInstance()->StopBGM();
+	// タイトルBGMを停止(旧StageSelectSceneと同じ)
+	SoundManager::GetInstance()->StopBGM();
 
-    // ステージ選択背景画像を解放
-    if (mBackgroundHandle != -1)
-    {
-        DeleteGraph(mBackgroundHandle);
-        mBackgroundHandle = -1;
-    }
+	mpBackground = nullptr;
+	mpDishPanels.fill(nullptr);
 
-    // 各ステージのクリア画像を解放
-    for (int i = 0; i < 8; i++)
-    {
-        if (mStageClearHandles[i] != -1)
-        {
-            DeleteGraph(
-                mStageClearHandles[i]
-            );
+	Scene::Finalize();
+}
 
-            mStageClearHandles[i] = -1;
-        }
-    }
+// ===================================================== //
+//  生成
+// ===================================================== //
 
-    // ステージ選択画面で使用した
-    // アイテム画像をすべて解放
-    for (int stageIndex = 0;
-        stageIndex < 8;
-        stageIndex++)
-    {
-        for (int itemIndex = 0;
-            itemIndex < 3;
-            itemIndex++)
-        {
-            if (mCollectibleHandles
-                [stageIndex][itemIndex] != -1)
-            {
-                DeleteGraph(
-                    mCollectibleHandles
-                    [stageIndex][itemIndex]
-                );
+void StageSelectScene::CreateBackground()
+{
+	mpBackground = GetUIManager()->CreateUI<UI>();
+	mpBackground->LoadUIGraph(BACKGROUND_PATH);
+	mpBackground->SetLayer(LAYER_BACKGROUND);
 
-                mCollectibleHandles
-                    [stageIndex][itemIndex] = -1;
-            }
-        }
-    }
+	// 画面いっぱいに引き伸ばす(この倍率を他の配置計算でも使う)
+	const VECTOR size = mpBackground->GetTransform().GetSize();
+	if (size.x > 0.0f && size.y > 0.0f)
+	{
+		mfBgScaleX = ScreenConfig::SCREEN_WIDTH / size.x;
+		mfBgScaleY = ScreenConfig::SCREEN_HEIGHT / size.y;
+	}
+	mpBackground->GetTransform().SetScale(VGet(mfBgScaleX, mfBgScaleY, 0.0f));
+
+	mpBackground->SetEnabled(true);
+}
+
+void StageSelectScene::CreateStageCard(int _stage)
+{
+	const Point center = { STAGE_CENTERS[_stage - 1][0], STAGE_CENTERS[_stage - 1][1] };
+	const bool isCompleted = ItemRecord::GetInstance().IsAllObtained(_stage);	// 3つ揃ったか
+
+	CreateDish(_stage, center, isCompleted);
+	CreateDishName(_stage, center, isCompleted);
+	CreateItems(_stage, center);
+}
+
+void StageSelectScene::CreateDishName(int _stage, Point _center, bool _isCompleted)
+{
+	UI* name = GetUIManager()->CreateUI<UI>();
+	name->SetLayer(LAYER_CONTENT);
+	name->GetTransform().SetPosition(ToUIPosition(_center.x, _center.y + NAME_OFFSET_Y));
+
+	UIText& text = name->GetText();
+	text.SetFontId(FontId::SubTitle);
+	text.SetColor(GetColor(0, 0, 0));
+	text.SetUnderline(true);	// AllClear / notClear と同じく下線付き
+	text.SetText(_isCompleted ? ItemTable::GetDishName(_stage) : SECRET_NAME);
+
+	name->SetEnabled(true);
+}
+
+void StageSelectScene::CreateDish(int _stage, Point _center, bool _isCompleted)
+{
+	// -- 料理パネル(灰色の枠ごと被せる。クリック判定もこれで行う) -- //
+	UI* panel = GetUIManager()->CreateUI<UI>();
+	panel->LoadUIGraph(DISH_PANEL_PATH);
+	PlaceImage(panel, _center.x, _center.y, LAYER_CARD);
+	StretchImage(panel, CARD_WIDTH, CARD_HEIGHT);
+	panel->SetEnabled(true);
+
+	mpDishPanels[_stage - 1] = panel;
+
+	// -- 料理画像(未完成なら真っ黒なシルエット + 「?」) -- //
+	const std::string path = ItemTable::GetDishFilePath(_stage);
+	if (path.empty())
+		return;
+
+	const float y = _center.y + DISH_OFFSET_Y;
+
+	ItemIconUI* dish = GetUIManager()->CreateUI<ItemIconUI>();
+	dish->LoadUIGraph(path);
+	PlaceImage(dish, _center.x, y, LAYER_CONTENT);
+	FitImage(dish, DISH_IMAGE_WIDTH, DISH_IMAGE_HEIGHT);
+
+	dish->SetShadowBright(0);
+	dish->SetPicked(_isCompleted);
+
+	if (!_isCompleted)
+	{
+		UIText& text = dish->GetText();
+		text.SetFontId(FontId::Button);
+		text.SetColor(GetColor(255, 255, 255));
+		text.SetText(SECRET_DISH);
+	}
+
+	dish->SetEnabled(true);
+}
+
+void StageSelectScene::CreateItems(int _stage, Point _center)
+{
+	const float y = _center.y + ITEM_OFFSET_Y;
+
+	// 真ん中の枠が中心に来るようにずらす（3個なら -1, 0, +1 倍）
+	constexpr float CENTER_INDEX = (GameConfig::MAX_ITEMS_PER_STAGE - 1) / 2.0f;
+
+	for (int slot = 0; slot < GameConfig::MAX_ITEMS_PER_STAGE; ++slot)
+	{
+		const float x = _center.x + (slot - CENTER_INDEX) * ITEM_SPACING;
+
+		// -- アイテムパネル(常に表示) -- //
+		UI* panel = GetUIManager()->CreateUI<UI>();
+		panel->LoadUIGraph(ITEM_PANEL_PATH);
+		PlaceImage(panel, x, y, LAYER_PANEL);
+		FitImage(panel, ITEM_PANEL_SIZE, ITEM_PANEL_SIZE);
+		panel->SetEnabled(true);
+
+		// -- アイテム画像(取得済みのものだけ) -- //
+		if (!ItemRecord::GetInstance().IsObtained(_stage, slot))
+			continue;
+
+		const std::string path = ItemTable::GetFilePath(_stage, slot);
+		if (path.empty())
+			continue;
+
+		UI* item = GetUIManager()->CreateUI<UI>();
+		item->LoadUIGraph(path);
+		PlaceImage(item, x, y, LAYER_CONTENT);
+		FitImage(item, ITEM_IMAGE_SIZE, ITEM_IMAGE_SIZE);
+		item->SetEnabled(true);
+	}
+}
+
+// ===================================================== //
+//  配置の補助
+// ===================================================== //
+
+void StageSelectScene::PlaceImage(UI* _ui, float _x, float _y, int _layer) const
+{
+	_ui->SetLayer(_layer);
+	_ui->GetTransform().SetPosition(ToUIPosition(_x, _y));
+}
+
+void StageSelectScene::FitImage(UI* _ui, float _width, float _height) const
+{
+	auto& transform = _ui->GetTransform();
+	const VECTOR size = transform.GetSize();
+	if (size.x <= 0.0f || size.y <= 0.0f)
+		return;
+
+	// 縦・横それぞれ「枠に収まる倍率」を出し、小さい方を両方に使う(= はみ出さない)
+	const float scale = (std::min)(
+		_width * mfBgScaleX / size.x,
+		_height * mfBgScaleY / size.y
+		);
+	transform.SetScale(VGet(scale, scale, 0.0f));
+}
+
+void StageSelectScene::StretchImage(UI* _ui, float _width, float _height) const
+{
+	auto& transform = _ui->GetTransform();
+	const VECTOR size = transform.GetSize();
+	if (size.x <= 0.0f || size.y <= 0.0f)
+		return;
+
+	transform.SetScale(VGet(
+		_width * mfBgScaleX / size.x,
+		_height * mfBgScaleY / size.y,
+		0.0f
+	));
+}
+
+VECTOR StageSelectScene::ToUIPosition(float _x, float _y) const
+{
+	return VGet(
+		_x * mfBgScaleX - ScreenConfig::SCREEN_WIDTH * 0.5f,
+		_y * mfBgScaleY - ScreenConfig::SCREEN_HEIGHT * 0.5f,
+		0.0f
+	);
 }

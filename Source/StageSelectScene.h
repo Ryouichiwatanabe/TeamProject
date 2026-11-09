@@ -1,7 +1,12 @@
 ﻿#pragma once
-
 #include "Scene.h"
-#include "StageSelectLayout.h"
+#include "GameConfig.h"
+
+#include <array>
+#include <string>
+#include <DxLib.h>
+
+class UI;
 
 class StageSelectScene : public Scene
 {
@@ -12,104 +17,31 @@ public:
     void Finalize() override;
 
 private:
-    // 現在選択しているステージ番号
-    int mnSelectedStage = 0;
-
-    // 前フレームのマウス左クリック状態
-    bool mbPreviousMouseLeft = true;
-
-    // ステージセレクトの背景画像
-    int mBackgroundHandle = -1;
-
-    // 各ステージのクリア画像を保持する
-    // [ステージ番号 - 1]
-    int mStageClearHandles[8] = {};
-
-    // ステージ選択範囲
-    // 1920×1080の背景画像上での各ステージの位置
-    //
-    // x     : 左端
-    // y     : 上端
-    // width : 横幅
-    // height: 縦幅
-    //
-    // この範囲内をクリックすると、そのステージを選択する
-    struct StageButton
+    // 背景画像(notFoundation.png)上のピクセル座標
+    struct Point
     {
         float x;
         float y;
-        float width;
-        float height;
     };
 
-    // 1920×1080用のステージ選択範囲
-    //
-    // 画像の左上から見て、
-    // 上段 : Stage1 ～ Stage4
-    // 下段 : Stage5 ～ Stage8
-    StageButton mStageButtons[8] =
-    {
-        // 上段
-        { 375.0f, 225.0f, 245.0f, 375.0f }, // Stage1
-        { 655.0f, 225.0f, 250.0f, 375.0f }, // Stage2
-        { 980.0f, 225.0f, 250.0f, 375.0f }, // Stage3
-        { 1270.0f, 225.0f, 250.0f, 375.0f }, // Stage4
+    // -- 生成 -- //
+    void CreateBackground();
+    void CreateStageCard(int _stage);                                   // 料理枠1つ分
+    void CreateDishName(int _stage, Point _center, bool _isCompleted);
+    void CreateDish(int _stage, Point _center, bool _isCompleted);
+    void CreateItems(int _stage, Point _center);
 
-        // 下段
-        { 375.0f, 645.0f, 245.0f, 375.0f }, // Stage5
-        { 655.0f, 645.0f, 250.0f, 375.0f }, // Stage6
-        { 980.0f, 645.0f, 250.0f, 375.0f }, // Stage7
-        { 1270.0f, 645.0f, 250.0f, 375.0f }  // Stage8
-    };
+    // -- 配置の補助 -- //
+    void PlaceImage(UI* _ui, float _x, float _y, int _layer) const;     // レイヤーと位置
+    void FitImage(UI* _ui, float _width, float _height) const;          // 比率を保って枠内に収める
+    void StretchImage(UI* _ui, float _width, float _height) const;      // 比率を無視して引き伸ばす
+    VECTOR ToUIPosition(float _x, float _y) const;                      // 背景画像の座標 → UIのPosition
 
-    struct StageClearImage
-    {
-        float x;
-        float y;
-        float width;
-        float height;
-    };
+private:
+    UI* mpBackground = nullptr;
 
-    StageClearImage mStageClearImages[8] =
-    {
-        // 上段
-        { 375.0f, 225.0f, 245.0f, 375.0f },
-        { 655.0f, 225.0f, 250.0f, 375.0f },
-        { 980.0f, 225.0f, 250.0f, 375.0f },
-        { 1270.0f, 225.0f, 250.0f, 375.0f },
+    float mfBgScaleX = 1.0f;    // 背景画像 → 画面 の拡大率
+    float mfBgScaleY = 1.0f;
 
-        // 下段
-        { 375.0f, 645.0f, 245.0f, 375.0f },
-        { 655.0f, 645.0f, 250.0f, 375.0f },
-        { 980.0f, 645.0f, 250.0f, 375.0f },
-        { 1270.0f, 645.0f, 250.0f, 375.0f }
-    };
-
-    // 背景画像を1920×1080の画面いっぱいに描画する
-    void DrawBackground();
-
-    // ステージをクリアしたときの完成画像を描画する
-    void DrawStageClearImages();
-
-    // ステージ選択範囲内をクリックしたか判定する
-    bool IsMouseInsideStageButton(
-        int _stageIndex,
-        int _mouseX,
-        int _mouseY
-    );
-
-    // ステージごとの取得アイテム画像
-    //
-    // [ステージ番号 - 1][アイテム番号]
-    //
-    // 例：
-    // mCollectibleHandles[0][0]
-    // → Stage1のアイテム1
-    //
-    // mCollectibleHandles[7][2]
-    // → Stage8のアイテム3
-    int mCollectibleHandles[8][3] = {};
-
-    // ステージ選択画面に取得済みアイテムを表示する
-    void DrawStageCollectibleImages();
+    std::array<UI*, GameConfig::STAGE_COUNT> mpDishPanels{};    // クリック判定も兼ねる [ステージ番号 - 1]
 };

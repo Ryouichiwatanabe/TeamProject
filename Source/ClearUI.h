@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "UI.h"
 #include "GameConfig.h"

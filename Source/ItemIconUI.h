@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "UI.h"
 
 // アイコン1つ分。未取得のときは画像だけ暗く描く(テキストは暗くしない)

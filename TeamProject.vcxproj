@@ -19,11 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ClearCollectibleUI.cpp" />
     <ClCompile Include="Source\ClearUI.cpp" />
-    <ClCompile Include="Source\Collectible.cpp" />
-    <ClCompile Include="Source\CollectibleData.cpp" />
-    <ClCompile Include="Source\CollectibleIconUI.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
     <ClCompile Include="Source\CsvLoader.cpp" />
@@ -74,10 +70,8 @@
     <ClCompile Include="Source\Spike.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
-    <ClCompile Include="Source\StageClearData.cpp" />
     <ClCompile Include="Source\StageSelectData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
-    <ClCompile Include="Source\StageSelectScene_ex.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
@@ -95,11 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
-    <ClInclude Include="Source\ClearCollectibleUI.h" />
     <ClInclude Include="Source\ClearUI.h" />
-    <ClInclude Include="Source\Collectible.h" />
-    <ClInclude Include="Source\CollectibleData.h" />
-    <ClInclude Include="Source\CollectibleIconUI.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
     <ClInclude Include="Source\CsvLoader.h" />
@@ -115,14 +105,13 @@
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
     <ClInclude Include="Source\TutorialScene.h" />
-    <ClInclude Include="Source\StageSelectLayout.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemHUD.h" />
     <ClInclude Include="Source\ItemIconUI.h" />
     <ClInclude Include="Source\ItemRecord.h" />
     <ClInclude Include="Source\ItemTable.h" />
     <ClInclude Include="Source\OperationGuideUI.h" />
-    <ClInclude Include="Source\StageSelectScene_ex.h" />
+    <ClInclude Include="Source\StageSelectScene.h" />
     <ClInclude Include="Source\UIFloatingMotion.h" />
     <ClInclude Include="Source\FontManager.h" />
     <ClInclude Include="Source\Game.h" />
@@ -158,7 +147,6 @@
     <ClInclude Include="Source\StageBlock.h" />
     <ClInclude Include="Source\StageClearData.h" />
     <ClInclude Include="Source\StageSelectData.h" />
-    <ClInclude Include="Source\StageSelectScene.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TitleScene.h" />
