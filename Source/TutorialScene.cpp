@@ -14,11 +14,11 @@
 #include "Stage.h"
 #include "Player.h"
 #include "Goal.h"
-#include "UIBackground.h"
 #include "PlayerShapeUI.h"
 #include "PauseUI.h"
 #include "EffectClear.h"
 #include "UI.h"
+#include "StageBackGround.h"
 
 #include "StageClearData.h" // SetTutorialCleared()
 
@@ -44,11 +44,7 @@ void TutorialScene::Initialize()
     mpGoal = GetObjectManager()->FindObject<Goal>();
 
     // -- 背景UI -- //
-    mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
-    if (mpBackgroundUI != nullptr)
-    {
-        mpBackgroundUI->SetStageByNumber(0);
-    }
+    mpBackgroundUI = GetUIManager()->CreateUI<StageBackGround>();
 
     // -- ポーズUI -- //
     mpPauseUI = GetUIManager()->CreateUI<PauseUI>();

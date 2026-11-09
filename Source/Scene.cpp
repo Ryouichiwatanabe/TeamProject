@@ -62,6 +62,11 @@ void Scene::Update(float _deltaTime)
 
 void Scene::UpdateWorld(float _worldDelta)
 {
+	// 時間が止まっている間は、移動・当たり判定・押し戻しをまとめて止める
+	// (押し戻しや倒れ込みは deltaTime を使わないため、ここで止めないと動いてしまう)
+	if (_worldDelta <= 0.0f)
+		return;
+
 	if (mpObjectManager != nullptr)
 		mpObjectManager->Update(_worldDelta);
 

@@ -23,7 +23,7 @@
 #include "ItemTable.h"
 
 // -- UI -- //
-#include "UIBackground.h"
+#include "StageBackGround.h"
 #include "PlayerShapeUI.h"
 #include "PauseUI.h"
 #include "ClearUI.h"
@@ -54,10 +54,7 @@ void GameScene::Initialize()
 		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
 
 	// -- 「背景」の生成 -- //
-	mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
-	if (mpBackgroundUI != nullptr) {
-		mpBackgroundUI->SetStageByNumber(Master::mpSceneManager->GetStageNumber());
-	}
+	mpBackgroundUI = GetUIManager()->CreateUI<StageBackGround>();
 
 	// -- 「Goal」の取得 -- //
 	mpGoal = this->GetObjectManager()->FindObject<Goal>();

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Scene.h"
-#include "UIBackground.h"
 #include "ItemRecord.h"		// StageFlags を使うため
 
 class Player;
@@ -10,6 +9,8 @@ class PauseUI;
 class ClearUI;
 class ItemHUD;
 class PlayerShapeUI;
+
+class StageBackGround;
 
 class GameScene : public Scene
 {
@@ -47,5 +48,5 @@ private:
     ItemRecord::StageFlags mPickedItems{};		// 今回のプレイの仮取得
 
     PlayerShapeUI* mpShapeUI = nullptr;
-    UIBackground* mpBackgroundUI = nullptr;
+    StageBackGround* mpBackgroundUI = nullptr;
 };

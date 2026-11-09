@@ -5,7 +5,7 @@
 class Player;
 class Goal;
 class PlayerShapeUI;
-class UIBackground;
+class StageBackGround;
 class PauseUI;
 class UI;
 
@@ -32,7 +32,7 @@ private:
     Goal* mpGoal = nullptr;
 
     // -- UI -- //
-    UIBackground* mpBackgroundUI = nullptr;
+    StageBackGround* mpBackgroundUI = nullptr;
     PlayerShapeUI* mpShapeUI = nullptr;
     PauseUI* mpPauseUI = nullptr;
     UI* mpSkipButton = nullptr;

@@ -70,16 +70,15 @@
     <ClCompile Include="Source\SoundManager.cpp" />
     <ClCompile Include="Source\Spike.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
+    <ClCompile Include="Source\StageBackGround.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
     <ClCompile Include="Source\StageClearData.cpp" />
-    <ClCompile Include="Source\StageSelectData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
     <ClCompile Include="Source\TutorialScene.cpp" />
     <ClCompile Include="Source\UI.cpp" />
-    <ClCompile Include="Source\UIBackground.cpp" />
     <ClCompile Include="Source\UIButton.cpp" />
     <ClCompile Include="Source\UIFloatingMotion.cpp" />
     <ClCompile Include="Source\UIGraphic.cpp" />
@@ -108,6 +107,7 @@
     <ClInclude Include="Source\EffectTrans.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
+    <ClInclude Include="Source\StageBackGround.h" />
     <ClInclude Include="Source\TutorialScene.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemHUD.h" />
@@ -150,11 +150,9 @@
     <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StageBlock.h" />
     <ClInclude Include="Source\StageClearData.h" />
-    <ClInclude Include="Source\StageSelectData.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TitleScene.h" />
-    <ClInclude Include="Source\UIBackground.h" />
     <ClInclude Include="Source\UITypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
     <ClInclude Include="Source\UIButton.h" />
