@@ -39,7 +39,7 @@ void TutorialScene::Initialize()
 
     // -- ステージ読み込み -- //
     auto* stage = new Stage();
-    stage->Load("Resource/Stage/Stage0.csv");
+    stage->Load("Resource/CSV/Stage/Stage0.csv");
 
     mpGoal = GetObjectManager()->FindObject<Goal>();
 
