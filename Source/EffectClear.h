@@ -5,12 +5,14 @@
 #include <string_view>
 #include "EffectBase.h"
 
+#include "ScreenConfig.h"
+
 // ステージクリア時の花火演出クラス
 class EffectClear final : public EffectBase
 {
 public:
     // コンストラクタ（発生位置の中心座標を受け取る）
-    EffectClear(float fCenterX, float fCenterY);
+    EffectClear(float fCenterX = ScreenConfig::SCREEN_WIDTH / 2.0f, float fCenterY = ScreenConfig::SCREEN_HEIGHT / 2.0f);
 
     // デストラクタ
     ~EffectClear() override = default;

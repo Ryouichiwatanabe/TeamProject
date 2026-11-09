@@ -105,10 +105,7 @@ void StageSelectScene::Update(float _deltaTime)
             );
 
             // ゲームシーンへ移動
-            Master::mpSceneManager->RequestScene(
-                SCENE_TYPE::GAME_SCENE
-            );
-
+            Master::mpSceneManager->RequestGameScene(i + 1);
             break;
         }
     }
