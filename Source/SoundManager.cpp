@@ -193,3 +193,16 @@ bool SoundManager::IsPlayingSE(SOUND_SE se)
 	return false;
 }
 
+bool SoundManager::IsPlayingBGM(SOUND_BGM bgm)
+{
+	for (const auto& pair : mnBgmHandleList)
+	{
+		if (pair.first == bgm)
+		{
+			// CheckSoundMem … 再生中なら1、停止中なら0、エラーなら-1を返す
+			return CheckSoundMem(pair.second) == 1;
+		}
+	}
+	return false;   // 読み込まれていないBGMは「再生していない」扱い
+}
+

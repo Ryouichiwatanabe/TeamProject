@@ -81,6 +81,7 @@ void TutorialScene::Initialize()
     SetTutorialMessage("これからチュートリアルを始めるよ！\n基本の操作を一緒に覚えよう！");
 
     // -- BGM再生 -- //
+    SoundManager::GetInstance()->StopBGM();
     SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 }
 
@@ -126,6 +127,7 @@ void TutorialScene::Update(float _deltaTime)
     {
         InputManager::GetInstance().ConsumeButton(Button::Confirm);
         SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
+        SoundManager::GetInstance()->StopBGM();
 
         StageClearData::SetTutorialCleared(true);   // チュートリアルのクリアを記録
         Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
