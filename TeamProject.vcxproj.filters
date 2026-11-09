@@ -312,6 +312,9 @@
     <ClCompile Include="Source\EffectTrans.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EffectSteam.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
@@ -522,6 +525,9 @@
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\EffectTrans.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteam.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
   </ItemGroup>

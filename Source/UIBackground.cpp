@@ -4,6 +4,11 @@
 #include <filesystem>
 #include <DxLib.h>
 
+#include "Master.h"
+#include "SceneManager.h"
+#include "Scene.h"
+#include "EffectSteam.h"
+
 namespace
 {
 	// ステージ用の背景画像がないときに使う画像
@@ -26,6 +31,13 @@ UIBackground::~UIBackground()
 void UIBackground::Init()
 {
 	SetEnabled(true);
+
+	//Master経由で現在のシーンのEffectManagerを呼び出して湯気を再生（引数省略で中央の鍋から出る）
+	Master::mpSceneManager
+		->GetCurrentScene()
+		->GetEffectManager()
+		->Play<EffectSteam>();
+
 }
 
 void UIBackground::Update()
