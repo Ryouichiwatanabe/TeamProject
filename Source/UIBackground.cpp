@@ -123,5 +123,5 @@ void UIBackground::LoadBackgroundGraph(const std::string& _path)
 
 std::string UIBackground::BuildBackgroundPath(int _stageNumber) const
 {
-	return std::format("Resource/StageGraphic/Stage{}_bg.png", _stageNumber);
+	return std::format("Resource/UI/BackGround/Stage{}_bg.png", _stageNumber);
 }

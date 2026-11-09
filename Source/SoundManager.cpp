@@ -34,24 +34,14 @@ void SoundManager::Initialize()
 	
 
 	// SE の読み込み
-	LoadSE(SOUND_SE::SE_DECIDE, "Resource/SE/DecisionSE/ClickSE.mp3");//EffectManagerのPlayClickRippleで呼び出し
-
-	LoadSE(SOUND_SE::SE_MOVE, "Resource/SE/MoveSE/ove.mp3");
-
-	LoadSE(SOUND_SE::SE_SELECTUI, "Resource/SE/DecisionSE/UISelectSE.mp3");
+	LoadSE(SOUND_SE::SE_DECIDE, "Resource/Sound/SE/Click/Click_normal.mp3");		// クリック(通常)
+	LoadSE(SOUND_SE::SE_SELECTUI, "Resource/Sound/SE/Click/Click_ui.mp3");			// クリック(UI)
 	
-	LoadSE(SOUND_SE::SE_FALL, "Resource/SE/MoveSE/FallingSE.mp3");
+	LoadSE(SOUND_SE::SE_GOAL, "Resource/Sound/SE/JINGLE/Clear.mp3");				// クリアジングル
+	LoadSE(SOUND_SE::SE_GOALVOICE, "Resource/Sound/SE/Clear/Yay.mp3");				// クリアSE
 
-	LoadSE(SOUND_SE::SE_GOAL, "Resource/SE/JingleSE/FailedSE.mp3");
-
-	LoadSE(SOUND_SE::SE_FAILED, "Resource/SE/JingleSE/FailedSE.mp3");
-
-	LoadSE(SOUND_SE::SE_GOALVOICE, "Resource/SE/WE_SOUND.mp3");
-
-	//3DBGM
-	LoadBGM(SOUND_BGM::BGM_Title, "Resource/BGM/Title and Select/TitleBGM.mp3");
-	LoadBGM(SOUND_BGM::BGM_Game, "Resource/BGM/Game/The real thing.mp3");
-	
+	LoadBGM(SOUND_BGM::BGM_Title, "Resource/Sound/BGM/Title&Select/Title&SelectBGM.mp3");	// BGM(Title&StageSelect)
+	LoadBGM(SOUND_BGM::BGM_Game, "Resource/Sound/BGM/Game/Cooking.mp3");					// BGM(Game)
 }
 
 void SoundManager::Finalize()

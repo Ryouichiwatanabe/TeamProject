@@ -50,7 +50,7 @@ private:
     // =================================================================
 
     // 読み込むテクスチャ画像のパス（白単色の星型や光球を推奨）
-    static constexpr std::string_view TEXTURE_PATH = "Resource/Clear.png";
+    static constexpr std::string_view TEXTURE_PATH = "Resource/Effect/Particle/Clear.png";
 
     // エフェクトが消えるまでの総時間（秒）
     // 【調整メモ】

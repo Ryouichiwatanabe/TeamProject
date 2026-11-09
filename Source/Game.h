@@ -16,9 +16,6 @@ public:
     static constexpr FrameDuration FIXED_TIMESTEP{ 1.0 };
     static constexpr int MAX_SIMULATION_STEPS{ 5 };
 
-    static constexpr int SCREEN_WIDTH = 1280;
-    static constexpr int SCREEN_HEIGHT = 720;
-
     Game();
     ~Game();
 
