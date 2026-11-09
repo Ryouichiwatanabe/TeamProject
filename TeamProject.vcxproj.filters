@@ -142,6 +142,18 @@
     <Filter Include="ソース ファイル\UI\Clear">
       <UniqueIdentifier>{9ce6e409-e407-4dee-9c11-38830874cc0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Effect\Player">
+      <UniqueIdentifier>{8d20a38d-b40d-4393-9e8d-4ed78ad9636a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects\Player">
+      <UniqueIdentifier>{6d712406-cc66-46d7-9db9-f989bed13947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects\Steam">
+      <UniqueIdentifier>{e69d7e9d-d9ec-4cb7-b1c7-adee2785382d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect\Steam">
+      <UniqueIdentifier>{1ec24f67-69e5-49e2-bfb4-d15e3c265ee8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GamePad.cpp">
@@ -297,9 +309,6 @@
     <ClCompile Include="Source\UIFloatingMotion.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectFall.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\StageClearData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -330,23 +339,26 @@
     <ClCompile Include="Source\ItemIconUI.cpp">
       <Filter>ソース ファイル\UI\ItemUI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectTrans.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Source\TutorialScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\UITypewriterText.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectSteam.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\StageBackGround.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\ClearUI.cpp">
       <Filter>ソース ファイル\UI\Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectTrans.cpp">
+      <Filter>ソース ファイル\Effect\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectFall.cpp">
+      <Filter>ソース ファイル\Effect\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectSteam.cpp">
+      <Filter>ソース ファイル\Effect\Steam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -506,9 +518,6 @@
     <ClInclude Include="Source\UIHoverScaler.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EffectFall.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\StageClearData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -539,9 +548,6 @@
     <ClInclude Include="Source\ItemIconUI.h">
       <Filter>ヘッダー ファイル\UI\ItemUI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EffectTrans.h">
-      <Filter>ヘッダー ファイル\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Module.h">
       <Filter>ヘッダー ファイル\Module</Filter>
     </ClInclude>
@@ -554,17 +560,23 @@
     <ClInclude Include="Source\UITypewriterText.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EffectSteam.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EffectSteamConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\StageBackGround.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\ClearUI.h">
       <Filter>ヘッダー ファイル\UI\Clear</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectTrans.h">
+      <Filter>ヘッダー ファイル\Effects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectFall.h">
+      <Filter>ヘッダー ファイル\Effects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteam.h">
+      <Filter>ヘッダー ファイル\Effects\Steam</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteamConfig.h">
+      <Filter>ヘッダー ファイル\Effects\Steam</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
