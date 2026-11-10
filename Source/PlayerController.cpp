@@ -20,7 +20,6 @@ void PlayerController::UpdateRotation()
 	if (!mpPlayer)
 		return;
 
-	// InputManagerからの入力値を取得
 	float rotateInput = InputManager::GetInstance().GetAxis(Axis::Rotation);
 
 	// フォールバック: 直接キー入力も安全に合算
