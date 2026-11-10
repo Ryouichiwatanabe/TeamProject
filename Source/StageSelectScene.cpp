@@ -63,6 +63,9 @@ void StageSelectScene::Initialize()
 
 	for (int stage = 1; stage <= GameConfig::STAGE_COUNT; ++stage)
 		CreateStageCard(stage);
+
+	if (!SoundManager::GetInstance()->IsPlayingBGM(SoundManager::SOUND_BGM::BGM_Title))
+		SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title);
 }
 
 void StageSelectScene::Update(float _deltaTime)

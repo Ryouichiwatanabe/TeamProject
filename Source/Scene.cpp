@@ -83,20 +83,27 @@ void Scene::UpdateOverlay(float _realDelta)
 		mpEffectManager->PlayClickRipple();
 	}
 }
-
 void Scene::Draw()
 {
+	// ★1. 背面エフェクト（背景の直後・ステージやキャラの後ろに湯気を描画）
+	if (mpEffectManager != nullptr)
+	{
+		mpEffectManager->DrawBackground();
+	}
 
+	// 2. ゲームオブジェクト（ステージブロック・プレイヤーなど）
 	if (mpObjectManager != nullptr)
 	{
 		mpObjectManager->Draw();
 	}
 
+	// 3. UI（ポーズ画面・クリア画面など）
 	if (mpUIManager != nullptr)
 	{
 		mpUIManager->Draw();
 	}
-	
+
+	// 4. 前面エフェクト（ClickEffectなどを最前面に描画）
 	if (mpEffectManager != nullptr)
 	{
 		mpEffectManager->Draw();

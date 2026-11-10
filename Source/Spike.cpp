@@ -13,22 +13,19 @@
 
 void Spike::InitComponent()
 {
-    // StageBlock::InitComponent() を呼ぶと静止画の Graphic モジュールまで追加されるため、
-    // Transform と Collider のみ追加する（もしくは StageBlock::InitComponent() を呼んで Graphic を SetEnabled(false) にする）
     AddModule<Transform>();
     AddModule<Collider>();
 
+    // プレイヤーのピースとの当たり判定を設定
     if (auto* collider = GetModule<Collider>())
     {
-        // PlayerPiece (Tag::PLAYER_CELL) との衝突を検知する
         collider->AddCollisionTag(Tag::PLAYER_CELL);
-        collider->SetHalfSize(VGet(GameConfig::CELL_SIZE / 4.0f, 1, 0.0f));
+        collider->SetHalfSize(VGet(GameConfig::CELL_SIZE / 4.0f, 1.0f, 0.0f));
     }
 }
 
 void Spike::Init()
 {
-    // StageBlock::Init() の Tag::BLOCK ではなく Tag::SPIKE に設定
     SetTag(Tag::SPIKE);
 }
 
@@ -39,35 +36,29 @@ void Spike::Update(float _deltaTime)
         return;
     }
 
-    // 初回更新時に Transform の座標を取得して EffectSmokeSpriteSheet を生成
-    // (Stage::CreateObjects で CreateObject 後に SetPosition されるため)
+    // 初回更新時に自分の座標へスプライトシートを生成
     if (!mpSmokeEffect)
     {
         if (auto* transform = GetModule<Transform>())
         {
             const VECTOR pos = transform->GetPosition();
-            auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/Smoke2.png", 16, 4, 4);
+            auto* pSmokeData = Master::mpResource->LoadDivGraphics("Resource/GameObject/StageBlock/Spike.png", 16, 4, 4);
 
             if (pSmokeData != nullptr)
             {
-                mpSmokeEffect = std::make_unique<EffectSmokeSpriteSheet>(
-                    pos.x,          // 横位置を微調整したい場合は pos.x + 10.0f などに変更
-                    pos.y + 20.0f,  // ★ここを + 20.0f（または + 25.0f）にすると下に下がって床にピッタリ接地します！
-                    pSmokeData,
-                    0.05f,
-                    true,
-                    false,
-                    0.8,
-                    0.0,
-                    255, 255, 255, 255,
-                    -1.0f,
-                    -1.0f
+                mpSmokeEffect = std::make_unique<SpriteSheet>(
+                    pos.x,          // X座標
+                    pos.y + 20.0f,  // Y座標（床に接地するよう微調整）
+                    pSmokeData,     // 分割画像
+                    0.05f,          // 1コマの秒数
+                    true,           // ループ再生
+                    0.8             // 拡大率
                 );
             }
         }
     }
 
-    // スプライトシートのアニメーション時間を進める
+    // アニメーション時間を進める
     if (mpSmokeEffect)
     {
         mpSmokeEffect->Update(_deltaTime);
@@ -80,7 +71,7 @@ void Spike::Update(float _deltaTime)
 
 void Spike::Draw()
 {
-    // StageBlock::Draw() は呼ばず（または Graphic を持たせず）、スプライトシートを描画
+    // スプライトシートを描画
     if (mpSmokeEffect)
     {
         mpSmokeEffect->Draw();
@@ -95,7 +86,7 @@ void Spike::CheckPlayerCollision()
         return;
     }
 
-    // PlayerPiece (Tag::PLAYER_CELL) との衝突リストを取得
+    // 有効なプレイヤーピースが触れたらリスポーンさせる
     const auto& collisions = collider->GetCollisions(Tag::PLAYER_CELL);
 
     for (auto* object : collisions)
@@ -105,7 +96,6 @@ void Spike::CheckPlayerCollision()
             continue;
         }
 
-        // PlayerPiece から親の Player を取得してリスポーンさせる
         auto* piece = static_cast<PlayerPiece*>(object);
         if (!piece->IsActive())
         {

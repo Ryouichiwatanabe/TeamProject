@@ -19,6 +19,9 @@
 #include "Switch.h"
 #include "SwitchBlock.h"
 #include "Item.h"
+#include "SpongeBlock.h" // キッチンスポンジのバネ床
+#include "ButterBlock.h" // 溶けバターの滑る床
+
 
 #include "Transform.h"
 
@@ -183,9 +186,21 @@ void Stage::CreateObjects()
                 item->GetModule<Transform>()->SetPosition(initPosition);
                 break;
 
+            }
+            case 12:
+            {
+                // ★キッチンスポンジのバネ床を生成
+                auto sponge = objectManager->CreateObject<SpongeBlock>();
+                sponge->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }
-
+            case 13:
+            {
+                // ★溶けバターのツルツル滑る床を生成
+                auto butter = objectManager->CreateObject<ButterBlock>();
+                butter->GetModule<Transform>()->SetPosition(initPosition);
+                break;
+            }
             default:
                 break;
             }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <vector>
@@ -6,21 +6,21 @@
 
 class SoundManager
 {
-public:     // enum, struct �Ȃǂ̒�`
+public:     // enum, struct などの定義
 
-	// BGM �̎��
+	// BGM の種類
 	enum SOUND_BGM
 	{
 
-		BGM_Title = 0,          // �^�C�g��BGM	
-		BGM_Game = 1,           // �Q�[��BGM
+		BGM_Title = 0,          // タイトルBGM	
+		BGM_Game = 1,           // ゲームBGM
 
 	};
 
-	// SE �̎��
+	// SE の種類
 	enum SOUND_SE
 	{
-		SE_DECIDE = 0,          // ���艹
+		SE_DECIDE = 0,          // 決定音
 		SE_MOVE = 1,
 		SE_SELECTUI = 2,
 		SE_FALL = 3,
@@ -37,46 +37,47 @@ private:
 	static SoundManager* sInstance;
 
 public:
-	// �R���X�g���N�^
+	// コンストラクタ
 	SoundManager();
-	// �f�X�g���N�^
+	// デストラクタ
 	~SoundManager();
 
-	// ������
+	// 初期化
 	void Initialize();
-	// �I������
+	// 終了処理
 	void Finalize();
 
-public:     // �T�E���h�Đ��n
+public:     // サウンド再生系
 
-	// BGM�Đ�
-	// SOUND_BGM ... �炵����BGM�̎��
-	// isTop ... �ŏ�����Đ����邩�ǂ���
-	// bool isTop = true -> �f�t�H���g�����ƌĂ΂�鏑�����B�֐����Ăяo���ۂɓn����Ȃ��Ă��F�������
+	// BGM再生
+	// SOUND_BGM ... 鳴らしたいBGMの種類
+	// isTop ... 最初から再生するかどうか
+	// bool isTop = true -> デフォルト引数と呼ばれる書き方。関数を呼び出す際に渡されなくても認識される
 	void PlayBGM(SOUND_BGM bgm, bool isTop = true);
 
-	// SE�Đ�
-	// se ... �炵����SE�̎��
+	// SE再生
+	// se ... 鳴らしたいSEの種類
 	void PlaySE(SOUND_SE se);
 
-	// BGM�̓ǂݍ���
+	// BGMの読み込み
 	void LoadBGM(SOUND_BGM bgm, std::string filename);
 
-	// SE�̓ǂݍ���
+	// SEの読み込み
 	void LoadSE(SOUND_SE se, std::string silename);
 
-	// BGM�̒�~
+	// BGMの停止
 	void StopBGM();
 
-	// SE���Đ������̔���
+	// SEが再生中かの判定
 	bool IsPlayingSE(SOUND_SE se);
+	bool IsPlayingBGM(SOUND_BGM bgm);
 
-private:     // �����o�ϐ�
-	SOUND_BGM mnNowPlayingBgm;   // ���ݍĐ�����Ă���BGM�̎��
-	SOUND_SE mnNowPlayingSe;     // ���ݍĐ�����Ă���SE�̎��
+private:     // メンバ変数
+	SOUND_BGM mnNowPlayingBgm;   // 現在再生されているBGMの種類
+	SOUND_SE mnNowPlayingSe;     // 現在再生されているSEの種類
 
-	std::vector<std::pair<SOUND_BGM, int>> mnBgmHandleList;   // �ǂ݂���BGM�n���h���̃��X�g
-	std::vector<std::pair<SOUND_SE, int>> mnSeHandleList;     // �ǂݍ���SE�n���h���̃��X�g
+	std::vector<std::pair<SOUND_BGM, int>> mnBgmHandleList;   // 読みこんだBGMハンドルのリスト
+	std::vector<std::pair<SOUND_SE, int>> mnSeHandleList;     // 読み込んだSEハンドルのリスト
 
 	int mGameBGMHandle;
 

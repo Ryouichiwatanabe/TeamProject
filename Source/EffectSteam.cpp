@@ -2,10 +2,38 @@
 #include <random>
 #include <cmath>
 
-EffectSteam::EffectSteam(float fCenterX, float fCenterY)
-    : EffectBase(fCenterX, fCenterY, INFINITE_LIFE_TIME)
+EffectSteam::EffectSteam(int _stageNumber)
+    : EffectBase(
+        EffectSteamConfig::GetStageParam(_stageNumber).fCenterX,
+        EffectSteamConfig::GetStageParam(_stageNumber).fCenterY,
+        INFINITE_LIFE_TIME)
 {
-    m_wisps.resize(WISP_COUNT);
+    const auto param = EffectSteamConfig::GetStageParam(_stageNumber);
+    m_fSpawnRadiusX = param.fSpawnRadiusX;
+    m_fSpawnMinY = param.fSpawnMinY;
+    m_fSpawnMaxY = param.fSpawnMaxY;
+
+    InitializeWisps(param.nWispCount);
+}
+
+EffectSteam::EffectSteam(
+    float fCenterX,
+    float fCenterY,
+    float fSpawnRadiusX,
+    float fSpawnMinY,
+    float fSpawnMaxY,
+    int   nWispCount)
+    : EffectBase(fCenterX, fCenterY, INFINITE_LIFE_TIME)
+    , m_fSpawnRadiusX(fSpawnRadiusX)
+    , m_fSpawnMinY(fSpawnMinY)
+    , m_fSpawnMaxY(fSpawnMaxY)
+{
+    InitializeWisps(nWispCount);
+}
+
+void EffectSteam::InitializeWisps(int nWispCount)
+{
+    m_wisps.resize(nWispCount);
     for (auto& wisp : m_wisps)
     {
         // ゲーム開始時から自然に湯気が立ち上っているよう初期経過時間をばらけさせる
@@ -13,13 +41,13 @@ EffectSteam::EffectSteam(float fCenterX, float fCenterY)
     }
 }
 
-
 void EffectSteam::ResetWisp(SteamWisp& wisp, bool bRandomInitialAge)
 {
     static std::mt19937 gen(std::random_device{}());
 
-    std::uniform_real_distribution<float> distX(-POT_SPAWN_RADIUS_X, POT_SPAWN_RADIUS_X);
-    std::uniform_real_distribution<float> distY(POT_SPAWN_MIN_Y, POT_SPAWN_MAX_Y);
+    // ステージ別の範囲（m_fSpawnRadiusX, m_fSpawnMinY, m_fSpawnMaxY）を使用
+    std::uniform_real_distribution<float> distX(-m_fSpawnRadiusX, m_fSpawnRadiusX);
+    std::uniform_real_distribution<float> distY(m_fSpawnMinY, m_fSpawnMaxY);
     std::uniform_real_distribution<float> distSpeed(MIN_RISE_SPEED, MAX_RISE_SPEED);
     std::uniform_real_distribution<float> distSwayAmp(MIN_SWAY_AMP, MAX_SWAY_AMP);
     std::uniform_real_distribution<float> distSwayFreq(MIN_SWAY_FREQ, MAX_SWAY_FREQ);

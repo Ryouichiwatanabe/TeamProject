@@ -48,6 +48,8 @@ public:
      */
     virtual void Draw() const = 0;
 
+    virtual bool IsBackgroundEffect() const noexcept { return false; }
+
     // --- 状態取得・操作インターフェース --- //
 
     [[nodiscard]] bool IsDead() const noexcept { return m_bIsDead; }

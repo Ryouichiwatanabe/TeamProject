@@ -1,24 +1,32 @@
 #pragma once
 #include "EffectBase.h"
-#include "ScreenConfig.h"
+#include "EffectSteamConfig.h"
 #include <vector>
 
-// ステージ背景の中央の鍋から立ち上る湯気エフェクト
+// ステージ背景の鍋から立ち上る湯気エフェクト
 class EffectSteam final : public EffectBase
 {
 public:
-    // 画面中央・定数定義（マジックナンバー排除）
-    static constexpr float HALF_RATIO = 0.5f;
-    static constexpr float POT_CENTER_OFFSET_Y = 80.0f; // 鍋のスープ面の高さ調整（中央より少し下から立ち上る）
+    static constexpr int DEFAULT_STAGE_NUMBER = 1;
 
-    static constexpr float DEFAULT_CENTER_X = ScreenConfig::SCREEN_WIDTH * HALF_RATIO;
-    static constexpr float DEFAULT_CENTER_Y = (ScreenConfig::SCREEN_HEIGHT * HALF_RATIO) + POT_CENTER_OFFSET_Y;
+    // ステージ番号を指定して生成（EffectSteamConfigの定数を自動で読み取る）
+    explicit EffectSteam(int _stageNumber = DEFAULT_STAGE_NUMBER);
 
-public:
-    EffectSteam(float fCenterX = DEFAULT_CENTER_X, float fCenterY = DEFAULT_CENTER_Y);
+    // 座標と範囲を直接指定して生成することも可能
+    EffectSteam(
+        float fCenterX,
+        float fCenterY,
+        float fSpawnRadiusX,
+        float fSpawnMinY = EffectSteamConfig::STAGE_1.fSpawnMinY,
+        float fSpawnMaxY = EffectSteamConfig::STAGE_1.fSpawnMaxY,
+        int   nWispCount = EffectSteamConfig::STAGE_1.nWispCount
+    );
+
     ~EffectSteam() override = default;
 
     void Draw() const override;
+
+    bool IsBackgroundEffect() const noexcept override { return true; }
 
 protected:
     void OnUpdate(float fDeltaTime) override;
@@ -37,18 +45,21 @@ private:
         float fMaxLife = 0.0f; // 寿命
     };
 
+    void InitializeWisps(int nWispCount);
     void ResetWisp(SteamWisp& wisp, bool bRandomInitialAge);
 
 private:
     std::vector<SteamWisp> m_wisps;
 
-    // --- 湯気の生成・配置パラメータ ---
+    // ステージごとにEffectSteamConfigから読み込まれる範囲パラメータ
+    float m_fSpawnRadiusX = 0.0f;
+    float m_fSpawnMinY = 0.0f;
+    float m_fSpawnMaxY = 0.0f;
+
+    // --- 共通定数（マジックナンバー排除） ---
+    static constexpr float HALF_RATIO = 0.5f;
     static constexpr float INFINITE_LIFE_TIME = 0.0f;   // EffectBaseの無期限再生用
     static constexpr float INITIAL_AGE_ZERO = 0.0f;
-    static constexpr int   WISP_COUNT = 22;     // 湯気の筋の本数
-    static constexpr float POT_SPAWN_RADIUS_X = 320.0f; // 鍋の横幅（中央から左右への湧き出し範囲）
-    static constexpr float POT_SPAWN_MIN_Y = -40.0f; // 湧き出し位置の上方向ばらつき
-    static constexpr float POT_SPAWN_MAX_Y = 100.0f; // 湧き出し位置の下方向ばらつき
 
     // --- ランダム範囲パラメータ ---
     static constexpr float MIN_RISE_SPEED = 55.0f;  // 最小上昇速度
@@ -74,7 +85,7 @@ private:
 
     // --- 透明度・色定数 ---
     static constexpr float FADE_IN_END_RATIO = 0.25f;  // ふわっと現れるまでの進行割合
-    static constexpr float FADE_OUT_SPAN_RATIO = 0.75f; // 消えていく区間の割合 (1.0 - 0.25)
+    static constexpr float FADE_OUT_SPAN_RATIO = 0.75f;  // 消えていく区間の割合 (1.0 - 0.25)
     static constexpr float UNIT_RATIO = 1.0f;
     static constexpr float MAX_OUTER_ALPHA = 28.0f;  // 外側のふんわりした湯気の最大アルファ
     static constexpr float MAX_CORE_ALPHA = 22.0f;  // 内側の湯気の芯の最大アルファ

@@ -44,7 +44,7 @@ void GameScene::Initialize()
 	// -- ステージの生成 -- //
 	auto* stage = new Stage();
 	std::string stageFileName =
-		"Resource/Stage/Stage"
+		"Resource/CSV/Stage/Stage"
 		+ std::to_string(Master::mpSceneManager->GetStageNumber())
 		+ ".csv";
 	stage->Load(stageFileName);

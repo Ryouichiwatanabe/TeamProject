@@ -258,10 +258,7 @@
     <ClCompile Include="Source\EffectClear.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Source\CollectibleData.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EffectSmokeSpriteSheet.cpp">
+    <ClCompile Include="Source\SpriteSheet.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Source\Player.cpp">
@@ -291,17 +288,8 @@
     <ClCompile Include="Source\ClearUI.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClearCollectibleUI.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collectible.cpp">
-      <Filter>ソース ファイル\GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Master.cpp">
       <Filter>ソース ファイル\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\CollectibleIconUI.cpp">
-      <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
     <ClCompile Include="Source\UIBackground.cpp">
       <Filter>ソース ファイル\UI</Filter>
@@ -345,9 +333,6 @@
     <ClCompile Include="Source\ItemIconUI.cpp">
       <Filter>ソース ファイル\UI\ItemUI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StageSelectScene_ex.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EffectTrans.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
@@ -356,6 +341,18 @@
     </ClCompile>
     <ClCompile Include="Source\UITypewriterText.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectSteam.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectRespawn.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SpongeBlock.cpp">
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ButterBlock.cpp">
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -479,10 +476,7 @@
     <ClInclude Include="Source\EffectClear.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\CollectibleData.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EffectSmokeSpriteSheet.h">
+    <ClInclude Include="Source\SpriteSheet.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Player.h">
@@ -505,15 +499,6 @@
     </ClInclude>
     <ClInclude Include="Source\ClearUI.h">
       <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ClearCollectibleUI.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\CollectibleIconUI.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Collectible.h">
-      <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
     <ClInclude Include="Source\Collider.h">
       <Filter>ヘッダー ファイル\Module\Collider</Filter>
@@ -569,17 +554,11 @@
     <ClInclude Include="Source\ItemIconUI.h">
       <Filter>ヘッダー ファイル\UI\ItemUI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StageSelectScene_ex.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Source\EffectTrans.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Module.h">
       <Filter>ヘッダー ファイル\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\StageSelectLayout.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\TutorialScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
@@ -589,6 +568,21 @@
     </ClInclude>
     <ClInclude Include="Source\UITypewriterText.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteam.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteamConfig.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectRespawn.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpongeBlock.h">
+      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ButterBlock.h">
+      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

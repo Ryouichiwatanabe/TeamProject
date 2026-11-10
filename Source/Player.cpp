@@ -23,7 +23,7 @@
 #include "Debug.h"
 
 #include "SoundManager.h"
-
+#include "EffectRespawn.h"
 #include <DxLib.h>
 #include <cmath>
 
@@ -224,4 +224,10 @@ void Player::Respawn()
 	SetGroundedState(false);
 
 	UpdatePieceTransforms();
+	//リスポーン時のチカチカエフェクトを再生
+	Master::mpSceneManager
+		->GetCurrentScene()
+		->GetEffectManager()
+		->Play<EffectRespawn>(this);
+
 }

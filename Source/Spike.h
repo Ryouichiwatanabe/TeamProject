@@ -1,8 +1,9 @@
 ﻿#pragma once
 #include "StageBlock.h"
-#include "EffectSmokeSpriteSheet.h"
+#include "SpriteSheet.h"
 #include <memory>
 
+// 触れるとリスポーンするお邪魔ギミック（湯気・トゲ）
 class Spike : public StageBlock
 {
 public:
@@ -15,9 +16,8 @@ public:
     void Draw() override;
 
 private:
-    void CheckPlayerCollision();
+    void CheckPlayerCollision(); // プレイヤーとの接触判定
 
 private:
-    // 既存のエフェクトスモークスプライトシートを用いてアニメーション描画
-    std::unique_ptr<EffectSmokeSpriteSheet> mpSmokeEffect = nullptr;
+    std::unique_ptr<SpriteSheet> mpSmokeEffect = nullptr; // アニメーション描画用
 };
