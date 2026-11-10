@@ -1,4 +1,4 @@
-#include "MovingBlock.h"
+ï»¿#include "MovingBlock.h"
 #include "Player.h"
 #include "PlayerPiece.h"
 
@@ -18,7 +18,7 @@
 
 void MovingBlock::Init()
 {
-    StageBlock::Init(); // Tag::BLOCK ‚Æ‚µ‚Ä“o˜^
+    StageBlock::Init(); // Tag::BLOCK ã¨ã—ã¦ç™»éŒ²
 }
 
 void MovingBlock::Update(float _deltaTime)
@@ -30,34 +30,34 @@ void MovingBlock::Update(float _deltaTime)
     if (!myTransform)
         return;
 
-    // 1. ‰‰ñƒtƒŒ[ƒ€‚ÅuCSV‚Å”z’u‚³‚ê‚½Œ³‚ÌÀ•Wv‚ğ‹L‰¯‚·‚é
+    // 1. åˆå›ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã€ŒCSVã§é…ç½®ã•ã‚ŒãŸå…ƒã®åº§æ¨™ã€ã‚’è¨˜æ†¶ã™ã‚‹
     if (!mbStartPosSaved)
     {
         mvStartPos = myTransform->GetPosition();
         mbStartPosSaved = true;
     }
 
-    // 2. ˆÚ“®‚·‚é‘O‚ÌÀ•W‚ÆA¡ã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğæ‚Éæ“¾‚µ‚Ä‚¨‚­
+    // 2. ç§»å‹•ã™ã‚‹å‰ã®åº§æ¨™ã¨ã€ä»Šä¸Šã«ä¹—ã£ã¦ã„ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å…ˆã«å–å¾—ã—ã¦ãŠã
     const VECTOR prevPos = myTransform->GetPosition();
     Player* pRidingPlayer = FindPlayerOnTop(prevPos);
 
-    // 3. ƒTƒCƒ“”gistd::sinfj‚ğg‚Á‚ÄA’[‚ÅŒ¸‘¬‚µ‚È‚ª‚çŠŠ‚ç‚©‚É‰•œˆÚ“®‚³‚¹‚é
+    // 3. ã‚µã‚¤ãƒ³æ³¢ï¼ˆstd::sinfï¼‰ã‚’ä½¿ã£ã¦ã€ç«¯ã§æ¸›é€Ÿã—ãªãŒã‚‰æ»‘ã‚‰ã‹ã«å¾€å¾©ç§»å‹•ã•ã›ã‚‹
     mfMoveTimer += _deltaTime * MOVE_SPEED;
     const float offset = std::sinf(mfMoveTimer) * MOVE_RANGE;
 
     VECTOR nextPos = mvStartPos;
     if (IS_VERTICAL_MOVE)
     {
-        nextPos.y += offset; // ã‰ºˆÚ“®ƒ‚[ƒh
+        nextPos.y += offset; // ä¸Šä¸‹ç§»å‹•ãƒ¢ãƒ¼ãƒ‰
     }
     else
     {
-        nextPos.x += offset; // ¶‰EˆÚ“®ƒ‚[ƒh
+        nextPos.x += offset; // å·¦å³ç§»å‹•ãƒ¢ãƒ¼ãƒ‰
     }
 
     myTransform->SetPosition(nextPos);
 
-    // 4. ‚±‚ÌƒtƒŒ[ƒ€‚Å°‚ª“®‚¢‚½·•ªimoveDeltaj‚¾‚¯Aã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚àˆê‚É‰^‚ÔI
+    // 4. ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§åºŠãŒå‹•ã„ãŸå·®åˆ†ï¼ˆmoveDeltaï¼‰ã ã‘ã€ä¸Šã«ä¹—ã£ã¦ã„ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚‚ä¸€ç·’ã«é‹ã¶ï¼
     const VECTOR moveDelta = VSub(nextPos, prevPos);
     if (pRidingPlayer != nullptr)
     {
@@ -72,7 +72,7 @@ void MovingBlock::Update(float _deltaTime)
     StageBlock::Update(_deltaTime);
 }
 
-// ‚±‚Ì“®‚­°‚Ìã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ’T‚·
+// ã“ã®å‹•ãåºŠã®ä¸Šã«ä¹—ã£ã¦ã„ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æ¢ã™
 Player* MovingBlock::FindPlayerOnTop(const VECTOR& blockPos)
 {
     auto* scene = Master::mpSceneManager ? Master::mpSceneManager->GetCurrentScene() : nullptr;
@@ -99,7 +99,7 @@ Player* MovingBlock::FindPlayerOnTop(const VECTOR& blockPos)
         const VECTOR piecePos = pieceTransform->GetPosition();
         const float pieceBottom = piecePos.y + halfCell;
 
-        // ƒs[ƒX‚ª°‚Ì‰¡•‚Ì”ÍˆÍ“à‚ÅA‚©‚Â‰º’[‚ª°‚Ìã–Ê‚ÉG‚ê‚Ä‚¢‚é‚©
+        // ãƒ”ãƒ¼ã‚¹ãŒåºŠã®æ¨ªå¹…ã®ç¯„å›²å†…ã§ã€ã‹ã¤ä¸‹ç«¯ãŒåºŠã®ä¸Šé¢ã«è§¦ã‚Œã¦ã„ã‚‹ã‹
         const bool isWithinX = std::fabsf(piecePos.x - blockPos.x) < (GameConfig::CELL_SIZE * 0.90f);
         const bool isTouchingTop = (pieceBottom >= blockTop - 14.0f) && (pieceBottom <= blockTop + 26.0f);
 
@@ -111,7 +111,7 @@ Player* MovingBlock::FindPlayerOnTop(const VECTOR& blockPos)
     return nullptr;
 }
 
-// u“®‚­‚Ü‚È”ÂƒŠƒtƒgiƒKƒCƒhƒŒ[ƒ‹{–Ø»ƒJƒbƒeƒBƒ“ƒOƒ{[ƒhjv‚Ì•`‰æ
+// ã€Œå‹•ãã¾ãªæ¿ãƒªãƒ•ãƒˆï¼ˆã‚¬ã‚¤ãƒ‰ãƒ¬ãƒ¼ãƒ«ï¼‹æœ¨è£½ã‚«ãƒƒãƒ†ã‚£ãƒ³ã‚°ãƒœãƒ¼ãƒ‰ï¼‰ã€ã®æç”»
 void MovingBlock::Draw()
 {
     auto* myTransform = GetModule<Transform>();
@@ -127,47 +127,24 @@ void MovingBlock::Draw()
     const int top = cy - half;
     const int bottom = cy + half;
 
-    const unsigned int railCol = GetColor(130, 138, 145); // ”wŒã‚ÌƒKƒCƒhƒŒ[ƒ‹F
-    const unsigned int shadowCol = GetColor(20, 18, 15);    // —§‘Ì‰e
-    const unsigned int woodMainCol = GetColor(225, 178, 120); // ‚Ü‚È”Â‚Ì–¾‚é‚¢–Ø–ÚF
-    const unsigned int woodDarkCol = GetColor(155, 108, 62);  // ‚Ü‚È”Â‚Ì‘¤–ÊE˜gF
-    const unsigned int metalRimCol = GetColor(195, 205, 215); // —¼’[‚ÌƒXƒeƒ“ƒŒƒX‹à‹ïF
-    const unsigned int arrowCol = GetColor(125, 82, 42);   // ’†‰›‚ÌˆÚ“®•ûŒüƒ}[ƒN
+    const unsigned int railCol = GetColor(130, 138, 145); // èƒŒå¾Œã®ã‚¬ã‚¤ãƒ‰ãƒ¬ãƒ¼ãƒ«è‰²
+    const unsigned int shadowCol = GetColor(20, 18, 15);    // ç«‹ä½“å½±
+    const unsigned int woodMainCol = GetColor(225, 178, 120); // ã¾ãªæ¿ã®æ˜ã‚‹ã„æœ¨ç›®è‰²
+    const unsigned int woodDarkCol = GetColor(155, 108, 62);  // ã¾ãªæ¿ã®å´é¢ãƒ»æ è‰²
+    const unsigned int metalRimCol = GetColor(195, 205, 215); // ä¸¡ç«¯ã®ã‚¹ãƒ†ãƒ³ãƒ¬ã‚¹é‡‘å…·è‰²
+    const unsigned int arrowCol = GetColor(125, 82, 42);   // ä¸­å¤®ã®ç§»å‹•æ–¹å‘ãƒãƒ¼ã‚¯
 
-    // 1. ‚Ç‚±‚©‚ç‚Ç‚±‚Ü‚Å“®‚­‚©‚ª•ª‚©‚éu”wŒã‚ÌƒKƒCƒhƒŒ[ƒ‹i“_ü‚Æ—¼’[‚ÌƒXƒgƒbƒp[jv‚ğ•`‰æ
-    if (mbStartPosSaved)
-    {
-        const int startX = static_cast<int>(mvStartPos.x);
-        const int startY = static_cast<int>(mvStartPos.y);
-        const int range = static_cast<int>(MOVE_RANGE);
-
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, 130);
-        if (IS_VERTICAL_MOVE)
-        {
-            DrawLine(startX, startY - range, startX, startY + range, railCol, 4);
-            DrawCircle(startX, startY - range, 7, railCol, TRUE);
-            DrawCircle(startX, startY + range, 7, railCol, TRUE);
-        }
-        else
-        {
-            DrawLine(startX - range, startY, startX + range, startY, railCol, 4);
-            DrawCircle(startX - range, startY, 7, railCol, TRUE);
-            DrawCircle(startX + range, startY, 7, railCol, TRUE);
-        }
-        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-    }
-
-    // 2. ƒuƒƒbƒN‚Ì‰e
+    // 2. ãƒ–ãƒ­ãƒƒã‚¯ã®å½±
     SetDrawBlendMode(DX_BLENDMODE_ALPHA, 75);
     DrawBox(left + 6, top + 8, right + 6, bottom + 8, shadowCol, TRUE);
     SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-    // 3. –Ø»‚Ü‚È”ÂƒuƒƒbƒN–{‘Ì‚Æ‰º‘¤‚ÌŒú‚İ
+    // 3. æœ¨è£½ã¾ãªæ¿ãƒ–ãƒ­ãƒƒã‚¯æœ¬ä½“ã¨ä¸‹å´ã®åšã¿
     DrawBox(left, top, right, bottom, woodMainCol, TRUE);
     DrawBox(left, bottom - 14, right, bottom, woodDarkCol, TRUE);
     DrawBox(left, top, right, bottom, woodDarkCol, FALSE);
 
-    // 4. ¶‰E—¼’[‚ÌƒXƒeƒ“ƒŒƒX•â‹­‹à‹ï‚ÆƒŠƒxƒbƒg
+    // 4. å·¦å³ä¸¡ç«¯ã®ã‚¹ãƒ†ãƒ³ãƒ¬ã‚¹è£œå¼·é‡‘å…·ã¨ãƒªãƒ™ãƒƒãƒˆ
     DrawBox(left, top, left + 12, bottom, metalRimCol, TRUE);
     DrawBox(right - 12, top, right, bottom, metalRimCol, TRUE);
     DrawBox(left, top, left + 12, bottom, woodDarkCol, FALSE);
@@ -175,7 +152,7 @@ void MovingBlock::Draw()
     DrawCircle(left + 6, cy, 3, woodDarkCol, TRUE);
     DrawCircle(right - 6, cy, 3, woodDarkCol, TRUE);
 
-    // 5. ’†‰›‚Ìuƒ „vˆÚ“®ƒ}[ƒN
+    // 5. ä¸­å¤®ã®ã€Œï¼œ ï¼ã€ç§»å‹•ãƒãƒ¼ã‚¯
     DrawLine(cx - 18, cy - 4, cx - 26, cy - 12, arrowCol, 3);
     DrawLine(cx - 18, cy - 4, cx - 26, cy + 4, arrowCol, 3);
     DrawLine(cx + 18, cy - 4, cx + 26, cy - 12, arrowCol, 3);
