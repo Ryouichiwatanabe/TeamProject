@@ -138,8 +138,8 @@ void InputManager::InitializeAxis() {
 	{
 		InputMode::Normal,
 
-		KEY_INPUT_L,
-		KEY_INPUT_J,
+		KEY_INPUT_D,
+		KEY_INPUT_A,
 		PadAxis::RightX
 	};
 
@@ -147,8 +147,8 @@ void InputManager::InitializeAxis() {
 	{
 		InputMode::Fake,
 
-		KEY_INPUT_L,
-		KEY_INPUT_J,
+		KEY_INPUT_D,
+		KEY_INPUT_A,
 		PadAxis::RightX
 	};
 
