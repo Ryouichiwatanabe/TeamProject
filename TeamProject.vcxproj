@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\LoadScene.cpp" />
     <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ClearUI.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
@@ -94,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
+    <ClInclude Include="Source\LoadScene.h" />
     <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ClearUI.h" />
     <ClInclude Include="Source\Collider.h" />
