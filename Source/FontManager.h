@@ -10,6 +10,7 @@ enum class FontId
     Title,
     SubTitle,
     Button,
+    HUD,
 };
 
 struct FontDesc

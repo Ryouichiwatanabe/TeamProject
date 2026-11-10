@@ -14,11 +14,13 @@
 #include "Stage.h"
 #include "Player.h"
 #include "Goal.h"
-#include "UIBackground.h"
 #include "PlayerShapeUI.h"
 #include "PauseUI.h"
 #include "EffectClear.h"
 #include "UI.h"
+#include "StageBackGround.h"
+
+#include "Transform.h"
 
 #include "StageClearData.h" // SetTutorialCleared()
 
@@ -31,12 +33,11 @@ void TutorialScene::Initialize()
     mfClearTimer = 0.0f;
 
     // -- Player・変形UIの生成 (変形UIはInit内でPlayerを探すため後に作る) -- //
-    mpPlayer = GetObjectManager()->CreateObject<Player>();
-    if (mpPlayer != nullptr)
-    {
+    const VECTOR initPos = VGet(200.0f, 350.0f, 0.0f);
+    auto player = GetObjectManager()->CreateObject<Player>(initPos);
+    if(player)
         mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
-    }
-
+    
     // -- ステージ読み込み -- //
     auto* stage = new Stage();
     stage->Load("Resource/CSV/Stage/Stage0.csv");
@@ -44,11 +45,7 @@ void TutorialScene::Initialize()
     mpGoal = GetObjectManager()->FindObject<Goal>();
 
     // -- 背景UI -- //
-    mpBackgroundUI = GetUIManager()->CreateUI<UIBackground>();
-    if (mpBackgroundUI != nullptr)
-    {
-        mpBackgroundUI->SetStageByNumber(0);
-    }
+    mpBackgroundUI = GetUIManager()->CreateUI<StageBackGround>();
 
     // -- ポーズUI -- //
     mpPauseUI = GetUIManager()->CreateUI<PauseUI>();

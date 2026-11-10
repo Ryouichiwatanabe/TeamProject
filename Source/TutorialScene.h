@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 #include "Scene.h"
 #include "UITypewriterText.h"
 
 class Player;
 class Goal;
 class PlayerShapeUI;
-class UIBackground;
+class StageBackGround;
 class PauseUI;
 class UI;
 
@@ -27,24 +27,23 @@ private:
     void UpdatePause();
 
 private:
-    // -- ƒIƒuƒWƒFƒNƒgQÆ—p -- //
-    Player* mpPlayer = nullptr;
+    // -- ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‚ç…§ç”¨ -- //
     Goal* mpGoal = nullptr;
 
     // -- UI -- //
-    UIBackground* mpBackgroundUI = nullptr;
+    StageBackGround* mpBackgroundUI = nullptr;
     PlayerShapeUI* mpShapeUI = nullptr;
     PauseUI* mpPauseUI = nullptr;
     UI* mpSkipButton = nullptr;
     UI* mpMessageUI = nullptr;
 
-    // -- ƒ`ƒ…[ƒgƒŠƒAƒ‹isŠÇ— -- //
+    // -- ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«é€²è¡Œç®¡ç† -- //
     int mnTutorialStep = 0;
     float mfStepTimer = 0.0f;
     UITypewriterText mTypewriter;
     int mMessageFontHandle = -1;
 
-    // -- ƒNƒŠƒA‰‰o—p -- //
+    // -- ã‚¯ãƒªã‚¢æ¼”å‡ºç”¨ -- //
     bool mbIsClear = false;
     float mfClearTimer = 0.0f;
 };

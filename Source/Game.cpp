@@ -61,6 +61,14 @@ Game::Game()
         subTitleDesc.fontType = DX_FONTTYPE_EDGE;
         subTitleDesc.edgeSize = 0;
         Master::mpFontManager->Register(FontId::Button, subTitleDesc);
+
+        // -- ゲーム中HUD -- //
+        FontDesc hudDesc;
+        hudDesc.name = "PixelMplus10";
+        hudDesc.size = 44;	// 56 → 44
+        hudDesc.fontType = DX_FONTTYPE_EDGE;
+        hudDesc.edgeSize = 0;
+        Master::mpFontManager->Register(FontId::HUD, hudDesc);
     }
 }
 

@@ -27,12 +27,18 @@
 #include <DxLib.h>
 #include <cmath>
 
-// ============================================================ //
-//  生成
-// ============================================================ //
+Player::Player(const VECTOR& initPos)
+	:GameObject()
+{
+	mvRespawnPos = initPos;
+	if (auto transform = GetModule<Transform>())
+		transform->SetPosition(initPos);
+}
+
 void Player::Init()
 {
 	SetTag(Tag::PLAYER);
+	GetTransform()->SetPosition(mvRespawnPos);
 
 	mController.Initialize(this);
 
@@ -81,9 +87,6 @@ void Player::CreatePiece(int _column, int _row)
 	));
 }
 
-// ============================================================ //
-//  毎フレームの更新
-// ============================================================ //
 void Player::Update(float _deltaTime)
 {
 	if (_deltaTime <= 0.0f)
@@ -123,16 +126,8 @@ void Player::PrintDebugInfo()
 	int deg = static_cast<int>(std::roundf(transform->GetRotation().z * 180.0f / DX_PI_F)) % 360;
 	if (deg < 0)
 		deg += 360;
-
-	// Debug::Print("Player Pos: (", static_cast<int>(transform->GetPosition().x), ", ", static_cast<int>(transform->GetPosition().y), ")");
-	// Debug::Print("Player Angle: ", deg, " deg");
-	// Debug::Print("Grounded: ", mbIsGrounded ? "YES" : "NO", " / Toppling: ", mbIsToppling ? "YES" : "NO");
-	// Debug::Print("Input Cooldown: ", mfInputCooldown > 0.0f ? "ACTIVE" : "IDLE");
 }
 
-// ============================================================ //
-//  Pieceの座標同期・重心
-// ============================================================ //
 void Player::UpdatePieceTransforms()
 {
 	auto transform = GetTransform();
@@ -217,6 +212,7 @@ void Player::Respawn()
 	if (!transform)
 		return;
 
+	SetShape(0);
 	transform->SetPosition(mvRespawnPos);
 	transform->SetRotation(VGet(0.0f, 0.0f, 0.0f));
 	mbIsToppling = false;

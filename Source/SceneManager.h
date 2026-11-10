@@ -24,14 +24,13 @@ public:
 	void Draw();						// 描画処理
 	void Finalize();					// 終了処理
 
-	//void ChangeSceneIfNeeded();	// シーン遷移（切り替え処理）が必要な状態なら遷移処理する
-	void SetNextScene(SCENE_TYPE next) { mnNextSceneType = next;}	// 次に遷移するシーンの設定
-
 	Scene* GetCurrentScene() { return mpCurrentScene; }			// 現在シーンの取得
 	SCENE_TYPE GetCurrentSceneType() { return mnSceneType; }	// シーンタイプの取得関数
+	
 	// 次のシーンを予約・フェードアウト開始
 	void RequestScene(SCENE_TYPE _nextType);
 	
+
 	void RequestGameScene(int _stageNumber);	// ステージ番号をStageSelectのみで設定するための窓口 & 次シーンの予約
 	int GetStageNumber() const;					// 最後に選択されたステージ番号の取得
 
