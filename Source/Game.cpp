@@ -93,7 +93,7 @@ bool Game::InitializeDxLib()
     if (DxLib_Init() == -1) {
         return false;
     }
-
+    
     SetDrawScreen(DX_SCREEN_BACK);
 
     SetUseZBufferFlag(TRUE);
