@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\ButterBlock.cpp" />
+    <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ClearUI.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\CollisionManager.cpp" />
@@ -55,7 +55,6 @@
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Master.cpp" />
     <ClCompile Include="Source\Mouse.cpp" />
-    <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ObjectManager.cpp" />
     <ClCompile Include="Source\OperationGuideUI.cpp" />
     <ClCompile Include="Source\PauseUI.cpp" />
@@ -94,7 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
-    <ClInclude Include="Source\ButterBlock.h" />
+    <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ClearUI.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\CollisionManager.h" />
@@ -138,7 +137,6 @@
     <ClInclude Include="Source\Master.h" />
     <ClInclude Include="Source\Module.h" />
     <ClInclude Include="Source\Mouse.h" />
-    <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ObjectManager.h" />
     <ClInclude Include="Source\PauseUI.h" />
     <ClInclude Include="Source\Player.h" />

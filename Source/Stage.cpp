@@ -20,7 +20,7 @@
 #include "SwitchBlock.h"
 #include "Item.h"
 #include "SpongeBlock.h" // キッチンスポンジのバネ床
-#include "ButterBlock.h" // 溶けバターの滑る床
+#include "MovingBlock.h" // 溶けバターの滑る床
 
 
 #include "Transform.h"
@@ -120,15 +120,7 @@ void Stage::CreateObjects()
 
             case 3:
             {
-                // 動く床を生成
-                objectManager
-                    ->CreateObject<MovingBlock>(
-                        300.0f,
-                        800.0f,
-                        2.0f
-                    );
-
-                break;
+             
             }
 
             case 4:
@@ -197,7 +189,7 @@ void Stage::CreateObjects()
             case 13:
             {
                 // ★溶けバターのツルツル滑る床を生成
-                auto butter = objectManager->CreateObject<ButterBlock>();
+                auto butter = objectManager->CreateObject<MovingBlock>();
                 butter->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }

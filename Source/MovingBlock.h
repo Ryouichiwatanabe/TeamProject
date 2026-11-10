@@ -1,37 +1,43 @@
-ï»¿#pragma once
+#pragma once
 #include "StageBlock.h"
+#include <DxLib.h>
 
 class Player;
 
+// CSV‚Å’u‚¢‚½ˆÊ’u‚ğŠî€‚É‰•œˆÚ“®‚µAã‚Éæ‚Á‚½“¤•…‚àˆê‚É‰^‚Ôu“®‚­°i‚Ü‚È”ÂƒŠƒtƒgjv
 class MovingBlock : public StageBlock
 {
 public:
-    MovingBlock(
-        float leftLimit,
-        float rightLimit,
-        float speed
-    );
-
-    ~MovingBlock() = default;
+    ~MovingBlock() override = default;
 
     void Init() override;
     void Update(float _deltaTime) override;
-
-    // ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§ã©ã‚Œã ã‘ç§»å‹•ã—ãŸã‹å–å¾—
-    VECTOR GetMoveDelta() const
-    {
-        return mvMoveDelta;
-    }
-
-    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç§»å‹•åºŠã®ç§»å‹•é‡ã ã‘é‹ã¶
-    void CarryPlayer();
+    void Draw() override;
 
 private:
-    float mfLeftLimit;
-    float mfRightLimit;
-    float mfSpeed;
+    Player* FindPlayerOnTop(const VECTOR& blockPos); // ‚±‚Ì°‚Ìã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ’T‚·
 
-    bool mbMovingRight = true;
+private:
+    // =========================================================================
+    // š “®‚­°‚ÌuˆÚ“®•vuƒXƒs[ƒhvu“®‚­•ûŒüv‚ğ’²®‚·‚é’è”
+    // =========================================================================
 
-    VECTOR mvMoveDelta = VGet(0.0f, 0.0f, 0.0f);
+    // [•Ğ“¹‚ÌˆÚ“®‹——£(px)]
+    // E‰Šú’l 200.0fi2ƒ}ƒX•ªj¨ ’u‚¢‚½ˆÊ’u‚©‚ç¶‰E‚É }200pxi‡Œv4ƒ}ƒX•j‚ğ‰•œ‚·‚é
+    // E‘å‚«‚­‚·‚é(—á: 300.0f) ¨ ‚æ‚èL‚¢”ÍˆÍ‚ğ‘å‚«‚­‰•œ‚·‚é‚æ‚¤‚É‚È‚é
+    static constexpr float MOVE_RANGE = 200.0f;
+
+    // [ˆÚ“®ƒXƒs[ƒh]
+    // E‘å‚«‚­‚·‚é(—á: 3.5f) ¨ ‰•œ‚ª‘¬‚­‚È‚é
+    // E¬‚³‚­‚·‚é(—á: 1.0f) ¨ ‚ä‚Á‚­‚è“®‚­‚æ‚¤‚É‚È‚é
+    static constexpr float MOVE_SPEED = 2.0f;
+
+    // [“®‚­•ûŒü‚ÌØ‚è‘Ö‚¦]
+    // Efalsei‰Šú’lj¨ u¶‰Ei‰¡jv‚É‰•œ‚·‚é“®‚­°
+    // Etrue ‚É•ÏX‚·‚é ¨ uã‰ºicjv‚É¸~‚·‚éƒGƒŒƒx[ƒ^[°‚É‚È‚éI
+    static constexpr bool  IS_VERTICAL_MOVE = false;
+
+    VECTOR mvStartPos = VGet(0.0f, 0.0f, 0.0f); // CSV‚Å”z’u‚³‚ê‚½‰ŠúÀ•W
+    bool   mbStartPosSaved = false;                  // ‰ŠúÀ•W‚ğ‹L‰¯‚µ‚½‚©
+    float  mfMoveTimer = 0.0f;                   // ‰•œˆÚ“®—pƒ^ƒCƒ}[
 };

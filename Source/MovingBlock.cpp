@@ -1,91 +1,183 @@
-ï»¿#include "MovingBlock.h"
+#include "MovingBlock.h"
 #include "Player.h"
+#include "PlayerPiece.h"
+
+// -- Module -- //
+#include "Transform.h"
 #include "Collider.h"
 
-#include "Transform.h"
+// -- Manager -- //
+#include "Master.h"
+#include "SceneManager.h"
+#include "Scene.h"
+#include "ObjectManager.h"
+#include "GameConfig.h"
 
-MovingBlock::MovingBlock(float leftLimit,float rightLimit,float speed)
-    : StageBlock()
-    , mfLeftLimit(leftLimit)
-    , mfRightLimit(rightLimit)
-    , mfSpeed(speed)
-{
-
-}
+#include <DxLib.h>
+#include <cmath>
 
 void MovingBlock::Init()
 {
-    // Playerã¨ã®è¡çªã‚’å–å¾—ã™ã‚‹
-    GetModule<Collider>()->AddCollisionTag(Tag::PLAYER);
+    StageBlock::Init(); // Tag::BLOCK ‚Æ‚µ‚Ä“o˜^
 }
 
 void MovingBlock::Update(float _deltaTime)
 {
-    VECTOR previousPosition = GetModule<Transform>()->GetPosition();
+    if (_deltaTime <= 0.0f)
+        return;
 
-    VECTOR position = previousPosition;
+    auto* myTransform = GetModule<Transform>();
+    if (!myTransform)
+        return;
 
-    if (mbMovingRight)
+    // 1. ‰‰ñƒtƒŒ[ƒ€‚ÅuCSV‚Å”z’u‚³‚ê‚½Œ³‚ÌÀ•Wv‚ğ‹L‰¯‚·‚é
+    if (!mbStartPosSaved)
     {
-        position.x += mfSpeed;
+        mvStartPos = myTransform->GetPosition();
+        mbStartPosSaved = true;
+    }
+
+    // 2. ˆÚ“®‚·‚é‘O‚ÌÀ•W‚ÆA¡ã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğæ‚Éæ“¾‚µ‚Ä‚¨‚­
+    const VECTOR prevPos = myTransform->GetPosition();
+    Player* pRidingPlayer = FindPlayerOnTop(prevPos);
+
+    // 3. ƒTƒCƒ“”gistd::sinfj‚ğg‚Á‚ÄA’[‚ÅŒ¸‘¬‚µ‚È‚ª‚çŠŠ‚ç‚©‚É‰•œˆÚ“®‚³‚¹‚é
+    mfMoveTimer += _deltaTime * MOVE_SPEED;
+    const float offset = std::sinf(mfMoveTimer) * MOVE_RANGE;
+
+    VECTOR nextPos = mvStartPos;
+    if (IS_VERTICAL_MOVE)
+    {
+        nextPos.y += offset; // ã‰ºˆÚ“®ƒ‚[ƒh
     }
     else
     {
-        position.x -= mfSpeed;
+        nextPos.x += offset; // ¶‰EˆÚ“®ƒ‚[ƒh
     }
 
-    if (position.x >= mfRightLimit)
+    myTransform->SetPosition(nextPos);
+
+    // 4. ‚±‚ÌƒtƒŒ[ƒ€‚Å°‚ª“®‚¢‚½·•ªimoveDeltaj‚¾‚¯Aã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚àˆê‚É‰^‚ÔI
+    const VECTOR moveDelta = VSub(nextPos, prevPos);
+    if (pRidingPlayer != nullptr)
     {
-        position.x = mfRightLimit;
-        mbMovingRight = false;
+        if (auto* playerTransform = pRidingPlayer->GetModule<Transform>())
+        {
+            const VECTOR playerPos = playerTransform->GetPosition();
+            playerTransform->SetPosition(VAdd(playerPos, moveDelta));
+            pRidingPlayer->UpdatePieceTransforms();
+        }
     }
-    else if (position.x <= mfLeftLimit)
-    {
-        position.x = mfLeftLimit;
-        mbMovingRight = true;
-    }
-
-    GetModule<Transform>()->SetPosition(position);
-
-    // ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§å®Ÿéš›ã«ç§»å‹•ã—ãŸé‡ã‚’ä¿å­˜
-    mvMoveDelta = VSub(position, previousPosition);
 
     StageBlock::Update(_deltaTime);
-
-    // ç§»å‹•ã—ãŸåˆ†ã ã‘Playerã‚’é‹ã¶
-    CarryPlayer();
 }
 
-void MovingBlock::CarryPlayer()
+// ‚±‚Ì“®‚­°‚Ìã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ’T‚·
+Player* MovingBlock::FindPlayerOnTop(const VECTOR& blockPos)
 {
-    if (VSize(mvMoveDelta) == 0.0f)
+    auto* scene = Master::mpSceneManager ? Master::mpSceneManager->GetCurrentScene() : nullptr;
+    auto* objectManager = scene ? scene->GetObjectManager() : nullptr;
+    if (!objectManager)
+        return nullptr;
+
+    const float halfCell = GameConfig::CELL_SIZE * 0.5f;
+    const float blockTop = blockPos.y - halfCell;
+
+    for (auto* obj : objectManager->GetObjects())
     {
+        if (!obj || obj->GetTag() != Tag::PLAYER_CELL)
+            continue;
+
+        auto* piece = static_cast<PlayerPiece*>(obj);
+        if (!piece->IsActive())
+            continue;
+
+        auto* pieceTransform = piece->GetModule<Transform>();
+        if (!pieceTransform)
+            continue;
+
+        const VECTOR piecePos = pieceTransform->GetPosition();
+        const float pieceBottom = piecePos.y + halfCell;
+
+        // ƒs[ƒX‚ª°‚Ì‰¡•‚Ì”ÍˆÍ“à‚ÅA‚©‚Â‰º’[‚ª°‚Ìã–Ê‚ÉG‚ê‚Ä‚¢‚é‚©
+        const bool isWithinX = std::fabsf(piecePos.x - blockPos.x) < (GameConfig::CELL_SIZE * 0.90f);
+        const bool isTouchingTop = (pieceBottom >= blockTop - 14.0f) && (pieceBottom <= blockTop + 26.0f);
+
+        if (isWithinX && isTouchingTop)
+        {
+            return piece->GetPlayer();
+        }
+    }
+    return nullptr;
+}
+
+// u“®‚­‚Ü‚È”ÂƒŠƒtƒgiƒKƒCƒhƒŒ[ƒ‹{–Ø»ƒJƒbƒeƒBƒ“ƒOƒ{[ƒhjv‚Ì•`‰æ
+void MovingBlock::Draw()
+{
+    auto* myTransform = GetModule<Transform>();
+    if (!myTransform)
         return;
-    }
 
-    auto collisions = GetModule<Collider>()->GetCollisions(Tag::PLAYER);
+    const VECTOR pos = myTransform->GetPosition();
+    const int cx = static_cast<int>(pos.x);
+    const int cy = static_cast<int>(pos.y);
+    const int half = static_cast<int>(GameConfig::CELL_SIZE * 0.5f);
+    const int left = cx - half;
+    const int right = cx + half;
+    const int top = cy - half;
+    const int bottom = cy + half;
 
-    for (auto* playerObject : collisions)
+    const unsigned int railCol = GetColor(130, 138, 145); // ”wŒã‚ÌƒKƒCƒhƒŒ[ƒ‹F
+    const unsigned int shadowCol = GetColor(20, 18, 15);    // —§‘Ì‰e
+    const unsigned int woodMainCol = GetColor(225, 178, 120); // ‚Ü‚È”Â‚Ì–¾‚é‚¢–Ø–ÚF
+    const unsigned int woodDarkCol = GetColor(155, 108, 62);  // ‚Ü‚È”Â‚Ì‘¤–ÊE˜gF
+    const unsigned int metalRimCol = GetColor(195, 205, 215); // —¼’[‚ÌƒXƒeƒ“ƒŒƒX‹à‹ïF
+    const unsigned int arrowCol = GetColor(125, 82, 42);   // ’†‰›‚ÌˆÚ“®•ûŒüƒ}[ƒN
+
+    // 1. ‚Ç‚±‚©‚ç‚Ç‚±‚Ü‚Å“®‚­‚©‚ª•ª‚©‚éu”wŒã‚ÌƒKƒCƒhƒŒ[ƒ‹i“_ü‚Æ—¼’[‚ÌƒXƒgƒbƒp[jv‚ğ•`‰æ
+    if (mbStartPosSaved)
     {
-        if (playerObject == nullptr)
+        const int startX = static_cast<int>(mvStartPos.x);
+        const int startY = static_cast<int>(mvStartPos.y);
+        const int range = static_cast<int>(MOVE_RANGE);
+
+        SetDrawBlendMode(DX_BLENDMODE_ALPHA, 130);
+        if (IS_VERTICAL_MOVE)
         {
-            continue;
+            DrawLine(startX, startY - range, startX, startY + range, railCol, 4);
+            DrawCircle(startX, startY - range, 7, railCol, TRUE);
+            DrawCircle(startX, startY + range, 7, railCol, TRUE);
         }
-
-        Player* player = dynamic_cast<Player*>(playerObject);
-
-        if (player == nullptr)
+        else
         {
-            continue;
+            DrawLine(startX - range, startY, startX + range, startY, railCol, 4);
+            DrawCircle(startX - range, startY, 7, railCol, TRUE);
+            DrawCircle(startX + range, startY, 7, railCol, TRUE);
         }
-
-        VECTOR playerPosition = player->GetModule<Transform>()->GetPosition();
-
-        playerPosition = VAdd(
-            playerPosition,
-            mvMoveDelta
-        );
-
-        player->GetModule<Transform>()->SetPosition(playerPosition);
+        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
     }
+
+    // 2. ƒuƒƒbƒN‚Ì‰e
+    SetDrawBlendMode(DX_BLENDMODE_ALPHA, 75);
+    DrawBox(left + 6, top + 8, right + 6, bottom + 8, shadowCol, TRUE);
+    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+    // 3. –Ø»‚Ü‚È”ÂƒuƒƒbƒN–{‘Ì‚Æ‰º‘¤‚ÌŒú‚İ
+    DrawBox(left, top, right, bottom, woodMainCol, TRUE);
+    DrawBox(left, bottom - 14, right, bottom, woodDarkCol, TRUE);
+    DrawBox(left, top, right, bottom, woodDarkCol, FALSE);
+
+    // 4. ¶‰E—¼’[‚ÌƒXƒeƒ“ƒŒƒX•â‹­‹à‹ï‚ÆƒŠƒxƒbƒg
+    DrawBox(left, top, left + 12, bottom, metalRimCol, TRUE);
+    DrawBox(right - 12, top, right, bottom, metalRimCol, TRUE);
+    DrawBox(left, top, left + 12, bottom, woodDarkCol, FALSE);
+    DrawBox(right - 12, top, right, bottom, woodDarkCol, FALSE);
+    DrawCircle(left + 6, cy, 3, woodDarkCol, TRUE);
+    DrawCircle(right - 6, cy, 3, woodDarkCol, TRUE);
+
+    // 5. ’†‰›‚Ìuƒ „vˆÚ“®ƒ}[ƒN
+    DrawLine(cx - 18, cy - 4, cx - 26, cy - 12, arrowCol, 3);
+    DrawLine(cx - 18, cy - 4, cx - 26, cy + 4, arrowCol, 3);
+    DrawLine(cx + 18, cy - 4, cx + 26, cy - 12, arrowCol, 3);
+    DrawLine(cx + 18, cy - 4, cx + 26, cy + 4, arrowCol, 3);
 }
