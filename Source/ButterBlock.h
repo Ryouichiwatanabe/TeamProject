@@ -19,7 +19,7 @@ private:
     bool    CanSlideHorizontally(Player* pPlayer, float stepX);
 
 private:
-    static constexpr float SLIDE_SPEED = 10000.0f; // 滑るスピード(px/秒)
+    static constexpr float SLIDE_SPEED = 500.0f; // 滑るスピード(px/秒)
 
     float mfSlideDir = 1.0f; // 滑る向き（+1.0f:右 / -1.0f:左）
     float mfAnimTimer = 0.0f; // ツヤ・矢印アニメーション用タイマー
