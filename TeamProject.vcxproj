@@ -71,6 +71,7 @@
     <ClCompile Include="Source\Spike.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
     <ClCompile Include="Source\StageBackGround.cpp" />
+    <ClCompile Include="Source\StageBackGroundTable.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
     <ClCompile Include="Source\StageClearData.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
     <ClInclude Include="Source\StageBackGround.h" />
+    <ClInclude Include="Source\StageBackGroundTable.h" />
     <ClInclude Include="Source\TutorialScene.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\ItemHUD.h" />

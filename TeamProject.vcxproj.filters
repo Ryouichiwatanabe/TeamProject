@@ -154,6 +154,12 @@
     <Filter Include="ソース ファイル\Effect\Steam">
       <UniqueIdentifier>{1ec24f67-69e5-49e2-bfb4-d15e3c265ee8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\UI\StageBackGround">
+      <UniqueIdentifier>{72f3a4a6-b2e2-4168-8794-fa3fea9925d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\StageBackGround">
+      <UniqueIdentifier>{3d01f65d-d204-49c1-a229-0ea01890e466}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GamePad.cpp">
@@ -345,9 +351,6 @@
     <ClCompile Include="Source\UITypewriterText.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StageBackGround.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Source\ClearUI.cpp">
       <Filter>ソース ファイル\UI\Clear</Filter>
     </ClCompile>
@@ -359,6 +362,12 @@
     </ClCompile>
     <ClCompile Include="Source\EffectSteam.cpp">
       <Filter>ソース ファイル\Effect\Steam</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StageBackGround.cpp">
+      <Filter>ソース ファイル\UI\StageBackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StageBackGroundTable.cpp">
+      <Filter>ソース ファイル\UI\StageBackGround</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -560,9 +569,6 @@
     <ClInclude Include="Source\UITypewriterText.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StageBackGround.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Source\ClearUI.h">
       <Filter>ヘッダー ファイル\UI\Clear</Filter>
     </ClInclude>
@@ -577,6 +583,12 @@
     </ClInclude>
     <ClInclude Include="Source\EffectSteamConfig.h">
       <Filter>ヘッダー ファイル\Effects\Steam</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StageBackGround.h">
+      <Filter>ヘッダー ファイル\UI\StageBackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StageBackGroundTable.h">
+      <Filter>ヘッダー ファイル\UI\StageBackGround</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

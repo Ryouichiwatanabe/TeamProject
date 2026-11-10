@@ -166,6 +166,9 @@ void GameScene::UpdateItems()
 		// ここに来るのは「取った最初のフレーム」だけ
 		mPickedItems[slot] = true;
 		mpItemHUD->SetPicked(slot);
+
+		if (mpBackgroundUI != nullptr)
+			mpBackgroundUI->SetPicked(slot);
 	}
 }
 

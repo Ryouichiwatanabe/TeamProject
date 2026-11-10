@@ -212,6 +212,7 @@ void Player::Respawn()
 	if (!transform)
 		return;
 
+	SetShape(0);
 	transform->SetPosition(mvRespawnPos);
 	transform->SetRotation(VGet(0.0f, 0.0f, 0.0f));
 	mbIsToppling = false;
