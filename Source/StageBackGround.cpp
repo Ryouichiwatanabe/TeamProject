@@ -1,4 +1,4 @@
-#include "StageBackGround.h"
+﻿#include "StageBackGround.h"
 
 #include "Master.h"
 #include "SceneManager.h"
@@ -23,7 +23,9 @@ namespace
 
 void StageBackGround::Init()
 {
-	const int stageNum = Master::mpSceneManager->GetStageNumber();
+	int stageNum = Master::mpSceneManager->GetStageNumber();;
+	if (Master::mpSceneManager->GetCurrentSceneType() != SCENE_TYPE::GAME_SCENE)
+		stageNum = 0;
 
 	// ステージ番号に応じた画像ファイルのロード
 	LoadUIGraph(BuildBackgroundPath(stageNum));
