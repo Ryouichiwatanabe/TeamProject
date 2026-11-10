@@ -54,5 +54,6 @@ private:
 	UI* mpConfirmUI = nullptr;
 	UI* mpBackUI = nullptr;
 	UI* mpOverlay = nullptr;
+	UI* mpBackGround = nullptr;	
 	UI* mpMessageUI = nullptr;	// 変形できない理由の表示用
 };
