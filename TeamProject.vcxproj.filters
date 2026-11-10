@@ -345,6 +345,15 @@
     <ClCompile Include="Source\EffectSteam.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Source\EffectRespawn.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SpongeBlock.cpp">
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ButterBlock.cpp">
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
@@ -565,6 +574,15 @@
     </ClInclude>
     <ClInclude Include="Source\EffectSteamConfig.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectRespawn.h">
+      <Filter>ヘッダー ファイル\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpongeBlock.h">
+      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ButterBlock.h">
+      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
