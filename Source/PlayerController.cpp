@@ -24,11 +24,11 @@ void PlayerController::UpdateRotation()
 	float rotateInput = InputManager::GetInstance().GetAxis(Axis::Rotation);
 
 	// フォールバック: 直接キー入力も安全に合算
-	if (CheckHitKey(KEY_INPUT_L) != 0)
+	if (CheckHitKey(KEY_INPUT_D) != 0)
 	{
 		rotateInput += 1.0f;
 	}
-	if (CheckHitKey(KEY_INPUT_J) != 0)
+	if (CheckHitKey(KEY_INPUT_A) != 0)
 	{
 		rotateInput -= 1.0f;
 	}

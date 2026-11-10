@@ -197,7 +197,7 @@ void TutorialScene::UpdateTutorialStep(float _deltaTime)
             if (mfStepTimer >= 2.0f) // ★読む時間の長さ（2.0秒）
             {
                 mnTutorialStep = 1;
-                SetTutorialMessage("まずは [J][L] キーを押して、\n豆腐を回転させてみよう！");
+                SetTutorialMessage("まずは [A][D] キーを押して、\n豆腐を回転させてみよう！");
             }
         }
     }
@@ -205,10 +205,10 @@ void TutorialScene::UpdateTutorialStep(float _deltaTime)
     else if (mnTutorialStep == 1)
     {
         if (input.GetAxis(Axis::Rotation) != 0.0f ||
-            CheckHitKey(KEY_INPUT_J) != 0 || CheckHitKey(KEY_INPUT_L) != 0)
+            CheckHitKey(KEY_INPUT_A) != 0 || CheckHitKey(KEY_INPUT_D) != 0)
         {
             mnTutorialStep = 2;
-            SetTutorialMessage("ナイス！ 次は変形キーを押して、\n豆腐の形を変えてみよう！");
+            SetTutorialMessage("ナイス！ 次は変形キー[E]を押して、\n豆腐の形を変えてみよう！");
         }
     }
     // Step 2: 変形UIを開いたらポーズ説明へ
