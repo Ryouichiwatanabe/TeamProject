@@ -28,6 +28,7 @@
 #include "PauseUI.h"
 #include "ClearUI.h"
 #include "ItemHUD.h"
+#include "RespawnUI.h"
 
 // -- Effect -- //
 #include "EffectManager.h"
@@ -50,7 +51,8 @@ void GameScene::Initialize()
 	stage->Load(stageFileName);
 
 	// -- 「Player変形UI」の生成 -- //
-	if (this->GetObjectManager()->FindObject<Player>())
+	mpPlayer = this->GetObjectManager()->FindObject<Player>();
+	if (mpPlayer)
 		mpShapeUI = GetUIManager()->CreateUI<PlayerShapeUI>();
 
 	// -- 「背景」の生成 -- //
@@ -69,6 +71,9 @@ void GameScene::Initialize()
 	// -- 「ItemHUD」の生成 -- //
 	mpItemHUD = GetUIManager()->CreateUI<ItemHUD>(Master::mpSceneManager->GetStageNumber());
 	mpPauseUI->AddMenuContent(mpItemHUD);
+
+	// -- 「RespawnUI」の生成 -- //
+	mpRespawnUI = GetUIManager()->CreateUI<RespawnUI>();
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 }
@@ -95,6 +100,7 @@ void GameScene::UpdatePlaying(float deltaTime)
 
 	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
 	UpdateShapeInput();
+	UpdateRestartInput(deltaTime);
 
 	// 更新処理
 	Scene::Update(deltaTime);
@@ -117,6 +123,8 @@ void GameScene::EnterClear()
 
 	GetEffectManager()->Play<EffectClear>();
 	mpPauseUI->SetEnabled(false);
+	if (mpRespawnUI != nullptr)
+		mpRespawnUI->SetEnabled(false);
 	mpClearUI->Show(mPickedItems);
 
 	mState = PlayState::Cleared;
@@ -176,6 +184,22 @@ void GameScene::UpdatePauseInput()
 {
 	if (mpPauseUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Pause))
 		mpPauseUI->OnPauseInput();
+}
+
+void GameScene::UpdateRestartInput(float deltaTime)
+{
+	if (mpRespawnUI == nullptr || mpPlayer == nullptr)
+		return;
+
+	// ポーズ中は表示しない
+	mpRespawnUI->SetEnabled(!mpPauseUI->IsEnabled());		// ← 追加
+
+	// ポーズ中・変形UIを開いている間は受け付けない
+	const bool canRestart = !mpPauseUI->IsEnabled() && !mpPlayer->IsShapeEditing();
+	const bool isHeld = canRestart && InputManager::GetInstance().GetButton(Button::Restart);
+
+	if (mpRespawnUI->UpdateHold(isHeld, deltaTime))
+		mpPlayer->Respawn();
 }
 
 void GameScene::Finalize()

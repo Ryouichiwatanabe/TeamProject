@@ -65,6 +65,7 @@
     <ClCompile Include="Source\PlayerShape.cpp" />
     <ClCompile Include="Source\PlayerShapeUI.cpp" />
     <ClCompile Include="Source\ResourceManager.cpp" />
+    <ClCompile Include="Source\RespawnUI.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
     <ClCompile Include="Source\SoundManager.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="Source\EffectTrans.h" />
     <ClInclude Include="Source\FadeEffect.h" />
     <ClInclude Include="Source\DisappearingBlock.h" />
+    <ClInclude Include="Source\RespawnUI.h" />
     <ClInclude Include="Source\StageBackGround.h" />
     <ClInclude Include="Source\StageBackGroundTable.h" />
     <ClInclude Include="Source\TutorialScene.h" />

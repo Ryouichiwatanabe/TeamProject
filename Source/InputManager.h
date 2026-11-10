@@ -18,8 +18,7 @@ enum class Button {
 
 	Pause,
 
-	OperationChange_toPlayer,	// (デバック用)
-	OperationChange_toFakePlayer,	// (デバック用)
+	Restart,
 
 	Max
 };
@@ -28,11 +27,7 @@ enum class Axis {
 	MoveX,
 	MoveY,
 
-	MoveX_FAKE,	// デバック用
-	MoveY_FAKE,	// デバック用
-
 	Rotation,
-	Rotation_FAKE,
 
 	LookX,
 	LookY,

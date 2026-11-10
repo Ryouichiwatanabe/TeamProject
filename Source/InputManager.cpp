@@ -67,29 +67,20 @@ void InputManager::InitializeButton() {
 		-1
 	};
 
+	mButtonBindings[(int)Button::Restart] =
+	{
+		InputMode::Normal,
+
+		KEY_INPUT_R,
+		-1,
+		-1		// パッド対応するならここに PAD_INPUT_x
+	};
+
 	mButtonBindings[(int)Button::Shape] =
 	{
 		InputMode::Normal,
 
 		KEY_INPUT_E,
-		-1,
-		-1
-	};
-
-	mButtonBindings[(int)Button::OperationChange_toFakePlayer] =
-	{
-		InputMode::Normal,
-
-		KEY_INPUT_C,
-		-1,
-		-1
-	};
-
-	mButtonBindings[(int)Button::OperationChange_toPlayer] =
-	{
-		InputMode::Fake,
-
-		KEY_INPUT_C,
 		-1,
 		-1
 	};
@@ -114,38 +105,9 @@ void InputManager::InitializeAxis() {
 		PadAxis::LeftY
 	};
 
-	// デバック用
-	mAxisBindings[(int)Axis::MoveX_FAKE] =
-	{
-		InputMode::Fake,
-
-		KEY_INPUT_D,
-		KEY_INPUT_A,
-		PadAxis::LeftX
-	};
-
-	// デバック用
-	mAxisBindings[(int)Axis::MoveY_FAKE] =
-	{
-		InputMode::Fake,
-
-		KEY_INPUT_S,
-		KEY_INPUT_W,
-		PadAxis::LeftY
-	};
-
 	mAxisBindings[(int)Axis::Rotation] =
 	{
 		InputMode::Normal,
-
-		KEY_INPUT_L,
-		KEY_INPUT_J,
-		PadAxis::RightX
-	};
-
-	mAxisBindings[(int)Axis::Rotation_FAKE] =
-	{
-		InputMode::Fake,
 
 		KEY_INPUT_L,
 		KEY_INPUT_J,

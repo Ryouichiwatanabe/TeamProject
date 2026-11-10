@@ -369,6 +369,9 @@
     <ClCompile Include="Source\StageBackGroundTable.cpp">
       <Filter>ソース ファイル\UI\StageBackGround</Filter>
     </ClCompile>
+    <ClCompile Include="Source\RespawnUI.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
@@ -589,6 +592,9 @@
     </ClInclude>
     <ClInclude Include="Source\StageBackGroundTable.h">
       <Filter>ヘッダー ファイル\UI\StageBackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RespawnUI.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

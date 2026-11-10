@@ -9,6 +9,7 @@ class PauseUI;
 class ClearUI;
 class ItemHUD;
 class PlayerShapeUI;
+class RespawnUI;
 
 class StageBackGround;
 
@@ -34,13 +35,16 @@ private:
     void EnterClear();                      // Playing → Cleared への切り替え（1回だけ呼ばれる）
 
     void UpdatePauseInput();        // 入力に伴い、PauseUIを有効にする
-    void UpdateShapeInput();     // 変形キーで変形UIを開閉する
+    void UpdateShapeInput();        // 変形キーで変形UIを開閉する
+    void UpdateRestartInput(float deltaTime);
     void UpdateItems();             // Item の取得状態を確認する
 
 private:
     PlayState mState = PlayState::Playing;
 
+    Player* mpPlayer = nullptr;
     Goal* mpGoal = nullptr;
+    RespawnUI* mpRespawnUI = nullptr;
 
     PauseUI* mpPauseUI = nullptr;
     ClearUI* mpClearUI = nullptr;
