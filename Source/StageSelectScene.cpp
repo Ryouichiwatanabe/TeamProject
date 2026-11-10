@@ -103,10 +103,6 @@ void StageSelectScene::Finalize()
 	Scene::Finalize();
 }
 
-// ===================================================== //
-//  生成
-// ===================================================== //
-
 void StageSelectScene::CreateBackground()
 {
 	mpBackground = GetUIManager()->CreateUI<UI>();
@@ -220,10 +216,6 @@ void StageSelectScene::CreateItems(int _stage, Point _center)
 		item->SetEnabled(true);
 	}
 }
-
-// ===================================================== //
-//  配置の補助
-// ===================================================== //
 
 void StageSelectScene::PlaceImage(UI* _ui, float _x, float _y, int _layer) const
 {

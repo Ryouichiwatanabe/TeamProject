@@ -7,7 +7,7 @@ namespace {
 	constexpr ItemDef ITEM_DEFS[] = {
 		{1,0,"Negi.png"},    {1,1,"Syouga.png"},     {1,2,"Syouyu.png"},
 		{2,0,"Konbu.png"},   {2,1,"Negi.png"},       {2,2,"Ponzu.png"},
-		{3,0,"Oil.png"},     {3,1,"Salt.png"},       {3,2,"Water.png"},
+		{3,0,"Oil.png"},     {3,1,"Negi.png"},       {3,2,"SaySauce.png"},
 		{4,0,"Miso.png"},    {4,1,"Negi.png"},       {4,2,"Wakame.png"},
 		{5,0,"Garlic.png"},  {5,1,"Hikiniku.png"},   {5,2,"Toubanjan.png"},
 		{6,0,"Gyuniku.png"}, {6,1,"Negi.png"},       {6,2,"Tare.png"},

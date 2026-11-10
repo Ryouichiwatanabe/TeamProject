@@ -53,6 +53,8 @@ struct PieceContact {
 class Player : public GameObject
 {
 public:
+	Player(const VECTOR& initPos);
+
 	// ================= 基本 (Player.cpp) ================= //
 	void Init() override;
 	void InitComponent() override;
@@ -153,7 +155,7 @@ private:
 	std::vector<VECTOR> mCollisionCorrections;	// 押し戻し量
 	std::vector<PieceContact> mPieceContacts;	// 接触情報
 
-	VECTOR mvRespawnPos = VGet(200.0f, 200.0f, 0.0f);	// リスポーン座標
+	VECTOR mvRespawnPos = VGet(0.0f, 0.0f, 0.0f);	// リスポーン座標
 
 	// -- 接地・倒れ込み -- //
 	bool mbIsGrounded = false;		// 安定して接地しているか

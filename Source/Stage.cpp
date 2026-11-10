@@ -136,7 +136,7 @@ void Stage::CreateObjects()
 
             case 5:
             {
-                auto player = objectManager->CreateObject<Player>();
+                auto player = objectManager->CreateObject<Player>(initPosition);
                 player->GetModule<Transform>()->SetPosition(initPosition);
                 player->UpdatePieceTransforms();    // Pieceに反映
                 break;
