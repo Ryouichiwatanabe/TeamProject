@@ -21,12 +21,11 @@ public:     // enum, struct などの定義
 	enum SOUND_SE
 	{
 		SE_DECIDE = 0,          // 決定音
-		SE_MOVE = 1,
-		SE_SELECTUI = 2,
-		SE_FALL = 3,
-		SE_GOAL = 4,
-		SE_FAILED = 5,
-		SE_GOALVOICE = 6
+		SE_SELECTUI,
+		SE_ITEM_GETTING,
+		SE_RESPAWN,
+		SE_GOAL,
+		SE_GOALVOICE,
 
 	};
 

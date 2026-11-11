@@ -49,6 +49,15 @@ void UIGraphic::Draw()
 	const auto scale = transform.GetScale();
 	const auto size = transform.GetSize();
 
+	// 明るさを変える場合だけ、元の値を保存して描画後に戻す
+	const bool changeBright = (mnBright != 255);
+	int prevR = 255, prevG = 255, prevB = 255;
+	if (changeBright)
+	{
+		GetDrawBright(&prevR, &prevG, &prevB);
+		SetDrawBright(mnBright, mnBright, mnBright);
+	}
+
 	DrawRotaGraph3(
 		static_cast<int>(centerPosition.x),
 		static_cast<int>(centerPosition.y),
@@ -61,4 +70,9 @@ void UIGraphic::Draw()
 		TRUE,
 		FALSE
 	);
+
+	if (changeBright)
+	{
+		SetDrawBright(prevR, prevG, prevB);
+	}
 }

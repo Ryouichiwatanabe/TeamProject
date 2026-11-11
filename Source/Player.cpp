@@ -226,4 +226,5 @@ void Player::Respawn()
 		->GetEffectManager()
 		->Play<EffectRespawn>(this);
 
+	SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_RESPAWN);
 }
