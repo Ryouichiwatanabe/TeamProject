@@ -53,8 +53,8 @@ class RoundedImageUI : public UI
 public:
 	void Draw() override;
 
-	// 画像を読み込み、最大範囲に収まる倍率を計算して角丸画像を作る（失敗時 false）
-	bool Setup(const std::string& _filename, float _maxWidth, float _maxHeight, float _maxScale, float _cornerRadius);
+	// 画像を読み込み、面積が _targetArea くらいになる倍率（ただし最大範囲・最大倍率は超えない）で角丸画像を作る（失敗時 false）
+	bool Setup(const std::string& _filename, float _targetArea, float _maxWidth, float _maxHeight, float _maxScale, float _cornerRadius);
 	void Release();	// 自前で作った角丸画像を解放する（シーン終了時に必ず呼ぶ）
 
 private:

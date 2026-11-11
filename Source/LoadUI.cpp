@@ -176,7 +176,7 @@ void LoadUI::CreateTipImage(const char* _imageFile)
 	// 画像（持ち手の分だけ左に寄せて、まな板の「板」部分の中央に置く）
 	const float imageCX = SCREEN_CX - BOARD_HANDLE_W / 2.0f;
 	mpTipImage = CreateChild<RoundedImageUI>(LAYER_CONTENT, imageCX, areaCY);
-	if (!mpTipImage->Setup(LOAD_UI_DIR + _imageFile, IMAGE_MAX_W, imageMaxH, IMAGE_MAX_SCALE, IMAGE_CORNER_RADIUS))
+	if (!mpTipImage->Setup(LOAD_UI_DIR + _imageFile, IMAGE_TARGET_AREA, IMAGE_MAX_W, imageMaxH, IMAGE_MAX_SCALE, IMAGE_CORNER_RADIUS))
 	{
 		mpTipImage->SetEnabled(false);
 		mpTipImage = nullptr;

@@ -118,7 +118,7 @@ void NineSliceUI::Draw()
 // ======================================================================
 // RoundedImageUI
 // ======================================================================
-bool RoundedImageUI::Setup(const std::string& _filename, float _maxWidth, float _maxHeight, float _maxScale, float _cornerRadius)
+bool RoundedImageUI::Setup(const std::string& _filename, float _targetArea, float _maxWidth, float _maxHeight, float _maxScale, float _cornerRadius)
 {
 	Release();
 
@@ -129,8 +129,12 @@ bool RoundedImageUI::Setup(const std::string& _filename, float _maxWidth, float 
 	int w, h;
 	GetGraphSize(srcHandle, &w, &h);
 
-	// 範囲からはみ出さない最大の倍率（縦と横の厳しい方に合わせる。小さい画像は伸ばしすぎない）
-	mfScale = (std::min)({ _maxWidth / w, _maxHeight / h, _maxScale });
+	// 1. 面積をそろえる倍率：画面上の面積が _targetArea になるようにする
+	//    （面積は倍率の2乗で変わるので、面積比の平方根が倍率になる）
+	const float areaScale = std::sqrt(_targetArea / (static_cast<float>(w) * h));
+
+	// 2. ただし範囲からはみ出さない・伸ばしすぎないよう、上限で抑える
+	mfScale = (std::min)({ areaScale, _maxWidth / w, _maxHeight / h, _maxScale });
 	GetTransform().SetSize(VGet(w * mfScale, h * mfScale, 0.0f));
 
 	// 画面上で _cornerRadius px に見えるよう、元画像側の半径に直してから切り抜く

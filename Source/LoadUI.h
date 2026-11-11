@@ -52,8 +52,9 @@ private:
 	static constexpr float IMAGE_AREA_BOTTOM = 848.0f;
 	static constexpr float BOARD_PADDING = 24.0f;		// 画像の周りに見せるまな板の幅
 	static constexpr float BOARD_HANDLE_W = 44.0f;		// まな板右端の持ち手の穴の分
-	static constexpr float IMAGE_MAX_W = 1100.0f;
-	static constexpr float IMAGE_MAX_SCALE = 3.0f;		// 小さい画像を伸ばしすぎない上限
+	static constexpr float IMAGE_TARGET_AREA = 520.0f * 400.0f;	// どの画像もだいたいこの面積で表示する
+	static constexpr float IMAGE_MAX_W = 900.0f;					// 横長の画像が広がりすぎない上限
+	static constexpr float IMAGE_MAX_SCALE = 4.0f;				// 小さい画像を伸ばしすぎない上限
 	static constexpr float IMAGE_CORNER_RADIUS = 18.0f;	// 画像の角の丸み(画面上のpx)
 
 	// -- Tipsの板 -- //
