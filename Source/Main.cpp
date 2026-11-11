@@ -5,7 +5,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     auto game = std::make_unique<Game>();
 
-    if (!game->IsInitialized()) {
+    if (!game->IsInitialized()) 
+    {
         return -1;
     }
 

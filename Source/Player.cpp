@@ -1,31 +1,37 @@
 ﻿#include "Player.h"
 
-/* memo :
-* Player の「基本」部分。
-*   生成(Init) → 毎フレームの更新(Update) → Pieceの座標同期 → リスポーン
-* 回転・接地・形状変更は別ファイル(Player.h の memo 参照)。
-*/
-
 // -- Module -- //
 #include "Transform.h"
 #include "Gravity.h"
 
-// -- Piece生成用 -- //
+// -- Manager  -- //
 #include "Master.h"
 #include "SceneManager.h"
 #include "Scene.h"
 #include "ObjectManager.h"
+
+// -- Object -- //
 #include "PlayerPiece.h"
 
+// -- Config  -- //
 #include "ScreenConfig.h"
 #include "GameConfig.h"
 #include "PlayerMath.h"
 #include "Debug.h"
 
+// -- Sound / Effect -- //
 #include "SoundManager.h"
 #include "EffectRespawn.h"
+
+// -- Library -- //
 #include <DxLib.h>
 #include <cmath>
+
+/* memo :
+* Player の「基本」部分。
+*   生成(Init) → 毎フレームの更新(Update) → Pieceの座標同期 → リスポーン
+* 回転・接地・形状変更は別ファイル(Player.h の memo 参照)。
+*/
 
 Player::Player(const VECTOR& initPos)
 	:GameObject()

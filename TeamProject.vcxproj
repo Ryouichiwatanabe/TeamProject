@@ -30,7 +30,6 @@
     <ClCompile Include="Source\CsvLoader.cpp" />
     <ClCompile Include="Source\Cursor.cpp" />
     <ClCompile Include="Source\Debug.cpp" />
-    <ClCompile Include="Source\DisappearingBlock.cpp" />
     <ClCompile Include="Source\EffectClear.cpp" />
     <ClCompile Include="Source\EffectClick.cpp" />
     <ClCompile Include="Source\EffectFall.cpp" />
@@ -82,8 +81,6 @@
     <ClCompile Include="Source\StageBlock.cpp" />
     <ClCompile Include="Source\GameProgress.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
-    <ClCompile Include="Source\Switch.cpp" />
-    <ClCompile Include="Source\SwitchBlock.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
     <ClCompile Include="Source\TutorialScene.cpp" />
     <ClCompile Include="Source\UI.cpp" />
@@ -121,7 +118,6 @@
     <ClInclude Include="Source\EffectSteamConfig.h" />
     <ClInclude Include="Source\EffectTrans.h" />
     <ClInclude Include="Source\FadeEffect.h" />
-    <ClInclude Include="Source\DisappearingBlock.h" />
     <ClInclude Include="Source\RespawnUI.h" />
     <ClInclude Include="Source\StageBackGround.h" />
     <ClInclude Include="Source\StageBackGroundTable.h" />
@@ -166,8 +162,6 @@
     <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StageBlock.h" />
     <ClInclude Include="Source\GameProgress.h" />
-    <ClInclude Include="Source\Switch.h" />
-    <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TitleScene.h" />
     <ClInclude Include="Source\UITypewriterText.h" />
     <ClInclude Include="Source\UI.h" />
