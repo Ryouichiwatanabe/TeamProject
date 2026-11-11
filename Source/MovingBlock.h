@@ -4,7 +4,7 @@
 
 class Player;
 
-// CSV‚Å’u‚¢‚½ˆÊ’u‚ğŠî€‚É‰•œˆÚ“®‚µAã‚Éæ‚Á‚½“¤•…‚àˆê‚É‰^‚Ôu“®‚­°i‚Ü‚È”ÂƒŠƒtƒgjv
+// ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½æ‚¹ï¿½Ä‰ï¿½ï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½é°ï¿½uï¿½ï¿½ï¿½bï¿½N
 class MovingBlock : public StageBlock
 {
 public:
@@ -14,30 +14,23 @@ public:
     void Update(float _deltaTime) override;
     void Draw() override;
 
-private:
-    Player* FindPlayerOnTop(const VECTOR& blockPos); // ‚±‚Ì°‚Ìã‚Éæ‚Á‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ’T‚·
+protected:
+    // ï¿½æ‘œï¿½ï¿½ï¿½\ï¿½[ï¿½Xï¿½iï¿½pï¿½Xï¿½ï¿½Ï‚ï¿½ï¿½ï¿½ÆŒï¿½ï¿½ï¿½ï¿½Ú‚ï¿½ÏXï¿½Â”\ï¿½j
+    const char* GetModelFilename() const override
+    {
+        return "Resource/GameObject/StageBlock/Stage.png";
+    }
 
 private:
-    // =========================================================================
-    // š “®‚­°‚ÌuˆÚ“®•vuƒXƒs[ƒhvu“®‚­•ûŒüv‚ğ’²®‚·‚é’è”
-    // =========================================================================
+    Player* FindPlayerOnTop(const VECTOR& blockPos); // ï¿½ï¿½Éï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìæ“¾
 
-    // [•Ğ“¹‚ÌˆÚ“®‹——£(px)]
-    // E‰Šú’l 200.0fi2ƒ}ƒX•ªj¨ ’u‚¢‚½ˆÊ’u‚©‚ç¶‰E‚É }200pxi‡Œv4ƒ}ƒX•j‚ğ‰•œ‚·‚é
-    // E‘å‚«‚­‚·‚é(—á: 300.0f) ¨ ‚æ‚èL‚¢”ÍˆÍ‚ğ‘å‚«‚­‰•œ‚·‚é‚æ‚¤‚É‚È‚é
-    static constexpr float MOVE_RANGE = 250.0f;
+private:
+    // ï¿½Ú“ï¿½ï¿½İ’ï¿½
+    static constexpr float MOVE_RANGE = 200.0f;       // ï¿½Ú“ï¿½ï¿½ï¿½ï¿½iï¿½Ğ“ï¿½ï¿½ï¿½pxï¿½j
+    static constexpr float MOVE_SPEED = 2.0f;         // ï¿½Ú“ï¿½ï¿½ï¿½ï¿½x
+    static constexpr bool  IS_VERTICAL_MOVE = false;  // trueï¿½Åã‰ºï¿½Ú“ï¿½ï¿½Afalseï¿½Åï¿½ï¿½Eï¿½Ú“ï¿½
 
-    // [ˆÚ“®ƒXƒs[ƒh]
-    // E‘å‚«‚­‚·‚é(—á: 3.5f) ¨ ‰•œ‚ª‘¬‚­‚È‚é
-    // E¬‚³‚­‚·‚é(—á: 1.0f) ¨ ‚ä‚Á‚­‚è“®‚­‚æ‚¤‚É‚È‚é
-    static constexpr float MOVE_SPEED = 1.0f;
-
-    // [“®‚­•ûŒü‚ÌØ‚è‘Ö‚¦]
-    // Efalsei‰Šú’lj¨ u¶‰Ei‰¡jv‚É‰•œ‚·‚é“®‚­°
-    // Etrue ‚É•ÏX‚·‚é ¨ uã‰ºicjv‚É¸~‚·‚éƒGƒŒƒx[ƒ^[°‚É‚È‚éI
-    static constexpr bool  IS_VERTICAL_MOVE = false;
-
-    VECTOR mvStartPos = VGet(0.0f, 0.0f, 0.0f); // CSV‚Å”z’u‚³‚ê‚½‰ŠúÀ•W
-    bool   mbStartPosSaved = false;                  // ‰ŠúÀ•W‚ğ‹L‰¯‚µ‚½‚©
-    float  mfMoveTimer = 0.0f;                   // ‰•œˆÚ“®—pƒ^ƒCƒ}[
+    VECTOR mvStartPos = VGet(0.0f, 0.0f, 0.0f); // ï¿½ï¿½ï¿½ï¿½ï¿½Ê’u
+    bool   mbStartPosSaved = false;
+    float  mfMoveTimer = 0.0f;
 };

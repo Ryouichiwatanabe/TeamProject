@@ -57,7 +57,7 @@ namespace {
 		{ "Skillet with Mapo Tofu.png", ALL,     0,       493.0f, 485.0f, 1.666f, 0.00f },
 		// 周りの素材
 		{ "Garlic.png",                 S0,      0,       -13.0f, 213.0f, 0.247f, 0.00f },
-		{ "Meat Pack.png",              S1,      0,       257.0f,  52.0f, 0.225f, 0.00f },
+		{ "Meat Pack.png",              S1,      0,       257.0f,  20.0f, 0.225f, 0.00f },
 		{ "Doubanjiang.png",            S2,      0,       902.0f, 190.0f, 0.503f, 0.00f },
 	};
 
@@ -67,8 +67,8 @@ namespace {
 		{ "Pot in Sauce.png",        S2, 0,  500.0f, 280.0f, 0.765f, 0.00f },
 		{ "Tofu.png",                0,  0,  556.0f, 197.0f, 0.461f, 0.00f },	// 常に表示
 		{ "Meat.png",                S0, 0,  458.0f, 313.0f, 1.179f, 0.00f },
-		{ "Sliced Green Onions.png", S1, 0,  374.0f, 159.0f, 0.922f, 0.00f },
-		{ "Meat Pack.png",           S0, 0,  194.0f,  26.0f, 0.800f, 0.00f },
+		{ "Sliced Green Onions.png", S1, 0,  354.0f, 159.0f, 0.555, 0.00f },
+		{ "Meat Pack.png",           S0, 0,  194.0f,  8.0f, 0.720f, 0.00f },
 		{ "Green Onion.png",         S1, 0,  -55.0f, 355.0f, 0.750f, 0.00f },
 		{ "Measuring Cup.png",       S2, 0,  919.0f, 170.0f, 0.634f, 0.00f },
 	};

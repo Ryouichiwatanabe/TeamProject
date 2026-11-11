@@ -33,6 +33,8 @@
 // -- Effect -- //
 #include "EffectManager.h"
 #include "EffectClear.h"
+#include "KitchenFrame.h"
+
 
 // -- 外部ライブラリ -- //
 #include <DxLib.h>
@@ -74,6 +76,8 @@ void GameScene::Initialize()
 
 	// -- 「RespawnUI」の生成 -- //
 	mpRespawnUI = GetUIManager()->CreateUI<RespawnUI>();
+	// -- 「KitchenFrame」の生成 --//
+	mpKitchenFrame = new KitchenFrame();
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 }
@@ -154,6 +158,12 @@ void GameScene::Draw()
 	}
 
 	Scene::Draw();
+
+	if (mpKitchenFrame != nullptr)
+	{
+		mpKitchenFrame->Draw();
+	}
+
 }
 
 void GameScene::UpdateShapeInput()
@@ -209,5 +219,10 @@ void GameScene::UpdateRestartInput(float deltaTime)
 
 void GameScene::Finalize()
 {
+	if (mpKitchenFrame != nullptr)
+	{
+		delete mpKitchenFrame;
+		mpKitchenFrame = nullptr;
+	}
 	Scene::Finalize();
 }
