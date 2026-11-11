@@ -59,7 +59,8 @@ void MovingBlock::Update(float _deltaTime)
 
     // 4. このフレームで床が動いた差分（moveDelta）だけ、上に乗っているプレイヤーも一緒に運ぶ！
     const VECTOR moveDelta = VSub(nextPos, prevPos);
-    if (pRidingPlayer != nullptr)
+    // プレイヤーが変形画面を開いている間(!pRidingPlayer->IsShapeEditing())は動かさない
+    if (pRidingPlayer != nullptr && !pRidingPlayer->IsShapeEditing())
     {
         if (auto* playerTransform = pRidingPlayer->GetModule<Transform>())
         {

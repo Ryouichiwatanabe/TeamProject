@@ -89,15 +89,16 @@ void Player::EndCollisionResolution()
 {
 	GameObject::EndCollisionResolution();
 
-	// 変形UIを開いている間は位置・回転を一切動かさない
-	if (mbIsShapeEditing)
-	{
-		UpdatePieceTransforms();
-		return;
-	}
-
+	// ★修正：変形UIを開いている間も、StageBlockへのめり込み押し戻し(ApplyCollisionCorrection)だけは行う！
+	// （これで万が一外力で押されても絶対にStageBlockをすり抜けなくなります）
 	ApplyCollisionCorrection();		// 1. めり込みを押し戻す
 	UpdatePieceTransforms();
+
+	// 変形UIを開いている間は接地・倒れ込み回転は行わない
+	if (mbIsShapeEditing)
+	{
+		return;
+	}
 
 	ProcessGroundAndTopple();		// 2. 接地 / 倒れ込み
 	UpdatePieceTransforms();
