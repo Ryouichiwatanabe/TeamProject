@@ -327,9 +327,6 @@
     <ClCompile Include="Source\UIFloatingMotion.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameProgress.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\PauseUI.cpp">
       <Filter>ソース ファイル\UI\PauseUI</Filter>
     </ClCompile>
@@ -395,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="Source\RespawnUI.cpp">
       <Filter>ソース ファイル\UI\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameProgress.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -548,9 +548,6 @@
     <ClInclude Include="Source\UIHoverScaler.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameProgress.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PauseUI.h">
       <Filter>ヘッダー ファイル\UI\PauseUI</Filter>
     </ClInclude>
@@ -625,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="Source\RespawnUI.h">
       <Filter>ヘッダー ファイル\UI\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameProgress.h">
+      <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
