@@ -19,7 +19,7 @@
 #include "Switch.h"
 #include "SwitchBlock.h"
 #include "Item.h"
-#include "SpongeBlock.h" // キッチンスポンジのバネ床
+#include "Konjac.h" // キッチンスポンジのバネ床
 #include "MovingBlock.h" // 溶けバターの滑る床
 
 
@@ -184,7 +184,7 @@ void Stage::CreateObjects()
             case 12:
             {
                 // ★キッチンスポンジのバネ床を生成
-                auto sponge = objectManager->CreateObject<SpongeBlock>();
+                auto sponge = objectManager->CreateObject<Konjac>();
                 sponge->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }
