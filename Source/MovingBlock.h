@@ -25,12 +25,12 @@ private:
     // [片道の移動距離(px)]
     // ・初期値 200.0f（2マス分）→ 置いた位置から左右に ±200px（合計4マス幅）を往復する
     // ・大きくする(例: 300.0f) → より広い範囲を大きく往復するようになる
-    static constexpr float MOVE_RANGE = 200.0f;
+    static constexpr float MOVE_RANGE = 250.0f;
 
     // [移動スピード]
     // ・大きくする(例: 3.5f) → 往復が速くなる
     // ・小さくする(例: 1.0f) → ゆっくり動くようになる
-    static constexpr float MOVE_SPEED = 2.0f;
+    static constexpr float MOVE_SPEED = 1.0f;
 
     // [動く方向の切り替え]
     // ・false（初期値）→ 「左右（横）」に往復する動く床

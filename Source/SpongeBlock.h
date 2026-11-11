@@ -20,7 +20,7 @@ private:
     bool    HasCeilingAbovePlayer(Player* pPlayer, float nextStepY);
 
 private:
-    static constexpr float INITIAL_JUMP_SPEED = 1500.0f;  // 跳ね上げる初速(px/秒)
+    static constexpr float INITIAL_JUMP_SPEED = 1200.0f;  // 跳ね上げる初速(px/秒)
     static constexpr float JUMP_DECEL = 2100.0f; // 上昇中の減速度(px/秒^2)
     static constexpr float BOUNCE_ANIM_TIME = 0.45f;   // スポンジがボヨンと揺れる秒数
     static constexpr float COOLDOWN_TIME = 0.35f;   // 連続発火を防ぐクールタイム
