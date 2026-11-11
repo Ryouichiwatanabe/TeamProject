@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-class StageClearData
+class GameProgress
 {
 public:
     // -- チュートリアルの終了状態のアクセサ -- //

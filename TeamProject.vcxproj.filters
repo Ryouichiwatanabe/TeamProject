@@ -67,9 +67,6 @@
     <Filter Include="ヘッダー ファイル\Effects">
       <UniqueIdentifier>{418fa353-9374-4892-aebc-04cbc8b3914c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Effect">
-      <UniqueIdentifier>{2046ad7d-2139-43c4-961b-24e980b2c2d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\Config">
       <UniqueIdentifier>{34eeeff6-2d95-4e3f-945d-5054f3616ef7}</UniqueIdentifier>
     </Filter>
@@ -135,6 +132,51 @@
     </Filter>
     <Filter Include="ソース ファイル\UI\ShapeUI">
       <UniqueIdentifier>{3ef6d2cb-3fa3-456c-a048-9a99429e0ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect">
+      <UniqueIdentifier>{2046ad7d-2139-43c4-961b-24e980b2c2d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect\Player">
+      <UniqueIdentifier>{5c0658fe-c124-43b2-a356-405f2c70a273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect\Event">
+      <UniqueIdentifier>{3c197103-3079-4abf-be23-9eaa36370605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect\UI">
+      <UniqueIdentifier>{7eed68c5-78d8-4db8-a7cd-042211c2c2dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Effect\Stage">
+      <UniqueIdentifier>{4e27cb49-854f-4e4b-abf0-1ca42296c392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\StageBackGround">
+      <UniqueIdentifier>{a3a540af-3532-4b6e-8b73-18a29f4ad1a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\Clear">
+      <UniqueIdentifier>{6205bdeb-fe92-4996-9f84-40e29eb896b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\UI\HUD">
+      <UniqueIdentifier>{72fd6b06-29c7-4590-9ecc-743faea9a4c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects\Player">
+      <UniqueIdentifier>{898986c2-6752-43fc-9e79-67c60e149cba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects\UI">
+      <UniqueIdentifier>{8e5a643a-d9ad-4770-96ab-c4836404896d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects\Event">
+      <UniqueIdentifier>{468061a8-dce2-4a21-9096-581fa58d0b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effects\Stage">
+      <UniqueIdentifier>{43831b4a-38c5-41ac-ae01-6554c581633b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\Clear">
+      <UniqueIdentifier>{c221364a-8cec-4528-8132-180491be7fe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\StageBackGround">
+      <UniqueIdentifier>{eca9ed2b-41ed-4a00-af68-44eb2726ac1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\HUD">
+      <UniqueIdentifier>{a1b4b2e7-8b39-4c45-850c-7405628ecbc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -252,12 +294,6 @@
     <ClCompile Include="Source\GoalEffect.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectClick.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EffectClear.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SpriteSheet.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
@@ -285,20 +321,11 @@
     <ClCompile Include="Source\Game.cpp">
       <Filter>ソース ファイル\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ClearUI.cpp">
-      <Filter>ソース ファイル\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Master.cpp">
       <Filter>ソース ファイル\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\UIFloatingMotion.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EffectFall.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\StageClearData.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\PauseUI.cpp">
       <Filter>ソース ファイル\UI\PauseUI</Filter>
@@ -327,35 +354,47 @@
     <ClCompile Include="Source\ItemIconUI.cpp">
       <Filter>ソース ファイル\UI\ItemUI</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectTrans.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Source\TutorialScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\UITypewriterText.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EffectSteam.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EffectRespawn.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SpongeBlock.cpp">
       <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RespawnUI.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\EffectFall.cpp">
+      <Filter>ソース ファイル\Effect\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectRespawn.cpp">
+      <Filter>ソース ファイル\Effect\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectTrans.cpp">
+      <Filter>ソース ファイル\Effect\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectClear.cpp">
+      <Filter>ソース ファイル\Effect\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectClick.cpp">
+      <Filter>ソース ファイル\Effect\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EffectSteam.cpp">
+      <Filter>ソース ファイル\Effect\Stage</Filter>
     </ClCompile>
     <ClCompile Include="Source\StageBackGround.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\UI\StageBackGround</Filter>
     </ClCompile>
     <ClCompile Include="Source\StageBackGroundTable.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\UI\StageBackGround</Filter>
     </ClCompile>
-    <ClCompile Include="Source\LoadScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
+    <ClCompile Include="Source\ClearUI.cpp">
+      <Filter>ソース ファイル\UI\Clear</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RespawnUI.cpp">
+      <Filter>ソース ファイル\UI\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameProgress.cpp">
+      <Filter>ソース ファイル\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,12 +512,6 @@
     <ClInclude Include="Source\EffectBase.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EffectClick.h">
-      <Filter>ヘッダー ファイル\Effects</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EffectClear.h">
-      <Filter>ヘッダー ファイル\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SpriteSheet.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
@@ -500,9 +533,6 @@
     <ClInclude Include="Source\Game.h">
       <Filter>ヘッダー ファイル\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ClearUI.h">
-      <Filter>ヘッダー ファイル\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Collider.h">
       <Filter>ヘッダー ファイル\Module\Collider</Filter>
     </ClInclude>
@@ -517,12 +547,6 @@
     </ClInclude>
     <ClInclude Include="Source\UIHoverScaler.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EffectFall.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\StageClearData.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\PauseUI.h">
       <Filter>ヘッダー ファイル\UI\PauseUI</Filter>
@@ -551,9 +575,6 @@
     <ClInclude Include="Source\ItemIconUI.h">
       <Filter>ヘッダー ファイル\UI\ItemUI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EffectTrans.h">
-      <Filter>ヘッダー ファイル\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Module.h">
       <Filter>ヘッダー ファイル\Module</Filter>
     </ClInclude>
@@ -566,29 +587,44 @@
     <ClInclude Include="Source\UITypewriterText.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EffectSteam.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EffectSteamConfig.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EffectRespawn.h">
-      <Filter>ヘッダー ファイル\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SpongeBlock.h">
       <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
     </ClInclude>
-    <ClInclude Include="Source\RespawnUI.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\EffectClick.h">
+      <Filter>ヘッダー ファイル\Effects\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectClear.h">
+      <Filter>ヘッダー ファイル\Effects\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectRespawn.h">
+      <Filter>ヘッダー ファイル\Effects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectTrans.h">
+      <Filter>ヘッダー ファイル\Effects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectFall.h">
+      <Filter>ヘッダー ファイル\Effects\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteam.h">
+      <Filter>ヘッダー ファイル\Effects\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EffectSteamConfig.h">
+      <Filter>ヘッダー ファイル\Effects\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ClearUI.h">
+      <Filter>ヘッダー ファイル\UI\Clear</Filter>
     </ClInclude>
     <ClInclude Include="Source\StageBackGround.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\UI\StageBackGround</Filter>
     </ClInclude>
     <ClInclude Include="Source\StageBackGroundTable.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\UI\StageBackGround</Filter>
     </ClInclude>
-    <ClInclude Include="Source\LoadScene.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
+    <ClInclude Include="Source\RespawnUI.h">
+      <Filter>ヘッダー ファイル\UI\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameProgress.h">
+      <Filter>ヘッダー ファイル\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
