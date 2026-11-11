@@ -10,6 +10,7 @@ class ClearUI;
 class ItemHUD;
 class PlayerShapeUI;
 class RespawnUI;
+class KitchenFrame;
 
 class StageBackGround;
 
@@ -53,4 +54,6 @@ private:
 
     PlayerShapeUI* mpShapeUI = nullptr;
     StageBackGround* mpBackgroundUI = nullptr;
+    KitchenFrame* mpKitchenFrame = nullptr;
+
 };

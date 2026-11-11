@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\KitchenFrame.cpp" />
     <ClCompile Include="Source\LoadScene.cpp" />
     <ClCompile Include="Source\LoadUI.cpp" />
     <ClCompile Include="Source\LoadUIParts.cpp" />
@@ -97,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
+    <ClInclude Include="Source\KitchenFrame.h" />
     <ClInclude Include="Source\LoadScene.h" />
     <ClInclude Include="Source\LoadUI.h" />
     <ClInclude Include="Source\LoadUIParts.h" />

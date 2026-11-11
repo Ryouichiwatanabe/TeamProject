@@ -4,7 +4,7 @@
 
 class Player;
 
-// CSVで置いた位置を基準に往復移動し、上に乗った豆腐も一緒に運ぶ「動く床（まな板リフト）」
+// プレイヤーを乗せて往復移動する床ブロック
 class MovingBlock : public StageBlock
 {
 public:
@@ -14,30 +14,23 @@ public:
     void Update(float _deltaTime) override;
     void Draw() override;
 
-private:
-    Player* FindPlayerOnTop(const VECTOR& blockPos); // この床の上に乗っているプレイヤーを探す
+protected:
+    // 画像リソース（パスを変えると見た目を変更可能）
+    const char* GetModelFilename() const override
+    {
+        return "Resource/GameObject/StageBlock/Stage.png";
+    }
 
 private:
-    // =========================================================================
-    // ★ 動く床の「移動幅」「スピード」「動く方向」を調整する定数
-    // =========================================================================
+    Player* FindPlayerOnTop(const VECTOR& blockPos); // 上に乗っているプレイヤーの取得
 
-    // [片道の移動距離(px)]
-    // ・初期値 200.0f（2マス分）→ 置いた位置から左右に ±200px（合計4マス幅）を往復する
-    // ・大きくする(例: 300.0f) → より広い範囲を大きく往復するようになる
-    static constexpr float MOVE_RANGE = 200.0f;
+private:
+    // 移動設定
+    static constexpr float MOVE_RANGE = 200.0f;       // 移動幅（片道のpx）
+    static constexpr float MOVE_SPEED = 2.0f;         // 移動速度
+    static constexpr bool  IS_VERTICAL_MOVE = false;  // trueで上下移動、falseで左右移動
 
-    // [移動スピード]
-    // ・大きくする(例: 3.5f) → 往復が速くなる
-    // ・小さくする(例: 1.0f) → ゆっくり動くようになる
-    static constexpr float MOVE_SPEED = 2.0f;
-
-    // [動く方向の切り替え]
-    // ・false（初期値）→ 「左右（横）」に往復する動く床
-    // ・true に変更する → 「上下（縦）」に昇降するエレベーター床になる！
-    static constexpr bool  IS_VERTICAL_MOVE = false;
-
-    VECTOR mvStartPos = VGet(0.0f, 0.0f, 0.0f); // CSVで配置された初期座標
-    bool   mbStartPosSaved = false;                  // 初期座標を記憶したか
-    float  mfMoveTimer = 0.0f;                   // 往復移動用タイマー
+    VECTOR mvStartPos = VGet(0.0f, 0.0f, 0.0f); // 初期位置
+    bool   mbStartPosSaved = false;
+    float  mfMoveTimer = 0.0f;
 };
