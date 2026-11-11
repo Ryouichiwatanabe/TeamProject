@@ -40,6 +40,15 @@ void PlayerShapeUI::Init()
 		}
 	}
 
+	mpBackGround = GetUIManager()->CreateUI<UI>();
+	mpBackGround->LoadUIGraph("Resource/UI/ShapeSelect/BackGround.png");
+	mpBackGround->SetLayer(LAYER_FRAME);
+	mpBackGround->GetTransform().SetScale(VGet(1.0f, 1.0f, 1.0f));
+
+	mpBackGround->SetEnabled(true);
+	this->AddChild(mpBackGround);
+	mpBackGround->SetParent(this);
+
 	// -- ボタン・メッセージ生成 -- //
 	mpMessageUI = CreateMessageUI(0.0f, MESSAGE_OFFSET_Y);
 

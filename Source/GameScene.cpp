@@ -96,10 +96,15 @@ void GameScene::UpdatePlaying(float deltaTime)
 {
 	// -- Pauseの処理 -- //
 	UpdatePauseInput();
-	SetWorldTimeScale(mpPauseUI->IsEnabled() ? 0.0f : 1.0f);
 
-	// Playerの更新より先に開閉する(開いたフレームからPlayerを止めるため)
+	// Playerの更新より先に開閉する(開いたフレームからPlayerと移動床を止めるため)
 	UpdateShapeInput();
+
+	// ★修正：ポーズ中 または 変形画面(mpShapeUI)を開いている間は、ゲーム世界(移動床など)の時間を止める
+	const bool isPaused = (mpPauseUI != nullptr && mpPauseUI->IsEnabled());
+	const bool isShapeEditing = (mpShapeUI != nullptr && mpShapeUI->IsEnabled());
+	SetWorldTimeScale((isPaused || isShapeEditing) ? 0.0f : 1.0f);
+
 	UpdateRestartInput(deltaTime);
 
 	// 更新処理

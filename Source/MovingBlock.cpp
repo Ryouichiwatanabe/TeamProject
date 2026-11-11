@@ -59,7 +59,8 @@ void MovingBlock::Update(float _deltaTime)
 
     // 4. ã“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã§åºŠãŒå‹•ã„ãŸå·®åˆ†ï¼ˆmoveDeltaï¼‰ã ã‘ã€ä¸Šã«ä¹—ã£ã¦ã„ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚‚ä¸€ç·’ã«é‹ã¶ï¼
     const VECTOR moveDelta = VSub(nextPos, prevPos);
-    if (pRidingPlayer != nullptr)
+    // ƒvƒŒƒCƒ„[‚ª•ÏŒ`‰æ–Ê‚ðŠJ‚¢‚Ä‚¢‚éŠÔ(!pRidingPlayer->IsShapeEditing())‚Í“®‚©‚³‚È‚¢
+    if (pRidingPlayer != nullptr && !pRidingPlayer->IsShapeEditing())
     {
         if (auto* playerTransform = pRidingPlayer->GetModule<Transform>())
         {

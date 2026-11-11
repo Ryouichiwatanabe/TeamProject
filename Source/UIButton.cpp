@@ -13,6 +13,9 @@ bool UIButton::IsMouseInside()
     if (mpUI == nullptr)
         return false;
 
+    if (!mpUI->IsEnabled())
+        return false;
+
     UITransform& transform = mpUI->GetTransform();
 
     VECTOR center = transform.GetCenterPosition();

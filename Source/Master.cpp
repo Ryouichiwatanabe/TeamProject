@@ -1,4 +1,3 @@
-// Master.cpp
 #include "Master.h"
 
 

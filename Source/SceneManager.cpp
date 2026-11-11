@@ -6,6 +6,7 @@
 #include "StageSelectScene.h"
 #include "TitleScene.h"
 #include "TutorialScene.h"
+#include "LoadScene.h"
 
 void SceneManager::Initialize()
 {
@@ -16,7 +17,6 @@ void SceneManager::Initialize()
 	// 真っ黒な状態から明転させる
 	mTransition.StartFromBlack();
 }
-
 
 void SceneManager::RequestScene(SCENE_TYPE _nextType)
 {
@@ -29,7 +29,7 @@ void SceneManager::RequestGameScene(int _stageNumber)
 {
 	if (mTransition.IsActive()) return;   // 遷移中なら番号も書き換えない
 	mnStageNumber = _stageNumber;
-	RequestScene(SCENE_TYPE::GAME_SCENE);
+	RequestScene(SCENE_TYPE::LOAD_SCENE); // GAME_SCENEからLOAD_SCENEに変更
 }
 
 void SceneManager::Update(float _deltaTime)
@@ -55,7 +55,7 @@ void SceneManager::ChangeSceneIfNeeded()
 	if (mnSceneType == mnNextSceneType)
 		return;
 
-	//旧Sceneを解放
+	// 旧Sceneを解放
 	if (mpCurrentScene != nullptr)
 	{
 		mpCurrentScene->Finalize();	// 旧シーンの終了処理をする
@@ -75,7 +75,7 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene = new GameScene();
 		break;
 
-		case SCENE_TYPE::STAGE_SELECT_SCENE:
+	case SCENE_TYPE::STAGE_SELECT_SCENE:
 		mpCurrentScene = new StageSelectScene();
 		break;
 
@@ -83,15 +83,18 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene = new TutorialScene();
 		break;
 
+	case SCENE_TYPE::LOAD_SCENE:
+		mpCurrentScene = new LoadScene();
+		break;
+
 	default:
 		break;
 	}
-	
+
 	if (mpCurrentScene != nullptr)
 	{
 		mpCurrentScene->Initialize();	// 新シーンの初期処理をする
 	}
-	
 }
 
 int SceneManager::GetStageNumber() const
@@ -101,14 +104,11 @@ int SceneManager::GetStageNumber() const
 
 void SceneManager::Finalize()
 {
-	//メモリ解放
+	// メモリ解放
 	if (mpCurrentScene != nullptr)
 	{
 		mpCurrentScene->Finalize();
 		delete mpCurrentScene;
 		mpCurrentScene = nullptr;
-
 	}
-
 }
-

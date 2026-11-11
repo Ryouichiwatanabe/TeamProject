@@ -19,7 +19,7 @@
 #include "Switch.h"
 #include "SwitchBlock.h"
 #include "Item.h"
-#include "SpongeBlock.h" // キッチンスポンジのバネ床
+#include "Konjac.h" // キッチンスポンジのバネ床
 #include "MovingBlock.h" // 溶けバターの滑る床
 
 
@@ -94,7 +94,7 @@ void Stage::CreateObjects()
 
             case 1:
             {
-                // 床を生成
+                // -- 床の生成 -- //
                 auto stageBlock = objectManager
                     ->CreateObject<StageBlock>();
 
@@ -104,7 +104,7 @@ void Stage::CreateObjects()
             }
             case 2:
             {
-                // ゴールを生成
+                // -- ゴールを生成 -- //
                 auto goalBlock = objectManager
                     ->CreateObject<Goal>();
 
@@ -125,7 +125,7 @@ void Stage::CreateObjects()
 
             case 4:
             {
-                // 針を生成
+                // -- 針を生成 -- //
                 auto spikeBlock = objectManager
                     ->CreateObject<Spike>();
                 spikeBlock
@@ -136,6 +136,7 @@ void Stage::CreateObjects()
 
             case 5:
             {
+                // -- プレイヤーの生成 -- //
                 auto player = objectManager->CreateObject<Player>(initPosition);
                 player->GetModule<Transform>()->SetPosition(initPosition);
                 player->UpdatePieceTransforms();    // Pieceに反映
@@ -174,6 +175,7 @@ void Stage::CreateObjects()
             case 10:
             case 11:
             {
+                // -- アイテムの生成 -- //
                 auto item = objectManager->CreateObject<Item>(mStageNumber, tile - 9);
                 item->GetModule<Transform>()->SetPosition(initPosition);
                 break;
@@ -182,7 +184,7 @@ void Stage::CreateObjects()
             case 12:
             {
                 // ★キッチンスポンジのバネ床を生成
-                auto sponge = objectManager->CreateObject<SpongeBlock>();
+                auto sponge = objectManager->CreateObject<Konjac>();
                 sponge->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }

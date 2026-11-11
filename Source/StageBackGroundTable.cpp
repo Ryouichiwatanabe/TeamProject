@@ -89,8 +89,8 @@ namespace {
 		{ "A bowl of milk.png",                          S2,      S1, 487.0f, 295.0f, 1.252f, 0.00f },
 		{ "A bowl containing almond paste and milk.png", S1 | S2, 0,  487.0f, 295.0f, 1.252f, 0.00f },
 		{ "Goji Berries.png",                            S0,      0,   50.0f,  37.0f, 0.844f, 0.00f },
-		{ "Almond Paste.png",                            S1,      0,  366.0f, -15.0f, 0.662f, 0.00f },
-		{ "Milk.png",                                    S2,      0,  779.0f, -27.0f, 0.700f, 0.00f },
+		{ "Almond Paste.png",                            S1,      0,  366.0f, -15.0f, 0.450f, 0.00f },
+		{ "Milk.png",                                    S2,      0,  779.0f, -27.0f, 0.500f, 0.00f },
 	};
 
 	constexpr BgDishDef DISH_DEFS[] = {

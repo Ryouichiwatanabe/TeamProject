@@ -19,6 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\LoadScene.cpp" />
+    <ClCompile Include="Source\LoadUI.cpp" />
+    <ClCompile Include="Source\LoadUIParts.cpp" />
     <ClCompile Include="Source\MovingBlock.cpp" />
     <ClCompile Include="Source\ClearUI.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
@@ -32,7 +35,7 @@
     <ClCompile Include="Source\EffectFall.cpp" />
     <ClCompile Include="Source\EffectManager.cpp" />
     <ClCompile Include="Source\EffectRespawn.cpp" />
-    <ClCompile Include="Source\SpongeBlock.cpp" />
+    <ClCompile Include="Source\Konjac.cpp" />
     <ClCompile Include="Source\SpriteSheet.cpp" />
     <ClCompile Include="Source\EffectSteam.cpp" />
     <ClCompile Include="Source\EffectTrans.cpp" />
@@ -76,7 +79,7 @@
     <ClCompile Include="Source\StageBackGround.cpp" />
     <ClCompile Include="Source\StageBackGroundTable.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
-    <ClCompile Include="Source\StageClearData.cpp" />
+    <ClCompile Include="Source\GameProgress.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
@@ -94,6 +97,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Box2D.h" />
+    <ClInclude Include="Source\LoadScene.h" />
+    <ClInclude Include="Source\LoadUI.h" />
+    <ClInclude Include="Source\LoadUIParts.h" />
     <ClInclude Include="Source\MovingBlock.h" />
     <ClInclude Include="Source\ClearUI.h" />
     <ClInclude Include="Source\Collider.h" />
@@ -107,7 +113,7 @@
     <ClInclude Include="Source\EffectFall.h" />
     <ClInclude Include="Source\EffectManager.h" />
     <ClInclude Include="Source\EffectRespawn.h" />
-    <ClInclude Include="Source\SpongeBlock.h" />
+    <ClInclude Include="Source\Konjac.h" />
     <ClInclude Include="Source\SpriteSheet.h" />
     <ClInclude Include="Source\EffectSteam.h" />
     <ClInclude Include="Source\EffectSteamConfig.h" />
@@ -157,7 +163,7 @@
     <ClInclude Include="Source\Spike.h" />
     <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StageBlock.h" />
-    <ClInclude Include="Source\StageClearData.h" />
+    <ClInclude Include="Source\GameProgress.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TitleScene.h" />
