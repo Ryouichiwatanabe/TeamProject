@@ -1,26 +1,24 @@
-#pragma once
+ï»¿#pragma once
 #include "Scene.h"
-#include <string>
 
-// —¿—‚Æ“¤•…‚Ì¢ŠEŠÏ‚É‡‚í‚¹‚½ƒ[ƒh‰æ–Ê
+class LoadUI;
+
+// æ–™ç†ã¨è±†è…ã®ä¸–ç•Œè¦³ã«åˆã‚ã›ãŸãƒ­ãƒ¼ãƒ‰ç”»é¢
+// è¦‹ãŸç›®ã¯ LoadUI ã«ã¾ã‹ã›ã€ã“ã“ã§ã¯ã€Œæ™‚é–“ãƒ»å…¥åŠ›ãƒ»ã‚·ãƒ¼ãƒ³é·ç§»ã€ã ã‘ã‚’æ‰±ã†
 class LoadScene : public Scene
 {
 public:
-    LoadScene() = default;
-    ~LoadScene() override = default;
+	LoadScene() = default;
+	~LoadScene() override = default;
 
-    void Initialize() override;             // ƒtƒHƒ“ƒg¶¬‚ÆTipsİ’è
-    void Update(float _deltaTime) override; // ‚µ‚½‚²‚µ‚ç‚¦is‚ÆƒNƒŠƒbƒNŒŸ’m
-    void Draw() override;                   // “’‹CEo`ƒQ[ƒWE‚¨—¿—ƒƒ‚‚Ì•`‰æ
-    void Finalize() override;               // ƒtƒHƒ“ƒg‰ğ•ú
+	void Initialize() override;				// LoadUI ã®ç”Ÿæˆ
+	void Update(float _deltaTime) override;	// ã—ãŸã”ã—ã‚‰ãˆé€²è¡Œã¨ã‚¯ãƒªãƒƒã‚¯æ¤œçŸ¥
+	void Finalize() override;				// è‡ªå‰ã§ä½œã£ãŸç”»åƒã®è§£æ”¾
 
 private:
-    int mnStageNumber = 1;          // ’§í‚·‚éƒXƒe[ƒW”Ô†
-    std::string mTipTitle;          // ‚¨—¿—ƒƒ‚‚ÌŒ©o‚µ
-    std::string mTipContent;        // ‚¨—¿—ƒƒ‚‚Ì–{•¶
+	static constexpr float LOAD_DURATION = 1.5f;	// ã—ãŸã”ã—ã‚‰ãˆå®Œäº†ã¾ã§ã®æ™‚é–“ï¼ˆç§’ï¼‰
 
-    int mnCustomFont = -1;          // ƒNƒbƒLƒŠ“Ç‚ß‚éLoadSceneê—pƒtƒHƒ“ƒg
-    float mfTimer = 0.0f;           // Œo‰ßƒ^ƒCƒ}[
-    const float LOAD_DURATION = 1.5f; // ‚µ‚½‚²‚µ‚ç‚¦Š®—¹‚Ü‚Å‚ÌŠÔi•bj
-    bool mbReady = false;           // €”õŠ®—¹ƒtƒ‰ƒO
+	LoadUI* mpLoadUI = nullptr;	// æ‰€æœ‰æ¨©ã¯ UIManager
+	float mfTimer = 0.0f;		// çµŒéã‚¿ã‚¤ãƒãƒ¼
+	bool mbReady = false;		// æº–å‚™å®Œäº†ãƒ•ãƒ©ã‚°
 };

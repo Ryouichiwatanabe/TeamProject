@@ -1,241 +1,58 @@
-#include "LoadScene.h"
+ï»¿#include "LoadScene.h"
+#include "LoadUI.h"
+
 #include "Master.h"
 #include "SceneManager.h"
-#include "FontManager.h"
+#include "UIManager.h"
 #include "InputManager.h"
 #include "SoundManager.h"
-#include "ScreenConfig.h"
+
 #include <DxLib.h>
-#include <cmath>
+#include <algorithm>
 
 void LoadScene::Initialize()
 {
-    mfTimer = 0.0f;
-    mbReady = false;
+	mfTimer = 0.0f;
+	mbReady = false;
 
-    // ‹”F«”²ŒQ‚Ì40pxƒtƒHƒ“ƒg‚ğì¬i•¶š‚ª’×‚ê‚¸ƒnƒbƒLƒŠ“Ç‚ß‚éİ’èj
-    mnCustomFont = CreateFontToHandle("PixelMplus10", 40, -1, DX_FONTTYPE_ANTIALIASING);
-
-    // ‘I‘ğ‚³‚ê‚½ƒXƒe[ƒW”Ô†‚ğæ“¾
-    mnStageNumber = Master::mpSceneManager->GetStageNumber();
-
-    // ƒXƒe[ƒW‚É‰‚¶‚½©‘R‚È“ú–{Œê‚ÌTips‚Æ‚¨—¿—ƒƒ‚
-    switch (mnStageNumber)
-    {
-    case 1:
-        mTipTitle = "y ‚¨—¿—ƒƒ‚F•ÏŒ` z";
-        mTipContent = "uEƒL[v‚ğ‰Ÿ‚·‚Æ•ÏŒ`‚Å‚«‚é‚æI ó‹µ‚É‡‚í‚¹‚Ä“¤•…‚Ìp‚ğ•Ï‚¦‚æ‚¤B";
-        break;
-    case 2:
-        mTipTitle = "y ‚¨—¿—ƒƒ‚F‰ñ“]ˆÚ“® z";
-        mTipContent = "uAƒL[ / DƒL[v‚Å¶‰E‚ÉƒRƒƒRƒ“]‚ª‚Á‚ÄˆÚ“®‚µ‚æ‚¤I";
-        break;
-    case 3:
-        mTipTitle = "y ƒMƒ~ƒbƒNFƒXƒCƒbƒ`ƒuƒƒbƒN z";
-        mTipContent = "ƒXƒCƒbƒ`‚ğ“¥‚Ş‚ÆA“¯‚¶F‚ÌƒuƒƒbƒN‚ªŒ»‚ê‚½‚èÁ‚¦‚½‚è‚·‚é‚æB";
-        break;
-    case 4:
-        mTipTitle = "y ƒMƒ~ƒbƒNFƒgƒQƒgƒQ z";
-        mTipContent = "Ô‚¢ƒgƒQ‚É‚Ô‚Â‚©‚é‚Æ“¤•…‚ª•ö‚ê‚¿‚á‚¤I ãè‚É”ò‚Ñ‰z‚¦‚æ‚¤B";
-        break;
-    case 5:
-        mTipTitle = "y ƒMƒ~ƒbƒNFƒoƒ^[ƒuƒƒbƒN z";
-        mTipContent = "‰©F‚¢ƒoƒ^[‚Ìã‚Íƒcƒ‹ƒcƒ‹ŠŠ‚é‚æI ŠŠ‚é¨‚¢‚ğg‚Á‚Äi‚à‚¤B";
-        break;
-    case 6:
-        mTipTitle = "y ƒMƒ~ƒbƒNF•ö‚ê‚é‘«ê z";
-        mTipContent = "ƒqƒrŠ„‚ê‚½ƒuƒƒbƒN‚Íæ‚é‚Æ•ö‚ê‚é‚æI —§‚¿~‚Ü‚ç‚¸‘f‘‚­“n‚ë‚¤B";
-        break;
-    case 7:
-        mTipTitle = "y U—ª‚ÌƒRƒcFŒ`‚Ìg‚¢•ª‚¯ z";
-        mTipContent = "‚‚¢’i·‚Íu‚½‚Ä’·vA’á‚¢“Vˆä‚Ì‚·‚«ŠÔ‚Íu‚æ‚±’·v‚ª’Ê‚è‚â‚·‚¢‚æB";
-        break;
-    case 8:
-        mTipTitle = "y ‚â‚è‚±‚İF’²–¡—¿‚ ‚Â‚ß z";
-        mTipContent = "ƒXƒe[ƒW‚Ì’²–¡—¿‚ğ3‚ÂW‚ß‚é‚ÆAƒŒƒVƒs’ ‚É—¿—‚ªŠ®¬‚·‚é‚æI";
-        break;
-    default:
-        mTipTitle = "y U—ª‚Ìƒqƒ“ƒg z";
-        mTipContent = "uEƒL[v‚Å•ÏŒ`I ¢‚Á‚½‚Æ‚«‚ÍƒŠƒXƒ^[ƒgƒ{ƒ^ƒ“‚ğ’·‰Ÿ‚µ‚µ‚æ‚¤B";
-        break;
-    }
+	// -- ã€ŒLoadUIã€ã®ç”Ÿæˆï¼ˆã‚¹ãƒ†ãƒ¼ã‚¸ç•ªå·ã«å¿œã˜ãŸTipsã‚‚ã“ã“ã§è¨­å®šã•ã‚Œã‚‹ï¼‰ -- //
+	mpLoadUI = GetUIManager()->CreateUI<LoadUI>();
 }
 
 void LoadScene::Update(float _deltaTime)
 {
-    Scene::Update(_deltaTime);
+	mfTimer += _deltaTime;
 
-    mfTimer += _deltaTime;
+	// 100%ã¾ã§ã‚²ãƒ¼ã‚¸ãŒæºœã¾ã£ãŸã‚‰æº–å‚™å®Œäº†
+	const float progress = (std::min)(1.0f, mfTimer / LOAD_DURATION);
+	mbReady = (progress >= 1.0f);
 
-    // 100%‚Ü‚ÅƒQ[ƒW‚ª—­‚Ü‚Á‚½‚ç€”õŠ®—¹
-    if (mfTimer >= LOAD_DURATION)
-    {
-        mbReady = true;
+	mpLoadUI->SetLoadState(mfTimer, progress, mbReady);
 
-        // €”õŠ®—¹ŒãAƒ}ƒEƒXƒNƒŠƒbƒNi¶ƒNƒŠƒbƒNj‚Ü‚½‚Í Œˆ’èƒL[(Enter/Space)‚ÅƒQ[ƒ€‚Ö
-        const bool isClicked = ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0) ||
-            InputManager::GetInstance().GetButtonDown(Button::Confirm);
+	Scene::Update(_deltaTime);
 
-        if (isClicked)
-        {
-            // Œˆ’è‰¹‚ğ–Â‚ç‚µ‚ÄƒQ[ƒ€‰æ–Ê‚Ö‘JˆÚ
-            SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
-            Master::mpSceneManager->RequestScene(SCENE_TYPE::GAME_SCENE);
-        }
-    }
-}
+	if (!mbReady)
+		return;
 
-void LoadScene::Draw()
-{
-    const int sw = static_cast<int>(ScreenConfig::SCREEN_WIDTH);
-    const int sh = static_cast<int>(ScreenConfig::SCREEN_HEIGHT);
-    const int cx = sw / 2; // ‰æ–Ê’†‰›X
+	// æº–å‚™å®Œäº†å¾Œã€ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯ï¼ˆå·¦ã‚¯ãƒªãƒƒã‚¯ï¼‰ã¾ãŸã¯ æ±ºå®šã‚­ãƒ¼(Enter/Space)ã§ã‚²ãƒ¼ãƒ ã¸
+	const bool isClicked = ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0) ||
+		InputManager::GetInstance().GetButtonDown(Button::Confirm);
 
-    // 1. ”wŒiFƒŒƒVƒs–{‚Ì‚æ‚¤‚È‰·‚©‚İ‚Ì‚ ‚éƒ‚ƒJƒuƒ‰ƒEƒ“
-    DrawBox(0, 0, sw, sh, GetColor(55, 40, 30), TRUE);
-
-    // ã‰º‚Ìü‚èƒ‰ƒCƒ“io`E‚«‚È•²ƒJƒ‰[j
-    DrawBox(60, 40, sw - 60, 44, GetColor(230, 215, 185), TRUE);
-    DrawBox(60, sh - 44, sw - 60, sh - 40, GetColor(230, 215, 185), TRUE);
-
-    int font = (mnCustomFont != -1) ? mnCustomFont : (Master::mpFontManager ? Master::mpFontManager->GetHandle(FontId::HUD) : -1);
-
-    // -------------------------------------------------------------
-    // 2. ’†‰›‚Ì‚µ‚½‚²‚µ‚ç‚¦ƒpƒlƒ‹iƒŒƒVƒsƒm[ƒg•—j
-    // -------------------------------------------------------------
-    const int cardW = 960;
-    const int cardH = 430;
-    const int cardTop = 160;
-    const int cardBottom = cardTop + cardH;
-    const int cardLeft = cx - cardW / 2;
-    const int cardRight = cx + cardW / 2;
-
-    // ƒpƒlƒ‹‚Ì‰e‚ÆƒAƒCƒ{ƒŠ[‚Ìƒm[ƒg—p†
-    DrawRoundRect(cardLeft + 8, cardTop + 8, cardRight + 8, cardBottom + 8, 20, 20, GetColor(30, 20, 15), TRUE);
-    DrawRoundRect(cardLeft, cardTop, cardRight, cardBottom, 20, 20, GetColor(250, 246, 235), TRUE);
-    DrawRoundRect(cardLeft, cardTop, cardRight, cardBottom, 20, 20, GetColor(85, 65, 50), FALSE);
-
-    // uƒXƒe[ƒW Xv
-    std::string stageText = "ƒXƒe[ƒW " + std::to_string(mnStageNumber);
-    if (font != -1)
-    {
-        int textW = GetDrawStringWidthToHandle(stageText.c_str(), static_cast<int>(stageText.length()), font);
-        DrawStringToHandle(cx - textW / 2, cardTop + 35, stageText.c_str(), GetColor(185, 65, 45), font);
-    }
-
-    // -------------------------------------------------------------
-    // 3. —¿—ƒ‚ƒ`[ƒt‰‰oF‚¨“ç‚ÌƒRƒgƒRƒg“’‹Ci‚ä‚°jƒAƒjƒ[ƒVƒ‡ƒ“
-    // -------------------------------------------------------------
-    const int steamCenterY = cardTop + 165;
-
-    // ‚¨“ç‚ÌƒRƒgƒRƒg‰·‚©‚¢“’‹C‚ª‚ä‚ç‚ä‚ç¸‚Á‚Ä‚¢‚­‰‰o
-    for (int i = 0; i < 3; ++i)
-    {
-        float t = std::fmod(mfTimer * 1.6f + i * 0.33f, 1.0f);
-        float steamY = steamCenterY - t * 50.0f;
-        float steamX = cx + (i - 1) * 38.0f + std::sin(t * 6.28f + i) * 12.0f;
-        int alpha = static_cast<int>(std::sin(t * 3.14159f) * 170);
-
-        SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-        DrawCircleAA(steamX, steamY, 14.0f * (0.8f + t * 0.5f), 16, GetColor(210, 190, 170), TRUE);
-    }
-    SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
-    // is—¦i0%?100%j
-    float progress = (std::min)(1.0f, mfTimer / LOAD_DURATION);
-    int percent = static_cast<int>(progress * 100.0f);
-
-    // ó‘ÔƒeƒLƒXƒgi‚µ‚½‚²‚µ‚ç‚¦’†... / ‚µ‚½‚²‚µ‚ç‚¦Š®—¹Ij
-    if (!mbReady)
-    {
-        std::string statusText = "‚µ‚½‚²‚µ‚ç‚¦’†... " + std::to_string(percent) + "%";
-        if (font != -1)
-        {
-            int textW = GetDrawStringWidthToHandle(statusText.c_str(), static_cast<int>(statusText.length()), font);
-            DrawStringToHandle(cx - textW / 2, cardTop + 220, statusText.c_str(), GetColor(70, 50, 40), font);
-        }
-    }
-    else
-    {
-        std::string readyText = "‚µ‚½‚²‚µ‚ç‚¦Š®—¹I";
-        if (font != -1)
-        {
-            int textW = GetDrawStringWidthToHandle(readyText.c_str(), static_cast<int>(readyText.length()), font);
-            DrawStringToHandle(cx - textW / 2, cardTop + 220, readyText.c_str(), GetColor(45, 135, 55), font);
-        }
-
-        // ‚Ó‚í‚Ó‚í“_–Å‚·‚éu‰æ–Ê‚ğƒNƒŠƒbƒN‚µ‚ÄƒXƒ^[ƒgv
-        const float blink = (std::sin(mfTimer * 6.0f) + 1.0f) * 0.5f;
-        int alpha = static_cast<int>(120 + 135 * blink);
-
-        std::string clickText = ">>  ‰æ–Ê‚ğƒNƒŠƒbƒN‚µ‚ÄƒXƒ^[ƒg  <<";
-        if (font != -1)
-        {
-            int textW = GetDrawStringWidthToHandle(clickText.c_str(), static_cast<int>(clickText.length()), font);
-            SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-            DrawStringToHandle(cx - textW / 2, cardTop + 280, clickText.c_str(), GetColor(190, 55, 35), font);
-            SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-        }
-    }
-
-    // -------------------------------------------------------------
-    // 4. ‚¨o`‚ÌƒvƒƒOƒŒƒXƒo[i‚«‚È•²E‚¨İ–ûFj
-    // -------------------------------------------------------------
-    const int barW = 760;
-    const int barH = 22;
-    const int barX = cx - barW / 2;
-    const int barY = cardBottom - 60;
-
-    // ƒQ[ƒW‚Ì”wŒii”–‚¢ƒx[ƒWƒ…j
-    DrawRoundRect(barX, barY, barX + barW, barY + barH, 11, 11, GetColor(220, 210, 195), TRUE);
-    // ƒQ[ƒW‚Ìisƒo[i‚¨‚¢‚µ‚»‚¤‚Èo`ƒIƒŒƒ“ƒWj
-    if (percent > 0)
-    {
-        int fillW = static_cast<int>(barW * progress);
-        DrawRoundRect(barX, barY, barX + fillW, barY + barH, 11, 11, GetColor(230, 140, 50), TRUE);
-    }
-    DrawRoundRect(barX, barY, barX + barW, barY + barH, 11, 11, GetColor(95, 75, 60), FALSE);
-
-    // -------------------------------------------------------------
-    // 5. ‰º•”‚Ì‚¨—¿—ƒƒ‚i•¶š‚ªƒnƒbƒLƒŠ“Ç‚ß‚éƒƒCƒhƒvƒŒ[ƒgj
-    // -------------------------------------------------------------
-    const int tipBoxW = 1300;
-    const int tipBoxH = 170;
-    const int tipTop = sh - 250;
-    const int tipBottom = tipTop + tipBoxH;
-    const int tipLeft = cx - tipBoxW / 2;
-    const int tipRight = cx + tipBoxW / 2;
-
-    // ”Z‚¢‚±‚°’ƒ‚ÌƒvƒŒ[ƒgi•¶š‚Æ‚ÌƒRƒ“ƒgƒ‰ƒXƒg‚ğÅ‘å‚É‚µ‚Ä‹”F«‚ğŠm•Ûj
-    DrawRoundRect(tipLeft + 6, tipTop + 6, tipRight + 6, tipBottom + 6, 18, 18, GetColor(25, 18, 12), TRUE);
-    DrawRoundRect(tipLeft, tipTop, tipRight, tipBottom, 18, 18, GetColor(45, 32, 24), TRUE);
-    DrawRoundRect(tipLeft, tipTop, tipRight, tipBottom, 18, 18, GetColor(215, 190, 150), FALSE);
-
-    // Œ©o‚µi‚ ‚½‚½‚©‚¢RFj
-    if (font != -1)
-    {
-        int titleW = GetDrawStringWidthToHandle(mTipTitle.c_str(), static_cast<int>(mTipTitle.length()), font);
-        DrawStringToHandle(cx - titleW / 2, tipTop + 24, mTipTitle.c_str(), GetColor(255, 210, 85), font);
-    }
-
-    // –{•¶iƒ”’‚ÌƒNƒbƒLƒŠ•¶šE’†‰›‘µ‚¦j
-    if (font != -1)
-    {
-        int contentW = GetDrawStringWidthToHandle(mTipContent.c_str(), static_cast<int>(mTipContent.length()), font);
-        DrawStringToHandle(cx - contentW / 2, tipTop + 90, mTipContent.c_str(), GetColor(255, 255, 255), font);
-    }
-
-    Scene::Draw();
+	if (isClicked)
+	{
+		// æ±ºå®šéŸ³ã‚’é³´ã‚‰ã—ã¦ã‚²ãƒ¼ãƒ ç”»é¢ã¸é·ç§»
+		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
+		Master::mpSceneManager->RequestScene(SCENE_TYPE::GAME_SCENE);
+	}
 }
 
 void LoadScene::Finalize()
 {
-    // ©‘O‚Åì¬‚µ‚½ƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹‚ğ‰ğ•ú
-    if (mnCustomFont != -1)
-    {
-        DeleteFontToHandle(mnCustomFont);
-        mnCustomFont = -1;
-    }
+	if (mpLoadUI != nullptr)
+	{
+		mpLoadUI->Release();
+		mpLoadUI = nullptr;
+	}
 
-    Scene::Finalize();
+	Scene::Finalize();
 }

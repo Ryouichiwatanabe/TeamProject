@@ -151,6 +151,12 @@
     <Filter Include="ソース ファイル\UI\StageBackGround">
       <UniqueIdentifier>{a3a540af-3532-4b6e-8b73-18a29f4ad1a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\UI\Load">
+      <UniqueIdentifier>{a191c3bf-48e3-4b47-9353-bbd1a5162021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\UI\Load">
+      <UniqueIdentifier>{2595cd38-f6c9-4d7f-963c-e2b482326c4e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ソース ファイル\UI\Clear">
       <UniqueIdentifier>{6205bdeb-fe92-4996-9f84-40e29eb896b1}</UniqueIdentifier>
     </Filter>
@@ -387,6 +393,12 @@
     <ClCompile Include="Source\StageBackGroundTable.cpp">
       <Filter>ソース ファイル\UI\StageBackGround</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LoadUI.cpp">
+      <Filter>ソース ファイル\UI\Load</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadUIParts.cpp">
+      <Filter>ソース ファイル\UI\Load</Filter>
+    </ClCompile>
     <ClCompile Include="Source\ClearUI.cpp">
       <Filter>ソース ファイル\UI\Clear</Filter>
     </ClCompile>
@@ -610,6 +622,12 @@
     </ClInclude>
     <ClInclude Include="Source\EffectSteamConfig.h">
       <Filter>ヘッダー ファイル\Effects\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadUI.h">
+      <Filter>ヘッダー ファイル\UI\Load</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadUIParts.h">
+      <Filter>ヘッダー ファイル\UI\Load</Filter>
     </ClInclude>
     <ClInclude Include="Source\ClearUI.h">
       <Filter>ヘッダー ファイル\UI\Clear</Filter>
