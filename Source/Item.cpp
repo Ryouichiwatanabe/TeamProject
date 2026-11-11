@@ -8,6 +8,8 @@
 #include "Graphic.h"
 #include "Collider.h"
 
+#include "SoundManager.h"
+
 // -- Config -- //
 #include "GameConfig.h"
 
@@ -47,6 +49,8 @@ void Item::UpdateIdle() {
 	mState = State::Picking;	// IsPicked() が true になる
 	mTimer = 0.0f;
 	collider->SetEnabled(false);
+
+	SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_ITEM_GETTING);
 }
 
 void Item::UpdatePicking(float _deltaTime) {
