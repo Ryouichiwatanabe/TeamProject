@@ -76,7 +76,7 @@
     <ClCompile Include="Source\StageBackGround.cpp" />
     <ClCompile Include="Source\StageBackGroundTable.cpp" />
     <ClCompile Include="Source\StageBlock.cpp" />
-    <ClCompile Include="Source\StageClearData.cpp" />
+    <ClCompile Include="Source\GameProgress.cpp" />
     <ClCompile Include="Source\StageSelectScene.cpp" />
     <ClCompile Include="Source\Switch.cpp" />
     <ClCompile Include="Source\SwitchBlock.cpp" />
@@ -157,7 +157,7 @@
     <ClInclude Include="Source\Spike.h" />
     <ClInclude Include="Source\Stage.h" />
     <ClInclude Include="Source\StageBlock.h" />
-    <ClInclude Include="Source\StageClearData.h" />
+    <ClInclude Include="Source\GameProgress.h" />
     <ClInclude Include="Source\Switch.h" />
     <ClInclude Include="Source\SwitchBlock.h" />
     <ClInclude Include="Source\TitleScene.h" />

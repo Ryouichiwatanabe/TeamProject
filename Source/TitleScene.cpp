@@ -10,7 +10,7 @@
 #include "InputManager.h"
 #include "SoundManager.h"
 
-#include "StageClearData.h"	// IsTutorialCleared()
+#include "GameProgress.h"	// IsTutorialCleared()
 
 #include "ScreenConfig.h"	// 背景画像の拡縮
 
@@ -72,7 +72,7 @@ void TitleScene::Update(float _deltaTime)
 		InputManager::GetInstance().ConsumeButton(Button::Confirm);
 		SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
 
-		const SCENE_TYPE next = StageClearData::IsTutorialCleared()
+		const SCENE_TYPE next = GameProgress::IsTutorialCleared()
 			? SCENE_TYPE::STAGE_SELECT_SCENE
 			: SCENE_TYPE::TUTORIAL_SCENE;
 		Master::mpSceneManager->RequestScene(next);

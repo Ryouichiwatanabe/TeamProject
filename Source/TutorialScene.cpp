@@ -22,7 +22,7 @@
 
 #include "Transform.h"
 
-#include "StageClearData.h" // SetTutorialCleared()
+#include "GameProgress.h" // SetTutorialCleared()
 
 #include <DxLib.h>
 #include <string>
@@ -113,7 +113,7 @@ void TutorialScene::Update(float _deltaTime)
         if (mfClearTimer >= 5.0f ||
             (mnTutorialStep == 99 && mTypewriter.IsFinished() && InputManager::GetInstance().GetButtonDown(Button::Confirm)))
         {
-            StageClearData::SetTutorialCleared(true);   // チュートリアルのクリアを記録
+            GameProgress::SetTutorialCleared(true);   // チュートリアルのクリアを記録
             Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
         }
         return;
@@ -126,7 +126,7 @@ void TutorialScene::Update(float _deltaTime)
         SoundManager::GetInstance()->PlaySE(SoundManager::SOUND_SE::SE_SELECTUI);
         SoundManager::GetInstance()->StopBGM();
 
-        StageClearData::SetTutorialCleared(true);   // チュートリアルのクリアを記録
+        GameProgress::SetTutorialCleared(true);   // チュートリアルのクリアを記録
         Master::mpSceneManager->RequestScene(SCENE_TYPE::STAGE_SELECT_SCENE);
         return;
     }
