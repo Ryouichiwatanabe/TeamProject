@@ -167,7 +167,9 @@ void GameScene::Draw()
 
 void GameScene::UpdateShapeInput()
 {
-	if (mpShapeUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Shape))
+	if (mpShapeUI != nullptr 
+		&& InputManager::GetInstance().GetButtonDown(Button::Shape)
+		&& !GetUIManager()->FindUI<PauseUI>()->IsEnabled())
 		mpShapeUI->OnShapeInput();
 }
 
@@ -196,7 +198,9 @@ void GameScene::UpdateItems()
 
 void GameScene::UpdatePauseInput()
 {
-	if (mpPauseUI != nullptr && InputManager::GetInstance().GetButtonDown(Button::Pause))
+	if (mpPauseUI != nullptr
+		&& InputManager::GetInstance().GetButtonDown(Button::Pause)
+		&& !GetUIManager()->FindUI<PlayerShapeUI>()->IsEnabled())
 		mpPauseUI->OnPauseInput();
 }
 

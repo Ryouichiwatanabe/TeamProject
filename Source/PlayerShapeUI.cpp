@@ -9,6 +9,8 @@
 #include "Scene.h"
 #include "UIManager.h"
 
+#include "PauseUI.h"
+
 #include "ObjectManager.h"	// Playerのアドレス取得用
 #include "Player.h"
 

@@ -6,6 +6,8 @@
 #include "Scene.h"
 #include "UIManager.h"
 
+#include "PlayerShapeUI.h"
+
 #include "OperationGuideUI.h"
 
 void PauseUI::Init()
