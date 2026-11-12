@@ -64,6 +64,7 @@ void PlayerShapeUI::Init()
 	mpConfirmUI->GetText().SetColor(GetColor(255, 113, 36));
 	mpConfirmUI->GetText().SetFontId(FontId::Button);
 	mpConfirmUI->GetText().SetText("OK!");
+	mpConfirmUI->GetHoverScaler().SetActive(true);
 
 	this->AddChild(mpConfirmUI);
 	mpConfirmUI->SetParent(this);
@@ -79,6 +80,7 @@ void PlayerShapeUI::Init()
 	mpBackUI->GetText().SetColor(GetColor(255, 113, 36));
 	mpBackUI->GetText().SetFontId(FontId::Button);
 	mpBackUI->GetText().SetText("Back!");
+	mpBackUI->GetHoverScaler().SetActive(true);
 
 	this->AddChild(mpBackUI);
 	mpBackUI->SetParent(this);

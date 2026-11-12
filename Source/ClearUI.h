@@ -24,7 +24,7 @@ private:
 private:
     static constexpr float ICON_Y = 0.0f;
     static constexpr float ICON_SPACING = 200.0f;  // アイコン同士の間隔（画像の幅より大きく）
-    static constexpr float BUTTON_Y = 300.0f;
+    static constexpr float BUTTON_Y = 200.0f;
 
     std::array<ItemIconUI*, GameConfig::MAX_ITEMS_PER_STAGE> mpIcons{}; // ItemアイコンのUI
     UI* mpStageSelectUI = nullptr;                                      // 「ステージ選択シーンへ」のボタン
