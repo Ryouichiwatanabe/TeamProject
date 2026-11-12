@@ -28,7 +28,7 @@ void PlayerPieceUI::Update()
 
 void PlayerPieceUI::Draw()
 {
-	if (IsSelected())
+	if (!IsSelected())
 	{
 		SetDrawBlendMode(DX_BLENDMODE_SUB, SELECTED_SUB_BLEND);
 		UI::Draw();

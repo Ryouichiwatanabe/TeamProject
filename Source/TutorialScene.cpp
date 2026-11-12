@@ -57,11 +57,11 @@ void TutorialScene::Initialize()
 
     // -- 「Skip」ボタン -- //
     mpSkipButton = GetUIManager()->CreateUI<UI>();
-    mpSkipButton->LoadUIGraph("Resource/UI/Scene_Title/Spoon.png");
+    mpSkipButton->LoadUIGraph("Resource/UI/Scene_Tutorial/Skip.png");
     mpSkipButton->SetEnabled(true);
     mpSkipButton->SetLayer(1);
     mpSkipButton->GetHoverScaler().SetActive(true);
-    mpSkipButton->GetText().SetFontId(FontId::SubTitle);
+    mpSkipButton->GetText().SetFontId(FontId::Button);
     mpSkipButton->GetText().SetColor(GetColor(255, 255, 255));
     mpSkipButton->GetText().SetText("Skip");
     mpSkipButton->GetTransform().SetPosition(VGet(480.0f, -280.0f, 0.0f));

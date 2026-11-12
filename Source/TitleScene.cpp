@@ -28,14 +28,6 @@ void TitleScene::Initialize()
 	const VECTOR scale = VGet(ScreenConfig::SCREEN_WIDTH / size.x, ScreenConfig::SCREEN_HEIGHT / size.y, 0.0f);
 	mpBackGround->GetTransform().SetScale(scale);
 
-	// -- ロゴ -- //
-	//mpLogo = uiManager->CreateUI<UI>();
-	//mpLogo->LoadUIGraph("Resource/UI/Scene_Title/TitleLogo.png");
-	//mpLogo->SetEnabled(true);
-	//mpLogo->SetLayer(1);
-	//mpLogo->GetFloatingMotion().SetActive(true);	// 浮遊モーションを適用
-	//mpLogo->GetTransform().SetPosition(VGet(0.0f, -200.0f, 0.0f));
-
 	// -- 「Start」ボタン -- //
 	mpStartButton = uiManager->CreateUI<UI>();
 	mpStartButton->LoadUIGraph("Resource/UI/Scene_Title/Spoon.png");
@@ -45,7 +37,8 @@ void TitleScene::Initialize()
 	mpStartButton->GetText().SetFontId(FontId::SubTitle);
 	mpStartButton->GetText().SetColor(GetColor(255, 255, 255));
 	mpStartButton->GetText().SetText("Start!");
-	mpStartButton->GetTransform().SetPosition(VGet(50.0f, 250.0f, 0.0f));
+	mpStartButton->GetTransform().SetScale(VGet(1.2f, 1.2f, 0.0f));
+	mpStartButton->GetTransform().SetPosition(VGet(50.0f, 275.0f, 0.0f));
 
 	// -- 「Quit」ボタン -- //
 	mpQuitButton = uiManager->CreateUI<UI>();
@@ -56,7 +49,8 @@ void TitleScene::Initialize()
 	mpQuitButton->GetText().SetFontId(FontId::SubTitle);
 	mpQuitButton->GetText().SetColor(GetColor(255, 255, 255));
 	mpQuitButton->GetText().SetText("Quit");
-	mpQuitButton->GetTransform().SetPosition(VGet(50.0f, 350.0f, 0.0f));
+	mpQuitButton->GetTransform().SetScale(VGet(1.2f, 1.2f, 0.0f));
+	mpQuitButton->GetTransform().SetPosition(VGet(50.0f, 375.0f, 0.0f));
 
 	// -- BGMの再生 -- //
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Title, true);
