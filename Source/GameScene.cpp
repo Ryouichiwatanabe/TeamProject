@@ -33,6 +33,7 @@
 // -- Effect -- //
 #include "EffectManager.h"
 #include "EffectClear.h"
+#include "KitchenFrame.h"
 
 // -- 外部ライブラリ -- //
 #include <DxLib.h>
@@ -74,6 +75,8 @@ void GameScene::Initialize()
 
 	// -- 「RespawnUI」の生成 -- //
 	mpRespawnUI = GetUIManager()->CreateUI<RespawnUI>();
+	// -- 「KitchenFrame」の生成 --//
+	mpKitchenFrame = new KitchenFrame();
 
 	SoundManager::GetInstance()->PlayBGM(SoundManager::SOUND_BGM::BGM_Game, true);
 }
@@ -100,7 +103,7 @@ void GameScene::UpdatePlaying(float deltaTime)
 	// Playerの更新より先に開閉する(開いたフレームからPlayerと移動床を止めるため)
 	UpdateShapeInput();
 
-	// ★修正：ポーズ中 または 変形画面(mpShapeUI)を開いている間は、ゲーム世界(移動床など)の時間を止める
+	// ポーズ中 または 変形画面(mpShapeUI)を開いている間は、ゲーム世界(移動床など)の時間を止める
 	const bool isPaused = (mpPauseUI != nullptr && mpPauseUI->IsEnabled());
 	const bool isShapeEditing = (mpShapeUI != nullptr && mpShapeUI->IsEnabled());
 	SetWorldTimeScale((isPaused || isShapeEditing) ? 0.0f : 1.0f);
@@ -154,6 +157,12 @@ void GameScene::Draw()
 	}
 
 	Scene::Draw();
+
+	if (mpKitchenFrame != nullptr)
+	{
+		mpKitchenFrame->Draw();
+	}
+
 }
 
 void GameScene::UpdateShapeInput()
@@ -197,7 +206,7 @@ void GameScene::UpdateRestartInput(float deltaTime)
 		return;
 
 	// ポーズ中は表示しない
-	mpRespawnUI->SetEnabled(!mpPauseUI->IsEnabled());		// ← 追加
+	mpRespawnUI->SetEnabled(!mpPauseUI->IsEnabled());
 
 	// ポーズ中・変形UIを開いている間は受け付けない
 	const bool canRestart = !mpPauseUI->IsEnabled() && !mpPlayer->IsShapeEditing();
@@ -209,5 +218,10 @@ void GameScene::UpdateRestartInput(float deltaTime)
 
 void GameScene::Finalize()
 {
+	if (mpKitchenFrame != nullptr)
+	{
+		delete mpKitchenFrame;
+		mpKitchenFrame = nullptr;
+	}
 	Scene::Finalize();
 }

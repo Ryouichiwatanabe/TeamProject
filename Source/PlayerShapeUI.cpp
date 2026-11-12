@@ -17,6 +17,7 @@ namespace
 	constexpr float BUTTON_OFFSET_X = 180.0f;	// OK / Back ボタンの左右位置
 	constexpr float BUTTON_OFFSET_Y = 300.0f;	// OK / Back ボタンの縦位置
 	constexpr float MESSAGE_OFFSET_Y = -280.0f;	// メッセージの縦位置
+	constexpr int BUTTON_BRIGHT = 170;			// スプーン / フォーク画像の明るさ (255 = 元の色)
 
 	constexpr int LAYER_OVERLAY = 0;
 	constexpr int LAYER_FRAME = 1;
@@ -43,7 +44,8 @@ void PlayerShapeUI::Init()
 	mpBackGround = GetUIManager()->CreateUI<UI>();
 	mpBackGround->LoadUIGraph("Resource/UI/ShapeSelect/BackGround.png");
 	mpBackGround->SetLayer(LAYER_FRAME);
-	mpBackGround->GetTransform().SetScale(VGet(1.0f, 1.0f, 1.0f));
+	mpBackGround->GetTransform().SetScale(VGet(1.5f, 1.5f, 1.0f));
+	mpBackGround->GetTransform().SetPosition(VGet(-60.0f, 0.0f, 0.0f));
 
 	mpBackGround->SetEnabled(true);
 	this->AddChild(mpBackGround);
@@ -55,6 +57,7 @@ void PlayerShapeUI::Init()
 	// -- 「OK」ボタン生成 -- //
 	mpConfirmUI = GetUIManager()->CreateUI<UI>();
 	mpConfirmUI->LoadUIGraph("Resource/UI/ShapeSelect/Spoon.png");
+	mpConfirmUI->GetGraphic().SetBright(BUTTON_BRIGHT);	// 背景と同化しないよう少し暗く
 	mpConfirmUI->SetLayer(LAYER_BUTTON);
 	mpConfirmUI->GetTransform().SetScale(VGet(1.0f, 1.0f, 1.0f));
 	mpConfirmUI->GetTransform().SetPosition(VGet(-BUTTON_OFFSET_X, BUTTON_OFFSET_Y, 0.0f));
@@ -69,6 +72,7 @@ void PlayerShapeUI::Init()
 	// -- 「Back」ボタン生成 -- //
 	mpBackUI = GetUIManager()->CreateUI<UI>();
 	mpBackUI->LoadUIGraph("Resource/UI/ShapeSelect/Fork.png");
+	mpBackUI->GetGraphic().SetBright(BUTTON_BRIGHT);	// 背景と同化しないよう少し暗く
 	mpBackUI->SetLayer(LAYER_BUTTON);
 	mpBackUI->GetTransform().SetScale(VGet(1.0f, 1.0f, 1.0f));
 	mpBackUI->GetTransform().SetPosition(VGet(BUTTON_OFFSET_X, BUTTON_OFFSET_Y, 0.0f));

@@ -36,6 +36,8 @@ void SoundManager::Initialize()
 	// SE の読み込み
 	LoadSE(SOUND_SE::SE_DECIDE, "Resource/Sound/SE/Click/Click_normal.mp3");		// クリック(通常)
 	LoadSE(SOUND_SE::SE_SELECTUI, "Resource/Sound/SE/Click/Click_ui.mp3");			// クリック(UI)
+	LoadSE(SOUND_SE::SE_ITEM_GETTING, "Resource/Sound/SE/Item/getting.mp3");			// クリック(UI)
+	LoadSE(SOUND_SE::SE_RESPAWN, "Resource/Sound/SE/Player/Respawn/Respawn.mp3");			// クリック(UI)
 	
 	LoadSE(SOUND_SE::SE_GOAL, "Resource/Sound/SE/JINGLE/Clear.mp3");				// クリアジングル
 	LoadSE(SOUND_SE::SE_GOALVOICE, "Resource/Sound/SE/Clear/Yay.mp3");				// クリアSE

@@ -16,7 +16,7 @@ void RespawnUI::Init()
 	GetTransform().SetAnchor(VGet(0.75f, 0.9f, 0.0f));
 
 	// 画像(UIGraphicがTransformの中心に、Scaleを掛けて描く)
-	LoadUIGraph("Resource/UI/Respawn/P-Key.png");
+	LoadUIGraph("Resource/UI/Respawn/R-Key.png");
 	GetTransform().SetScale(VGet(ICON_SCALE, ICON_SCALE, 0.0f));
 
 	// テキストは画像の右側に、左揃え・縦中央で置く

@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="ソース ファイル\Input">
-      <UniqueIdentifier>{07324466-ae32-4f04-8226-fe2fb53fa6b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\Input">
-      <UniqueIdentifier>{fb64202a-2324-4a29-a730-5af2885634c4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Manager">
       <UniqueIdentifier>{4ec80d54-e2ef-477e-a2cd-a20d91445b0d}</UniqueIdentifier>
     </Filter>
@@ -184,19 +178,22 @@
     <Filter Include="ヘッダー ファイル\UI\HUD">
       <UniqueIdentifier>{a1b4b2e7-8b39-4c45-850c-7405628ecbc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Manager\Input">
+      <UniqueIdentifier>{07324466-ae32-4f04-8226-fe2fb53fa6b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Manager\Input">
+      <UniqueIdentifier>{fb64202a-2324-4a29-a730-5af2885634c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GamePad.cpp">
-      <Filter>ソース ファイル\Input</Filter>
+      <Filter>ソース ファイル\Manager\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Keyboard.cpp">
-      <Filter>ソース ファイル\Input</Filter>
+      <Filter>ソース ファイル\Manager\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Mouse.cpp">
-      <Filter>ソース ファイル\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\InputManager.cpp">
-      <Filter>ソース ファイル\Manager</Filter>
+      <Filter>ソース ファイル\Manager\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
@@ -238,7 +235,7 @@
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
     <ClCompile Include="Source\Cursor.cpp">
-      <Filter>ソース ファイル\Input</Filter>
+      <Filter>ソース ファイル\Manager\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\StageSelectScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
@@ -273,9 +270,6 @@
     <ClCompile Include="Source\UIManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Source\DisappearingBlock.cpp">
-      <Filter>ソース ファイル\GameObject\StageElement</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Goal.cpp">
       <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
@@ -288,17 +282,8 @@
     <ClCompile Include="Source\StageBlock.cpp">
       <Filter>ソース ファイル\GameObject\StageElement</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Switch.cpp">
-      <Filter>ソース ファイル\GameObject\StageElement</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\SwitchBlock.cpp">
-      <Filter>ソース ファイル\GameObject\StageElement</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EffectManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\GoalEffect.cpp">
-      <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
     <ClCompile Include="Source\SpriteSheet.cpp">
       <Filter>ソース ファイル\Effect</Filter>
@@ -366,9 +351,6 @@
     <ClCompile Include="Source\UITypewriterText.cpp">
       <Filter>ソース ファイル\UI\UIModule</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SpongeBlock.cpp">
-      <Filter>ソース ファイル\GameObject\StageElement</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EffectFall.cpp">
       <Filter>ソース ファイル\Effect\Player</Filter>
     </ClCompile>
@@ -408,19 +390,31 @@
     <ClCompile Include="Source\GameProgress.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
+    <ClCompile Include="Source\InputManager.cpp">
+      <Filter>ソース ファイル\Manager\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\KitchenFrame.cpp">
+      <Filter>ソース ファイル\UI\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Konjac.cpp">
+      <Filter>ソース ファイル\GameObject\StageElement</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadScene.cpp">
+      <Filter>ソース ファイル\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GoalEffect.cpp">
+      <Filter>ソース ファイル\Effect\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\GamePad.h">
-      <Filter>ヘッダー ファイル\Input</Filter>
+      <Filter>ヘッダー ファイル\Manager\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\Keyboard.h">
-      <Filter>ヘッダー ファイル\Input</Filter>
+      <Filter>ヘッダー ファイル\Manager\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mouse.h">
-      <Filter>ヘッダー ファイル\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\InputManager.h">
-      <Filter>ヘッダー ファイル\Manager</Filter>
+      <Filter>ヘッダー ファイル\Manager\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
@@ -459,13 +453,10 @@
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Source\Cursor.h">
-      <Filter>ヘッダー ファイル\Input</Filter>
+      <Filter>ヘッダー ファイル\Manager\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlayerController.h">
       <Filter>ヘッダー ファイル\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\UIFloatingMotion.h">
-      <Filter>ヘッダー ファイル\Module</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI.h">
       <Filter>ヘッダー ファイル\UI</Filter>
@@ -497,15 +488,6 @@
     <ClInclude Include="Source\StageBlock.h">
       <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Switch.h">
-      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SwitchBlock.h">
-      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\DisappearingBlock.h">
-      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SoundManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
@@ -517,9 +499,6 @@
     </ClInclude>
     <ClInclude Include="Source\EffectManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GoalEffect.h">
-      <Filter>ヘッダー ファイル\Effects</Filter>
     </ClInclude>
     <ClInclude Include="Source\EffectBase.h">
       <Filter>ヘッダー ファイル\Effects</Filter>
@@ -599,9 +578,6 @@
     <ClInclude Include="Source\UITypewriterText.h">
       <Filter>ヘッダー ファイル\UI\UIModule</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SpongeBlock.h">
-      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
-    </ClInclude>
     <ClInclude Include="Source\EffectClick.h">
       <Filter>ヘッダー ファイル\Effects\UI</Filter>
     </ClInclude>
@@ -643,6 +619,24 @@
     </ClInclude>
     <ClInclude Include="Source\GameProgress.h">
       <Filter>ヘッダー ファイル\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\KitchenFrame.h">
+      <Filter>ヘッダー ファイル\UI\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Konjac.h">
+      <Filter>ヘッダー ファイル\GameObject\StageElement</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadScene.h">
+      <Filter>ヘッダー ファイル\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\InputManager.h">
+      <Filter>ヘッダー ファイル\Manager\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UIFloatingMotion.h">
+      <Filter>ヘッダー ファイル\UI\UIModule</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GoalEffect.h">
+      <Filter>ヘッダー ファイル\Effects\Event</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

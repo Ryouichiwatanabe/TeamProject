@@ -2,32 +2,28 @@
 
 #include "CsvLoader.h"
 
-// Obj生成用
 #include "Master.h"
 #include "SceneManager.h"
 #include "Scene.h"
 #include "ObjectManager.h"
 #include "Player.h"
 
-// 生成するObj関係
+// -- 生成するObj -- //
 #include "Player.h"
 #include "StageBlock.h"
 #include "Goal.h"
 #include "MovingBlock.h"
 #include "Spike.h"
-#include "DisappearingBlock.h"
-#include "Switch.h"
-#include "SwitchBlock.h"
 #include "Item.h"
-#include "Konjac.h" // キッチンスポンジのバネ床
-#include "MovingBlock.h" // 溶けバターの滑る床
-
+#include "Konjac.h" 
+#include "MovingBlock.h"
 
 #include "Transform.h"
 
+// -- 定数 -- //
 #include "GameConfig.h"
 
-#include <DxLib.h>  // VECTOR用
+#include <DxLib.h>  // VECTOR
 
 void Stage::Load(const std::string& _filename)
 {
@@ -95,42 +91,29 @@ void Stage::CreateObjects()
             case 1:
             {
                 // -- 床の生成 -- //
-                auto stageBlock = objectManager
-                    ->CreateObject<StageBlock>();
-
-                stageBlock->GetModule<Transform>()
-                    ->SetPosition(initPosition);
+                auto stageBlock = objectManager->CreateObject<StageBlock>();
+                stageBlock->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }
+
             case 2:
             {
                 // -- ゴールを生成 -- //
-                auto goalBlock = objectManager
-                    ->CreateObject<Goal>();
-
+                auto goalBlock = objectManager->CreateObject<Goal>();
                 auto transform = goalBlock->GetModule<Transform>();
                 const VECTOR baseScale = transform->GetScale();
                 const VECTOR addScale = VGet(0.5f, 0.5f, 0.0f);
                 transform->SetScale(VAdd(baseScale, addScale));
-
                 transform->SetPosition(initPosition);
 
                 break;
             }
 
-            case 3:
-            {
-             
-            }
-
             case 4:
             {
                 // -- 針を生成 -- //
-                auto spikeBlock = objectManager
-                    ->CreateObject<Spike>();
-                spikeBlock
-                    ->GetModule<Transform>()
-                    ->SetPosition(initPosition);
+                auto spikeBlock = objectManager->CreateObject<Spike>();
+                spikeBlock->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }
 
@@ -143,34 +126,6 @@ void Stage::CreateObjects()
                 break;
             }
 
-            case 6:
-            {
-                // 消える床を生成
-                auto disappearingBlock = objectManager
-                    ->CreateObject<DisappearingBlock>();
-                disappearingBlock
-                    ->GetModule<Transform>()
-                    ->SetPosition(initPosition);
-
-                break;
-            }
-
-            case 7:
-            {
-                // スイッチを生成
-                auto switchBlock = objectManager
-                    ->CreateObject<Switch>();
-
-                break;
-            }
-
-            case 8:
-            {
-                // SwitchBlockは2回目に生成する
-                break;
-
-            }
-
             case 9:
             case 10:
             case 11:
@@ -179,48 +134,27 @@ void Stage::CreateObjects()
                 auto item = objectManager->CreateObject<Item>(mStageNumber, tile - 9);
                 item->GetModule<Transform>()->SetPosition(initPosition);
                 break;
-
             }
+
             case 12:
             {
-                // ★キッチンスポンジのバネ床を生成
-                auto sponge = objectManager->CreateObject<Konjac>();
-                sponge->GetModule<Transform>()->SetPosition(initPosition);
+                // -- コンニャクを生成 -- //
+                auto konjacBlock = objectManager->CreateObject<Konjac>();
+                konjacBlock->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }
+
             case 13:
             {
-                // ★溶けバターのツルツル滑る床を生成
-                auto butter = objectManager->CreateObject<MovingBlock>();
-                butter->GetModule<Transform>()->SetPosition(initPosition);
+                // -- 移動する床の生成 -- //
+                auto movingBlock = objectManager->CreateObject<MovingBlock>();
+                movingBlock->GetModule<Transform>()->SetPosition(initPosition);
                 break;
             }
+
             default:
                 break;
             }
-        }
-    }
-
-    // Switchを取得
-    Switch* pSwitch = objectManager->FindObject<Switch>();
-
-    if (pSwitch == nullptr)
-        return;
-
-    // SwitchBlockを生成
-    for (int y = 0; y < mStageData.size(); y++)
-    {
-        for (int x = 0; x < mStageData[y].size(); x++)
-        {
-            const int tile = mStageData[y][x];
-
-            if (tile != 8)
-                continue;
-
-            objectManager
-                ->CreateObject<SwitchBlock>(
-                    pSwitch
-                );
         }
     }
 }
