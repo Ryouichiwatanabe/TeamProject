@@ -27,7 +27,7 @@ private:
 private:
     // �ړ��ݒ�
     static constexpr float MOVE_RANGE = 200.0f;       // �ړ����i�Г���px�j
-    static constexpr float MOVE_SPEED = 2.0f;         // �ړ����x
+    static constexpr float MOVE_SPEED = 1.0f;         // �ړ����x
     static constexpr bool  IS_VERTICAL_MOVE = false;  // true�ŏ㉺�ړ��Afalse�ō��E�ړ�
 
     VECTOR mvStartPos = VGet(0.0f, 0.0f, 0.0f); // �����ʒu
